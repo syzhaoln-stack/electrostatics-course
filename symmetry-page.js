@@ -1,7 +1,8 @@
+import {applyAcademicScene} from './academic-scene.js';
 import {FieldScene,THREE} from './scene.js';
 import {symmetryOptions,symmetryField,symmetryReadings,integrateSymmetrySurface} from './symmetry-physics.js';
 
-const CYAN='#76dedc',GOLD='#f1c078',MUTED='#647d91';
+const CYAN='#367f85',GOLD='#a47734',MUTED='#73818b';
 const MODE={sphere:{title:'球对称',source:'点电荷',surface:'同心球面',area:'4πr²',law:'E ∝ 1/r²',radius:1.4},line:{title:'柱对称',source:'无限长均匀线电荷',surface:'同轴柱面',area:'2πrL',law:'E ∝ 1/r',radius:1.4},plane:{title:'面对称',source:'无限大均匀带电面',surface:'穿过带电面的薄盒',area:'2A',law:'E 与距离无关',radius:.7}};
 const fmt=(x,n=2)=>Math.abs(x)<5e-7?'0':Math.abs(x)>=10000||Math.abs(x)<.001?x.toExponential(2):x.toFixed(n);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -27,9 +28,9 @@ export function mountSymmetry(container){
     <details class="sy-details"><summary>面积、测量与理想模型</summary><div class="sy-detail-grid"><div><b>逐片积分，不是数箭头</b><p id="sy-integral"></p><p>图中箭头长度经过压缩；数字使用真实场强。高斯面是假想的测量边界，不是导体或实体外壳。</p></div><div><b>无限模型怎样对应实际</b><p>长线、大平面的近中部且远离边缘处，可近似使用无限模型。本页直接采用无限源；画面边缘只是显示范围。无限源的电势应选有限参考点，不能沿用无穷远为零。</p><p id="sy-model"></p></div></div></details>
   </section>`;
   const $=s=>container.querySelector(s),scene=new FieldScene($('.sy-stage'),{extent:6});
-  scene.scene.background.set('#050c14');scene.scene.fog.color.set('#050c14');scene.grid.visible=false;scene.layer('axes').visible=false;scene.controls.enablePan=false;scene.controls.minDistance=7;scene.controls.maxDistance=30;
+  applyAcademicScene(scene);scene.grid.visible=false;scene.layer('axes').visible=false;scene.controls.enablePan=false;scene.controls.minDistance=7;scene.controls.maxDistance=30;
   let options=symmetryOptions({radius:1.4}),patch='active',disposed=false,drag=null,comparison=null,drawPending=0,reading=null,integral=null,handlePositions={},inViewport=true;
-  function resetView(){scene.cameraMove=null;const distance=options.mode==='sphere'?($('.sy-stage').clientWidth<600?16:12):($('.sy-stage').clientWidth<600?21:16);scene.camera.position.set(distance*.43,distance*.37,distance*.78);scene.camera.up.set(0,1,0);scene.controls.target.set(0,0,0);scene.controls.enabled=true;scene.controls.update();}
+  function resetView(){scene.cameraMove=null;const distance=options.mode==='sphere'?Math.max($('.sy-stage').clientWidth<600?11:8.8,options.radius*3.5):($('.sy-stage').clientWidth<600?21:16);scene.camera.position.set(distance*.43,distance*.37,distance*.78);scene.camera.up.set(0,1,0);scene.controls.target.set(0,0,0);scene.controls.enabled=true;scene.controls.update();}
   resetView();
   const material=(color,opacity)=>new THREE.MeshBasicMaterial({color,transparent:true,opacity,side:THREE.DoubleSide,depthWrite:false});
   function mesh(geometry,color,opacity,position=[0,0,0],layer='gaussian'){const m=new THREE.Mesh(geometry,material(color,opacity));m.position.set(...position);scene.layer(layer).add(m);return m;}
@@ -43,6 +44,7 @@ export function mountSymmetry(container){
     $('#sy-patch-value').textContent=Math.abs(dot)<1e-7?`E ≠ 0，E·n = 0`:`E·n = ${fmt(dot,1)} V/m`;
   }
   function createGeometry(){
+    scene.controls.minDistance=options.mode==='sphere'?Math.max(7,options.radius*3.5):7;scene.controls.update();
     for(const layer of ['source','gaussian','wire','vectors','labels','patch'])scene.clearLayer(layer);
     const {radius:r,length:L,halfWidth:w,mode,offset,sign}=options,symmetric=reading.symmetric;
     if(mode==='sphere'){

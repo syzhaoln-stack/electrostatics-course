@@ -1,5 +1,6 @@
-document.body.classList.add('cinematic');
-document.querySelector('meta[name="theme-color"]')?.setAttribute('content','#080f19');
+document.body.classList.add('cinematic','academic');
+const academicSheet=document.createElement('link');academicSheet.rel='stylesheet';academicSheet.href='./academic-figures.css';document.head.append(academicSheet);
+document.querySelector('meta[name="theme-color"]')?.setAttribute('content','#fffefa');
 const PAGES={
  'foundations':{file:'foundations.html',name:'电荷与电场'},
  'symmetry':{file:'symmetry.html',name:'用对称性求场强'},

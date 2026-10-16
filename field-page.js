@@ -3,6 +3,7 @@ import {fieldAt} from './physics.js';
 import {buildVectorLattice} from './field-vectors.js';
 import {observationFrame} from './field-frame.js';
 import {FIELD_CHALLENGES,evaluateFieldChallenge,advanceFieldChallenge} from './field-challenge.js';
+import {applyAcademicScene} from './academic-scene.js';
 const norm=v=>Math.hypot(...v);
 export function mountField(container){
  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href='./field.css';document.head.append(sheet);
@@ -13,28 +14,31 @@ export function mountField(container){
   <button data-preset="same" aria-pressed="false"><strong>＋ ＋　同号</strong></button>
  </div>
  <div class="field-toolbar"><button id="field-visible" aria-pressed="true">空间电场：已显示</button><button id="probe-visible" aria-pressed="true">观察点受力：已显示</button><div class="field-probe-sign" role="group" aria-label="试探电荷的符号"><button data-sign="-1" class="active" aria-pressed="true">电子 −</button><button data-sign="1" aria-pressed="false">正试探电荷</button></div><button id="reset-sources">恢复起点</button></div>
- <div class="stage-wrap"><div class="stage"></div><div class="stage-top"><div class="scene-label"><strong>拖动黄点 P，看这里的受力</strong></div><div class="view-switch"><button data-field-view="space" class="active">三维空间</button><button data-field-view="plane">过 P 的剖面</button></div></div><div class="stage-bottom"><div class="hint-chip" id="field-gesture">点击空白放置 P · 拖动源或黄点 · 滚轮缩放</div></div><div class="field-probe-caption" id="probe-info"></div><div class="field-direction-key"><span class="electric">青色 E · 电场方向</span><span class="electron">金色 F · 电子受力</span><strong id="field-sign-reason">电子带负电，受力与电场反向</strong></div><label class="field-depth" for="probe-z">P 前后 <output id="probe-z-value">0.8 mm</output><input id="probe-z" type="range" min="-2.5" max="2.5" step="0.1" value="0.8"></label><div class="field-dynamic-note">剖面穿过 Q₁、Q₂ 和 P</div></div>
+ <div class="stage-wrap"><div class="stage"></div><div class="stage-top"><div class="scene-label"><strong>双电荷的空间电场</strong><span>拖动 P，比较同一点的两个贡献</span></div><div class="view-switch"><button data-field-view="space" class="active">三维空间</button><button data-field-view="plane">过 P 的剖面</button></div></div><div class="stage-bottom"><div class="hint-chip" id="field-gesture">点击空白放置 P · 拖动源或黄点 · 滚轮缩放</div></div><div class="field-probe-caption" id="probe-info"></div><div class="field-direction-key"><span class="electric">青色 E · 电场方向</span><span class="electron">金色 F · 电子受力</span><strong id="field-sign-reason">电子带负电，受力与电场反向</strong></div><label class="field-depth" for="probe-z">P 前后 <output id="probe-z-value">0.8 mm</output><input id="probe-z" type="range" min="-2.5" max="2.5" step="0.1" value="0.8"></label><div class="field-dynamic-note">淡面经过 Q₁、Q₂ 和 P · 背景箭长采用同一压缩尺度，越长表示 |E| 越大</div></div>
  <div class="field-results" id="field-results"><div><span class="field-key one">E₁</span><small>分场大小 |E₁|</small><strong id="e1-value"></strong></div><div><span class="field-key two">E₂</span><small>分场大小 |E₂|</small><strong id="e2-value"></strong></div><div><span class="field-key total">E</span><small>合场大小 |E|</small><strong id="field-value"></strong></div><div class="field-force"><span>F = qE</span><small id="force-note"></small><strong id="force-value"></strong></div></div>
  <p class="field-vector-note">矢量相加：𝐄 = 𝐄₁ + 𝐄₂；大小通常不能直接相加。</p><details class="field-components"><summary>查看 x、y、z 分量（V/m）</summary><table class="field-component-table"><thead><tr><th>分量</th><th>E₁</th><th>E₂</th><th>合场 E</th></tr></thead><tbody id="field-components-body"></tbody></table></details><p class="field-observation" id="field-observation" aria-live="polite"></p>
  <p class="field-engine-link"><a href="engine.html">Godot 空间版 →</a></p><details class="field-adjust"><summary>参数</summary><div class="field-adjust-grid"><section><h3>改变两个源</h3>${slider('q1','左源 Q₁',-.6,.6,.05,.3,'pC')}${slider('q2','右源 Q₂',-.6,.6,.05,-.3,'pC')}<button id="field-auto-btn" aria-pressed="false">让左源往复</button><button id="single-source">只看一个电荷</button><p class="small">单电荷用于比较一个源的贡献；上方两种双电荷情形才是叠加实验。</p></section><section><h3>移动黄点 P</h3>${slider('probe-x','左右位置',-4.5,4.5,.1,0,'mm')}${slider('probe-y','上下位置',-3.5,3.5,.1,1.2,'mm')}<label class="check"><input id="source-guides" type="checkbox" checked>显示源到 P 的虚线</label><p class="small">虚线连接源和观察点。正源贡献背离源，负源贡献指向源；在 P 把两个矢量相加。</p></section></div></details>
- <details class="field-notes"><summary>说明</summary><div class="learn-row"><details class="learning"><summary>这里相加的是什么？</summary><p>相加的是两个源在同一个观察点产生的电场 E₁、E₂。空间箭头是在固定三维格点测得的场；淡色剖面始终经过两个源和 P，剖面按钮将同一平面转到正面。转动镜头不改变任何位置的场。把很小的试探电荷放在 P，才用 F=qE 求它的受力；试探电荷不改变这里的源电场。</p><p>黄点选择 ±e，受力读数按元电荷计算。分场与合场采用同一局部尺度，虚线构成矢量平行四边形；背景场另作长度压缩。F 箭头只表示方向，不能把力与场的箭头长度当作同单位比较。</p></details><details class="learning"><summary>电荷移动，与扰动传播有什么不同？</summary><p>本页展示不同源位置对应的静电状态，没有传播延迟。振荡源产生的辐射场放在进阶实验中。</p><a href="charge.html#propagation">进阶：振荡与传播 →</a></details></div></details>`;
+ <details class="field-notes"><summary>说明</summary><div class="learn-row"><details class="learning"><summary>这里相加的是什么？</summary><p>相加的是两个源在同一个观察点产生的电场 E₁、E₂。空间箭头显示规则三维格点和源附近对称采样点的合场；淡色剖面始终经过两个源和 P，剖面按钮将同一平面转到正面。转动镜头不改变任何位置的场。把很小的试探电荷放在 P，才用 F=qE 求它的受力；试探电荷不改变这里的源电场。</p><p>黄点选择 ±e，受力读数按元电荷计算。分场与合场采用同一局部尺度，虚线构成矢量平行四边形；背景箭长按同一单调尺度压缩，不与 |E| 成正比；场强大小读图下数值。F 箭头只表示方向，不能把力与场的箭头长度当作同单位比较。</p></details><details class="learning"><summary>电荷移动，与扰动传播有什么不同？</summary><p>本页展示不同源位置对应的静电状态，没有传播延迟。振荡源产生的辐射场放在进阶实验中。</p><a href="charge.html#propagation">进阶：振荡与传播 →</a></details></div></details>`;
  const $=s=>container.querySelector(s),view=new FieldScene($('.stage'),{extent:6});
  const challengePanel=document.createElement('div');challengePanel.className='field-challenge';challengePanel.innerHTML=`<button id="field-challenge-start">◎ 找一个受力位置</button><div class="field-challenge-task" hidden><div class="field-challenge-title" id="field-challenge-title"></div><div class="field-challenge-feedback"><span class="field-challenge-meter" aria-hidden="true"></span><span id="field-challenge-state" role="status" aria-live="polite">拖动黄点 P</span><span class="field-challenge-check" hidden>✓</span></div><div class="field-challenge-actions"><button id="field-challenge-next">换个目标 →</button><button id="field-challenge-exit">自由探索</button></div></div>`;$('.stage-wrap').append(challengePanel);
- view.scene.background.set('#000');view.scene.fog.color.set('#000');view.grid.visible=false;view.layer('axes').visible=false;view.controls.enablePan=false;
+ const academic=true;view.scene.background.set('#fcfbf7');view.scene.fog.color.set('#fcfbf7');applyAcademicScene(view);view.scene.fog.near=30;view.scene.fog.far=65;view.grid.visible=false;view.layer('axes').visible=false;view.controls.enablePan=false;
  let viewMode='space';
- function setView(mode){viewMode=mode;const d=Math.max(14,6.5/(Math.tan(19*Math.PI/180)*view.camera.aspect));view.controls.target.set(0,0,0);view.camera.up.set(0,1,0);if(mode==='plane'){const f=frame();view.camera.position.fromArray(f.normal).multiplyScalar(d);view.camera.up.fromArray(f.v);}else view.camera.position.set(d*.35,d*.30,d*.88);view.camera.lookAt(0,0,0);view.controls.enabled=true;view.controls.update();view.controls.enableRotate=mode==='space';view.renderer.domElement.dataset.viewMode=mode;container.querySelectorAll('[data-field-view]').forEach(b=>{const on=b.dataset.fieldView===mode;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on)});$('#field-gesture').textContent=mode==='plane'?'拖动源或 P · 滚轮缩放':'拖空白旋转 · 拖动源或 P';if(typeof volume!=='undefined'){volume.group.visible=showField&&mode==='space';vectors.group.visible=showField&&mode==='plane';}}
+ function setView(mode){viewMode=mode;const d=Math.max(14,(view.camera.aspect<.9?4.7:6.5)/(Math.tan(19*Math.PI/180)*view.camera.aspect));view.controls.target.set(0,0,0);view.camera.up.set(0,1,0);if(mode==='plane'){const f=frame();view.camera.position.fromArray(f.normal).multiplyScalar(d);view.camera.up.fromArray(f.v);}else view.camera.position.set(d*.35,d*.30,d*.88);view.camera.lookAt(0,0,0);view.controls.enabled=true;view.controls.update();view.controls.enableRotate=mode==='space';view.renderer.domElement.dataset.viewMode=mode;container.querySelectorAll('[data-field-view]').forEach(b=>{const on=b.dataset.fieldView===mode;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on)});$('#field-gesture').textContent=mode==='plane'?'拖动源或 P · 滚轮缩放':'拖空白旋转 · 拖动源或 P';if(typeof volume!=='undefined'){volume.group.visible=showField&&mode==='space';vectors.group.visible=showField&&mode==='plane';}}
  const resize=view.resize.bind(view);view.resize=()=>{resize();if(ready)setView(viewMode);};let ready=false;
- const surface=new THREE.Mesh(new THREE.PlaneGeometry(12,8),new THREE.MeshBasicMaterial({color:'#42667a',transparent:true,opacity:.09,side:THREE.DoubleSide,depthWrite:false}));view.layer('sampling-plane').add(surface);
+ const surface=new THREE.Mesh(new THREE.PlaneGeometry(12,8),new THREE.MeshBasicMaterial({color:'#9bb9b7',transparent:true,opacity:.10,side:THREE.DoubleSide,depthWrite:false}));view.layer('sampling-plane').add(surface);
+ surface.add(new THREE.LineSegments(new THREE.EdgesGeometry(surface.geometry),new THREE.LineBasicMaterial({color:'#b5c7c3',transparent:true,opacity:.5})));
  let sign=-1,sources=[{id:'Q1',label:'Q₁',pos:[-1.8,0,0],Q:.3,radius:.24},{id:'Q2',label:'Q₂',pos:[1.8,0,0],Q:-.3,radius:.24}],showField=true,showProbe=true,moving=false,clock=0,base=0,last=0,lastDraw=0,dirty=false,drag=null;
  let challenge=null,challengeProgress=null,challengeEvaluation=null,challengeSnapshot=null,challengeRing=null,challengeSuccessAt=-Infinity;
  const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
  function probe(){return [+$('#probe-x').value,+$('#probe-y').value,+$('#probe-z').value]}
  function frame(){return observationFrame(sources[0].pos,sources[1].pos,probe());}
- const vectors=buildVectorLattice(view,THREE,()=>sources,{plane:'xy',step:.55,getFrame:frame}),volume=buildVectorLattice(view,THREE,()=>sources,{plane:'volume',step:.85}),canvas=view.renderer.domElement;
+ const narrow=matchMedia('(max-width:700px)').matches;
+ const vectors=buildVectorLattice(view,THREE,()=>sources,{plane:'xy',step:narrow?1:.75,getFrame:frame,light:academic}),volume=buildVectorLattice(view,THREE,()=>sources,{plane:'volume',step:narrow?1.5:1.2,light:academic,nearSources:true}),canvas=view.renderer.domElement;
+ canvas.dataset.vectorSamples=volume.count;canvas.dataset.vectorSampling='regular-volume-with-symmetric-source-refinement';
  function challengeControls(active){
   container.classList.toggle('field-challenge-active',active);$('#field-challenge-start').hidden=active;$('.field-challenge-task').hidden=!active;
   container.querySelectorAll('[data-preset],[data-sign],#q1,#q2,#field-auto-btn,#single-source,#reset-sources').forEach(el=>el.disabled=active);
-  $('.scene-label strong').textContent=active?'拖动黄点 P':'拖动黄点 P，看这里的受力';surface.visible=!active;
+  $('.scene-label strong').textContent=active?'拖动黄点 P':'双电荷的空间电场';surface.visible=!active;
  }
  function beginChallenge(id='force-direction'){
   if(!challengeSnapshot)challengeSnapshot={sources:structuredClone(sources),sign,showProbe,showField,viewMode,values:Object.fromEntries(['q1','q2','probe-x','probe-y','probe-z'].map(k=>[k,$('#'+k).value])),preset:container.querySelector('[data-preset].active')?.dataset.preset};
@@ -50,7 +54,7 @@ export function mountField(container){
  }
  function drawChallengeTarget(p){
   view.clearLayer('challenge-target');challengeRing=null;if(!challenge)return;
-  const color='#83e8c1',layer='challenge-target';
+  const color='#357857',layer='challenge-target';
   if(challenge.kind==='direction'){
    // Four open faces make a hollow +y arrow: its direction remains visible
    // when the camera turns, while the gold force arrow stays visually separate.
@@ -86,16 +90,16 @@ export function mountField(container){
  function drawProbe(){
   updatePlane();view.clearLayer('probe');view.clearLayer('guides');const p=probe(),parts=sources.map(s=>fieldAt(p,[s]).E),E=fieldAt(p,sources).E,m=norm(E),scale=1.65/Math.max(m,...parts.map(norm),1);
   view.layer('probe').visible=showProbe;view.layer('guides').visible=showProbe;
-  const marker=new THREE.Mesh(new THREE.SphereGeometry(.12,24,16),new THREE.MeshBasicMaterial({color:'#f2cb73'}));marker.position.set(...p);marker.userData={pickable:true,probe:true};view.layer('probe').add(marker);view.label(sign<0?'P · −e':'P · +e',[p[0]-.18,p[1]+.34,p[2]],'#f2cb73','probe',.30);
+  const marker=new THREE.Mesh(new THREE.SphereGeometry(.12,24,16),new THREE.MeshStandardMaterial({color:'#b58b2c',roughness:.45}));marker.position.set(...p);marker.userData={pickable:true,probe:true};view.layer('probe').add(marker);view.label(sign<0?'P · −e':'P · +e',[p[0]-.18,p[1]+.34,p[2]],'#936d1c','probe',.30);
   const hitArea=new THREE.Mesh(new THREE.SphereGeometry(.25,12,8),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));hitArea.position.set(...p);hitArea.userData={probe:true};view.layer('probe').add(hitArea);
-  const ring=new THREE.Mesh(new THREE.RingGeometry(.19,.21,48),new THREE.MeshBasicMaterial({color:'#f2cb73',transparent:true,opacity:.75,side:THREE.DoubleSide,depthTest:false}));ring.position.set(...p);ring.quaternion.copy(view.camera.quaternion);view.layer('probe').add(ring);
+  const ring=new THREE.Mesh(new THREE.RingGeometry(.19,.21,48),new THREE.MeshBasicMaterial({color:'#b08424',transparent:true,opacity:.75,side:THREE.DoubleSide,depthTest:false}));ring.position.set(...p);ring.quaternion.copy(view.camera.quaternion);view.layer('probe').add(ring);
   if(showProbe){
-   if($('#source-guides').checked)sources.filter(s=>Math.abs(s.Q)>1e-8).forEach((s,i)=>view.dashedLine([s.pos,p],i?'#6db2e4':'#eb9b85','guides',.7));
-   parts.forEach((e,i)=>view.arrow(p,e,i?'#80bfff':'#ffa58d',norm(e)*scale,'probe'));
+   if($('#source-guides').checked)sources.filter(s=>Math.abs(s.Q)>1e-8).forEach((s,i)=>view.dashedLine([s.pos,p],i?'#61849c':'#c47865','guides',.7));
+   parts.forEach((e,i)=>view.arrow(p,e,i?'#477c9b':'#bd6552',norm(e)*scale,'probe'));
    const tip1=p.map((v,i)=>v+parts[0][i]*scale),tip2=p.map((v,i)=>v+parts[1][i]*scale),tip=p.map((v,i)=>v+E[i]*scale);
-   if(norm(parts[0])>1e-6&&norm(parts[1])>1e-6){view.dashedLine([tip1,tip],'#80bfff','probe',.45);view.dashedLine([tip2,tip],'#ffa58d','probe',.45);}
-   view.arrow(p,E,'#67dce5',m*scale,'probe');
-   if(m>1e-6){view.label('电场 E',tip.map((v,i)=>v+(i===1?.19:0)),'#67dce5','probe',.28);if(sign<0){const f=E.map(v=>-v);view.arrow(p,f,'#f2cb73',m*scale,'probe');view.label('电子受力 F',p.map((v,i)=>v+f[i]*scale+(i===1?.19:0)),'#f2cb73','probe',.28);}}
+   if(norm(parts[0])>1e-6&&norm(parts[1])>1e-6){view.dashedLine([tip1,tip],'#477c9b','probe',.45);view.dashedLine([tip2,tip],'#bd6552','probe',.45);}
+   view.arrow(p,E,'#176f77',m*scale,'probe');
+   if(m>1e-6){view.label('合场 E',tip.map((v,i)=>v+(i===1?.21:0)),'#176f77','probe',.28);const f=E.map(v=>sign*v),forceLength=m*scale*(sign>0?.68:1);view.arrow(p,f,'#ad811d',forceLength,'probe');view.label(sign<0?'电子受力 F':'F · +eE',p.map((v,i)=>v+f[i]*scale*(sign>0?.68:1)+(i===1?-.24:0)),'#936d1c','probe',.27);}
   }
   $('#field-sign-reason').textContent=sign<0?'电子带负电，受力与电场反向':'正试探电荷：受力与电场同向';$('.field-direction-key .electron').textContent=sign<0?'金色 F · 电子受力':'F = qE · 与电场同向';
   $('#e1-value').textContent=norm(parts[0]).toFixed(1)+' V/m';$('#e2-value').textContent=norm(parts[1]).toFixed(1)+' V/m';$('#field-value').textContent=m.toFixed(1)+' V/m';$('#force-value').textContent=(m*1.602176634e-4).toFixed(3)+' fN';$('#force-note').textContent=sign<0?'电子：力与 E 反向':'正试探电荷：力与 E 同向';

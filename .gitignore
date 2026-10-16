@@ -6,6 +6,8 @@ qa-*.cjs
 qa-*.py
 qa-*.html
 qa-*.json
+qa-*.ttf
+*.tgz
 media/podcast-production/
 media/*.wav
 podcast-manifest.json
@@ -21,3 +23,6 @@ blender/*.blend1
 
 !blender/*-preview.png
 blender/*-build.log
+
+qa-*
+.local-*

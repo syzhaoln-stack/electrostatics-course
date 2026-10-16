@@ -6,8 +6,8 @@ import {POTENTIAL_LEVELS,equipotentialProfile} from './potential-surfaces.js';
 // with one fixed scale; no field-line density or animation speed encodes charge.
 export function drawPotentialTotalField(scene,sources){
   const samples=[];
-  for(const z of [-1.4,0,1.4])for(let iy=-7;iy<=7;iy++)for(let ix=-7;ix<=7;ix++){
-    const p=[ix*.61,iy*.61,z];
+  for(const z of [-1.4,0,1.4])for(let iy=-5;iy<=5;iy++)for(let ix=-5;ix<=5;ix++){
+    const p=[ix*.84,iy*.84,z];
     if(sources.some(s=>Math.hypot(...p.map((x,i)=>x-s.pos[i]))<.43))continue;
     const E=fieldAt(p,sources).E,magnitude=Math.hypot(...E);if(magnitude<1e-8)continue;
     samples.push({p,E,magnitude});
@@ -20,7 +20,7 @@ export function drawPotentialTotalField(scene,sources){
     direction.set(...s.E).normalize();const strength=s.magnitude/(s.magnitude+500),length=.13+.30*strength;
     pose.quaternion.setFromUnitVectors(axis,direction);pose.position.set(...s.p).addScaledVector(direction,(length-.09)/2);pose.scale.set(1,length-.09,1);pose.updateMatrix();shafts.setMatrixAt(i,pose.matrix);
     pose.position.set(...s.p).addScaledVector(direction,length-.045);pose.scale.setScalar(.66+.34*strength);pose.updateMatrix();heads.setMatrixAt(i,pose.matrix);
-    color.set('#67c7e5').multiplyScalar((s.p[2]===0?.58:.30)+.26*strength);shafts.setColorAt(i,color);heads.setColorAt(i,color);
+    color.set('#377b8b').multiplyScalar((s.p[2]===0?.58:.30)+.26*strength);shafts.setColorAt(i,color);heads.setColorAt(i,color);
   });
   shafts.instanceMatrix.needsUpdate=true;heads.instanceMatrix.needsUpdate=true;shafts.frustumCulled=heads.frustumCulled=false;g.add(shafts,heads);
   return samples.length;
@@ -41,5 +41,5 @@ export function drawEquipotentialLayers(scene){
   }else{for(const x of [-5,0,5])seg([x,0,-5],[x,0,5]);for(const z of [-5,0,5])seg([-5,0,z],[5,0,z]);}
   const wireGeometry=new THREE.BufferGeometry();wireGeometry.setAttribute('position',new THREE.Float32BufferAttribute(wirePositions,3));const wire=new THREE.LineSegments(wireGeometry,new THREE.LineBasicMaterial({color,transparent:true,opacity:.16,depthWrite:false}));g.add(wire);layers.push({value,mesh,wire});
  }
- return {select(value,progress=0,glow=0){for(const layer of layers){const active=layer.value===value;layer.mesh.userData.pickable=active;layer.mesh.material.opacity=active?.016+.060*progress+.14*glow:.004;layer.wire.material.opacity=active?.12+.18*progress+.24*glow:.055;layer.mesh.material.color.set(active?'#7dd8d0':layer.value>0?'#bf927b':layer.value<0?'#5899bd':'#66aba9');layer.wire.material.color.set(active?'#a1f0df':layer.value>0?'#bf927b':layer.value<0?'#5899bd':'#66aba9');layer.mesh.renderOrder=active?2:0;}},count:layers.length};
+ return {select(value,progress=0,glow=0){for(const layer of layers){const active=layer.value===value;layer.mesh.userData.pickable=active;layer.mesh.material.opacity=active?.045+.055*progress+.12*glow:.005;layer.wire.material.opacity=active?.32+.15*progress+.20*glow:.085;layer.mesh.material.color.set(active?'#689c8e':layer.value>0?'#bf927b':layer.value<0?'#5899bd':'#66aba9');layer.wire.material.color.set(active?'#3f7a6b':layer.value>0?'#bf927b':layer.value<0?'#5899bd':'#66aba9');layer.mesh.renderOrder=active?2:0;}},count:layers.length};
 }

@@ -1,3 +1,4 @@
+import {applyAcademicScene} from './academic-scene.js';
 import * as THREE from 'three';
 import { FieldScene } from './scene.js';
 import { CONSTANTS, fieldAt, gaussianFlux } from './physics.js';
@@ -103,7 +104,7 @@ export function mountFlux(container) {
   explanation.append(extra);
   const $ = selector => container.querySelector(selector);
   const goalPanel=document.createElement('div');goalPanel.className='flux-goal';goalPanel.innerHTML=`<button id="flux-goal-start">◎ 让它一进一出</button><div class="flux-goal-task" hidden><strong>让同一条场线一进一出</strong><div class="flux-goal-feedback"><i aria-hidden="true"></i><span id="flux-goal-status" role="status" aria-live="polite">拖动红球</span><span id="flux-goal-check" hidden>✓</span></div><div class="flux-goal-actions"><button id="flux-goal-again" hidden>再试一次</button><button id="flux-goal-exit">自由探索</button></div></div>`;$('.stage-wrap').append(goalPanel);
-  const scene = new FieldScene($('.stage'), { extent: 6 });
+  const scene = new FieldScene($('.stage'), { extent: 6 });applyAcademicScene(scene);
   // A narrow screen needs a wider field of view so the external source stays visible.
   const fitViewport = () => { scene.camera.fov = $('.stage').clientWidth < 600 ? 52 : 38; scene.camera.updateProjectionMatrix(); };
   const viewportObserver = new ResizeObserver(fitViewport); viewportObserver.observe($('.stage')); fitViewport();
@@ -171,14 +172,14 @@ export function mountFlux(container) {
     const corners = [point(selected.u - 1 / NU, selected.phi - Math.PI / NP), point(selected.u + 1 / NU, selected.phi - Math.PI / NP), point(selected.u + 1 / NU, selected.phi + Math.PI / NP), point(selected.u - 1 / NU, selected.phi + Math.PI / NP)];
     const border = scene.line([...corners, corners[0]], '#d59a16', 'selected'); border.material.depthTest = false; border.material.transparent = true; border.renderOrder = 16;
     const marker = new THREE.Mesh(new THREE.SphereGeometry(0.055, 12, 8), new THREE.MeshBasicMaterial({ color: '#e6ad28', depthTest: false, transparent: true })); marker.position.set(...patch.pos); marker.renderOrder = 18; scene.layer('selected').add(marker);
-    visibleArrow(patch.pos, patch.E, '#62e5e0', 1.0, 'selected'); visibleArrow(patch.pos, patch.normal, '#c4a1ff', 0.66, 'selected');
+    visibleArrow(patch.pos, patch.E, '#347e82', 1.0, 'selected'); visibleArrow(patch.pos, patch.normal, '#7b6493', 0.66, 'selected');
     const eLength = norm(patch.E) || 1;
     const eEnd = patch.pos.map((value, index) => value + patch.E[index] / eLength * 1.22);
     const nEnd = patch.pos.map((value, index) => value + patch.normal[index] * 0.93);
     // Offset labels when E and n happen to be parallel.
     eEnd[1] += 0.2; nEnd[1] -= 0.2;
-    scene.label('E', eEnd, '#62e5e0', 'selected', 0.6).renderOrder = 25;
-    scene.label('n', nEnd, '#c4a1ff', 'selected', 0.55).renderOrder = 25;
+    scene.label('E', eEnd, '#347e82', 'selected', 0.6).renderOrder = 25;
+    scene.label('n', nEnd, '#7b6493', 'selected', 0.55).renderOrder = 25;
     const sign = patch.En > 0.01 ? 'out' : patch.En < -0.01 ? 'in' : 'zero';
     $('#flux-patch-direction').className = `flux-${sign}`;
     $('#flux-patch-direction').textContent = sign === 'out' ? '向外穿过 → 记正贡献' : sign === 'in' ? '向内穿过 → 记负贡献' : '沿着这一片 → 贡献为零';
@@ -194,7 +195,7 @@ export function mountFlux(container) {
     for (let j = 0; j < NU; j++) for (let i = 0; i < NP; i++) {
       const u0 = -1 + j * 2 / NU, u1 = -1 + (j + 1) * 2 / NU, phi0 = i * 2 * Math.PI / NP, phi1 = (i + 1) * 2 * Math.PI / NP;
       const patch = patchAt((u0 + u1) / 2, (phi0 + phi1) / 2); patchCenters.push({ u: patch.u, phi: patch.phi });
-      const color = new THREE.Color('#17394e').lerp(new THREE.Color(patch.En >= 0 ? '#f2ad5e' : '#65c3f3'), Math.pow(Math.min(1, Math.abs(patch.En) / 500), 0.45));
+      const color = new THREE.Color('#d8e1db').lerp(new THREE.Color(patch.En >= 0 ? '#c8a25f' : '#699db4'), Math.pow(Math.min(1, Math.abs(patch.En) / 500), 0.45));
       const corners = [point(u0, phi0), point(u1, phi0), point(u1, phi1), point(u0, phi1)];
       for (const index of [0, 1, 2, 0, 2, 3]) { vertices.push(...corners[index]); colors.push(color.r, color.g, color.b); }
     }
@@ -232,9 +233,9 @@ export function mountFlux(container) {
       }
       if (end <= start + 0.12) return;
       const along = distance => source.pos.map((value, axis) => value + direction[axis] * distance);
-      scene.line([along(start), along(end)], state.sign>0?'#f0ac71':'#78cbef', 'field-flow', 0.11);
+      scene.line([along(start), along(end)], state.sign>0?'#a87a44':'#557f9d', 'field-flow', 0.18);
       for (let markerIndex = 0; markerIndex < 2; markerIndex++) {
-        const glyph = new THREE.Mesh(new THREE.ConeGeometry(0.043, 0.14, 5), new THREE.MeshBasicMaterial({ color: '#ffd094', transparent: true, opacity: 0.23, depthWrite: false }));
+        const glyph = new THREE.Mesh(new THREE.ConeGeometry(0.043, 0.14, 5), new THREE.MeshBasicMaterial({ color: '#ac8249', transparent: true, opacity: 0.48, depthWrite: false }));
         glyph.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(...direction.map(v=>v*state.sign)));
         const offset = (index * 0.173 + markerIndex * 0.5) % 1;
         glyph.position.set(...along(start + offset * (end - start))); scene.layer('field-glyphs').add(glyph);
