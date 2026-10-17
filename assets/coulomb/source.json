@@ -5,5 +5,39 @@
   "french_scan": "https://webusers.imj-prg.fr/~david.aubin/cours/Textes/Coulomb.pdf",
   "original": "Coulomb, First Memoir, memoir year 1785, printed 1788, pp.569–577, Plate XIII",
   "images": "Original public-domain 18th-century plate; extracted from supplied PDF. French scan checked for cosinus on p.576. English page facsimiles provided alongside the requested translation.",
-  "chinese": "本教材中文译文；依据所附英译本，关键数值与术语对校法文原版。所有现代说明另作标注。"
+  "chinese": "本教材中文译文；依据所附英译本，关键数值与术语对校法文原版。所有现代说明另作标注。",
+  "portrait": {
+    "artist": "Louis Hierle, after Hippolyte Lecomte",
+    "date": 1894,
+    "collection": "Palace of Versailles, MV 5332 / RF 841",
+    "catalogue": "https://pop.culture.gouv.fr/notice/joconde/000PE011079",
+    "image_source": "https://commons.wikimedia.org/wiki/File:Charles_de_Coulomb.png",
+    "file_url": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Charles_de_Coulomb.png",
+    "licence": "Public domain, as marked on the Commons file description",
+    "sha256": "e66f0c7a31fc38f0d339bf11df723a3917b0a18a41dd6dad0e3de46a0b67bac0",
+    "note": "Posthumous portrait/copy; not an eyewitness depiction of the 1785 experiment."
+  },
+  "materials_note": "Original text specifies the main instrument materials. Surface finish, brass appearance, workbench and lighting are an interpretive period setting. Paper scale, glass vessel, silver wire, shellac and pith spheres are represented distinctly.",
+  "stamp": {
+    "file": "coulomb-stamp-1961.jpg",
+    "source": "Unaltered clean scan from Timbres de France; replaces user-provided Baidu-watermarked reference. No public-domain assertion.",
+    "sha256": "33e1bfbfd49c0e22c6e5ffe782a83e0adad808f669a5d306775fa9b60aea287f",
+    "issued": "1961-05-23",
+    "designer": "Charles Mazelin",
+    "engraver": "Jacques Combet",
+    "catalogue": "https://www.timbres-de-france.com/collection/pop.php?ligne=1394",
+    "depiction": "Coulomb portrait and electric torsion balance; educational numbered overlays are separate HTML elements, not modifications to the supplied image",
+    "image_url": "https://www.timbres-de-france.com/image/image_1189_1367/1297.jpg",
+    "official_notice": "https://www.wikitimbres.fr/public/stamps/pdf/POSTE-1961-18.pdf"
+  },
+  "biography_sources": [
+    "https://www.academie-sciences.fr/pdf/dossiers/Coulomb/Coulomb_pubd1.htm",
+    "https://ampere-archives.fr/histoire-electricite/parcours-historique/lois/coulomb/frottement",
+    "https://www.musee-du-genie-angers.fr/fpdb/2018522-7-charles-augustincoulomb.pdf"
+  ],
+  "commemoration_sources": [
+    "https://www.toureiffel.paris/fr/le-monument/tour-eiffel-et-sciences",
+    "https://www.bipm.org/en/si-base-units/ampere"
+  ],
+  "calibration": "Modern fixed-arm tangential-force illustration; same material and length, kappa scales with wire diameter^4. Teaching assumptions: 1 degree readable step and 60 degree display window. Neither is a claimed historical detection limit or elastic failure angle. 2.5 degree zero offset is an illustration of the memoir's 2–3 degree discussion."
 }

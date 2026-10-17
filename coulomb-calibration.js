@@ -1,0 +1,13 @@
+import {calibrationResponse} from './coulomb-physics.js';
+export function mountCalibration(host){
+ const choices=[{d:.75,title:'更细的丝'},{d:1,title:'参考细丝'},{d:1.5,title:'更粗的丝'}];
+ const tick=(a,r)=>[130+r*Math.sin(a*Math.PI/180),142-r*Math.cos(a*Math.PI/180)];
+ const ticks=Array.from({length:61},(_,a)=>{const p=tick(a,a%5?98:94),q=tick(a,104);return `<path d="M${p}L${q}" stroke="#8b8e7b" stroke-width="${a%10?1:1.5}"/>`;}).join('');
+ const labels=[0,20,40,60].map(a=>{const p=tick(a,119);return `<text x="${p[0]}" y="${p[1]+4}" text-anchor="middle" fill="#697365" font-size="11">${a}°</text>`;}).join('');
+ host.innerHTML=choices.map(({d,title})=>`<article class="calibration-card" data-diameter="${d}"><h3>${title}<small>相对丝径 ${d} 倍</small></h3><svg viewBox="0 0 260 180" role="img" aria-label="${title}在相同力下的偏转"><path d="M130 142V38" stroke="#c9caba" stroke-dasharray="3 4"/>${ticks}${labels}<g class="calibration-needle"><path d="M130 147V47" stroke="#8f5236" stroke-width="3"/><path d="M126 53L130 43L134 53" fill="#8f5236"/></g><circle cx="130" cy="142" r="6" fill="#8f5236"/><path d="M32 142V69" stroke="#727b69" stroke-width="${d*2}"/><text x="32" y="162" text-anchor="middle" font-size="10" fill="#697365">丝径示意</text></svg><p class="calibration-angle"></p><p class="calibration-status"></p><dl><div><dt>1° 刻度对应</dt><dd class="calibration-step"></dd></div><div><dt>60° 窗口上限</dt><dd class="calibration-range"></dd></div></dl></article>`).join('');
+ function update(force){
+  for(const {d} of choices){const s=calibrationResponse(force,{diameter:d}),card=host.querySelector(`[data-diameter="${d}"]`);card.querySelector('.calibration-needle').style.transform=`rotate(${Math.min(s.angle,60)}deg)`;card.querySelector('.calibration-angle').textContent=s.overWindow?'＞60°':`${s.angle.toFixed(2)}°`;card.querySelector('.calibration-status').textContent=s.overWindow?'超出本例读数窗口':s.belowStep?'偏转小于一个刻度':'落在本例可读窗口内';card.classList.toggle('outside-window',s.overWindow||s.belowStep);card.querySelector('.calibration-step').textContent=(s.forcePerStep*1e9).toFixed(2)+' nN';card.querySelector('.calibration-range').textContent=(s.windowForce*1e9).toFixed(1)+' nN';}
+  host.dataset.force=String(force);const baseline=calibrationResponse(force);document.querySelector('#calibration-zero').textContent=`参考丝中，若零点偏差为 2.5°，相当于约 ${(baseline.zeroForce*1e9).toFixed(1)} nN 的力偏差。即使能读到 1°，也不能因此声称有 1° 的准确度。`;
+ }
+ document.querySelectorAll('[data-calibration-force]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-calibration-force]').forEach(x=>{x.classList.toggle('selected',x===b);x.setAttribute('aria-pressed',String(x===b));});update(Number(b.dataset.calibrationForce)*1e-9);});update(20e-9);
+}

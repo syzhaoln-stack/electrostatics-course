@@ -1,7 +1,9 @@
 import {RECORDS,reading,equilibrium,historicalPoints,fittedPower} from './coulomb-physics.js';
 import {MEMOIR,TRANSLATION_NOTES} from './coulomb-text.js';
 import {mountBalance} from './coulomb-scene.js';
+import {mountCalibration} from './coulomb-calibration.js';
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+mountCalibration($('#calibration'));
 const state={beta:0,alpha:3.18,power:2,charged:false,history:false,chargeFraction:1,contact:false};
 let balance;
 function render(){
@@ -16,7 +18,9 @@ function model(beta){state.beta=Math.round(beta);state.charged=true;state.histor
 function trial(i){const r=RECORDS[i];Object.assign(state,r,{charged:true,history:true,chargeFraction:1,contact:false});$('#observation').textContent=[`原文第一次：两球转开到 36°。上端没有转动，所以银丝总扭转也是 36°。`,`原文第二次：上端反向转 126°，两球只相隔 18°。银丝总扭转 144°，是第一次的四倍。`,`原文第三次：上端反向转 567°，两球相隔 8.5°。总扭转相加为 575.5°，原文记为 576°。`][i];$('#error-note').textContent='历史按钮显示原文读数；已恢复充电条件。打开漏电示例可对照现代模型的预测。';render();}
 $('#charge').onclick=()=>trial(0);$$('[data-trial]').forEach(b=>b.onclick=()=>trial(+b.dataset.trial));$('#reset').onclick=()=>{Object.assign(state,{beta:0,alpha:3.18,charged:false,history:false,chargeFraction:1,contact:false});$('#observation').textContent='先给两球充电。轻杆能自由旋转，银丝会阻止它继续转开。';render();};$('#twist').oninput=e=>model(+e.target.value);
 let drag;$('#dial').onpointerdown=e=>{drag={x:e.clientX,beta:state.beta};e.currentTarget.setPointerCapture(e.pointerId);};$('#dial').onpointermove=e=>{if(drag)model(Math.max(0,Math.min(720,drag.beta+(e.clientX-drag.x)*3)));};$('#dial').onpointerup=$('#dial').onpointercancel=()=>{drag=null;};$('#dial').onkeydown=e=>{const d={ArrowRight:5,ArrowUp:5,ArrowLeft:-5,ArrowDown:-5}[e.key];if(d){e.preventDefault();model(Math.max(0,Math.min(720,state.beta+d)));}if(e.key==='Home'||e.key==='End'){e.preventDefault();model(e.key==='Home'?0:720);}};
-$$('[data-view]').forEach(b=>b.onclick=()=>{balance?.view(b.dataset.view);$$('[data-view]').forEach(x=>x.classList.toggle('selected',x===b));$('.scene-caption').innerHTML=b.dataset.view==='top'?'俯视 · 上盖与立管暂时隐藏<br>拖动画面仍可旋转':'拖动画面旋转 · 滚轮缩放<br>金色球固定，珊瑚色球随轻杆转动';});
+$$('[data-view]').forEach(b=>b.onclick=()=>{balance?.view(b.dataset.view);$$('[data-view]').forEach(x=>x.classList.toggle('selected',x===b));$('.scene-caption').innerHTML=b.dataset.view==='top'?'俯视 · 玻璃外壳和立管暂时隐藏<br>拖动画面仍可旋转':b.dataset.view==='knob'?'左右拖动三维黄铜旋钮，改变上端转角<br>纸刻度与金属刻度对应不同的读数位置':'拖动画面旋转 · 滚轮缩放<br>金色标签是固定球，红色标签是活动球';});
+$('#annotations').onclick=e=>{const enabled=e.currentTarget.getAttribute('aria-pressed')!=='true';e.currentTarget.setAttribute('aria-pressed',String(enabled));e.currentTarget.textContent=enabled?'受力标记：开':'受力标记：关';balance?.annotations(enabled);};
+$$('[data-stamp-view]').forEach(b=>b.onclick=()=>{$(`[data-view="${b.dataset.stampView}"]`).click();$('.lab').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});$(`[data-view="${b.dataset.stampView}"]`).focus({preventScroll:true});});
 $('#leak').onclick=()=>{state.chargeFraction=.9;model(state.beta);$('#error-note').textContent='两球各保留 90% 的电量，电力乘以 0.9 × 0.9 = 0.81。旋钮不变，小球平衡位置向固定球靠近。';};$('#restore').onclick=()=>{state.chargeFraction=1;model(state.beta);$('#error-note').textContent='已恢复模型的充电条件。'};
 function chart(){const exact=$('#geometry').checked,points=historicalPoints(exact),w=480,h=300,pad={l:50,r:24,t:25,b:45},x=d=>pad.l+Math.log(d/.2)/Math.log(5)*(w-pad.l-pad.r),y=f=>h-pad.b-Math.log(f)/Math.log(140)*(h-pad.t-pad.b);
  let svg=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="历史测量点与距离反比假设比较图"><rect width="480" height="300" fill="#f0eee6" rx="6"/>`;

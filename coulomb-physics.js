@@ -5,6 +5,13 @@ export const R=.108; // 4 historical pouces; rounded conversion supplied with th
 export const GRAIN_KG=.000053;
 export const G=9.80665; // modern standard gravity, for an illustrative SI conversion only.
 export const KAPPA=(GRAIN_KG*G/340)*R/(2*Math.PI);
+// Modern calibration illustration: a known tangential force at fixed arm R.
+// The 1° readout step and 60° window are teaching assumptions, not historical limits.
+export function calibrationResponse(force,{diameter=1,stepDegrees=1,windowDegrees=60,zeroDegrees=2.5}={}){
+ if(!Number.isFinite(force)||force<0||!Number.isFinite(diameter)||diameter<=0||!(stepDegrees>0&&windowDegrees>0&&zeroDegrees>=0))throw Error('Invalid calibration inputs');
+ const kappa=KAPPA*diameter**4,perDegree=kappa*DEG/R,angle=force/perDegree;
+ return {kappa,angle,forcePerStep:perDegree*stepDegrees,windowForce:perDegree*windowDegrees,zeroForce:perDegree*zeroDegrees,overWindow:angle>windowDegrees,belowStep:angle<stepDegrees};
+}
 export const RECORDS=Object.freeze([
  {beta:0,alpha:36,reportedTwist:36},
  {beta:126,alpha:18,reportedTwist:144},

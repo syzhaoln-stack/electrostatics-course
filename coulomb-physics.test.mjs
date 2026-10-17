@@ -1,5 +1,16 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {RECORDS,R,DEG,KAPPA,distance,lever,reading,equilibrium,residual,historicalPoints,fittedPower,electricalForce} from './coulomb-physics.js';
+import {calibrationResponse} from './coulomb-physics.js';
+test('calibration distinguishes force resolution, zero uncertainty and a chosen reading window',()=>{
+ const a=calibrationResponse(20e-9),b=calibrationResponse(20e-9,{diameter:2});
+ assert.ok(Math.abs(a.angle*a.kappa*DEG-20e-9*R)<1e-22);
+ assert.equal(b.forcePerStep/a.forcePerStep,16);assert.equal(a.angle/b.angle,16);
+ assert.equal(b.windowForce/a.windowForce,16);assert.ok(Math.abs(a.zeroForce/a.forcePerStep-2.5)<1e-12);
+ assert.equal(calibrationResponse(200e-9,{diameter:.75}).overWindow,true);
+ assert.equal(calibrationResponse(200e-9).overWindow,false);
+ assert.equal(calibrationResponse(20e-9,{diameter:1.5}).belowStep,true);
+ assert.equal(calibrationResponse(0).angle,0);assert.throws(()=>calibrationResponse(-1));
+});
 test('historical measurements stay distinct from the assumed-law simulation',()=>{
  assert.deepEqual(RECORDS.map(r=>[r.beta,r.alpha]),[[0,36],[126,18],[567,8.5]]);
  assert.equal(RECORDS[2].beta+RECORDS[2].alpha,575.5);assert.equal(RECORDS[2].reportedTwist,576);
