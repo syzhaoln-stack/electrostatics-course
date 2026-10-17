@@ -1,8 +1,8 @@
 {
   "lesson": "flux",
-  "edition": "v3-1",
+  "edition": "v3-3",
   "state": "rendered_muxed_decode_verified",
-  "duration_seconds": 42.766,
+  "duration_seconds": 89.146,
   "video": {
     "codec": "h264",
     "width": 1280,
@@ -23,116 +23,102 @@
       "xia": "爽快思思",
       "che": "清爽男大"
     },
-    "speech_rate_request": 40,
+    "speech_rate_request": {
+      "che": -8,
+      "xia": 5
+    },
     "pitch_rate": 0,
-    "inter_turn_silence_seconds": 0.1,
-    "character_proxy_per_second": 5.757,
+    "inter_turn_silence_seconds": 0.3,
+    "character_proxy_per_second": 3.92,
     "pacing_note": "Measured character proxy per processed whole phrase, not phoneme alignment or listening review.",
     "local_tempo_by_turn": [
-      1.08454,
-      1.094508,
-      1.112875,
-      1.129513,
-      1.18,
-      1.124425,
-      1.18,
+      1.153702,
+      1.14,
+      1.233642,
+      1.331532,
+      1.252909,
+      1.237882,
+      1.334183,
       1.0,
-      1.095708,
+      1.240565,
       1.0,
-      1.0
+      1.191
     ],
-    "original_pcm_peak_dbfs": -0.37870832523945774,
-    "original_pcm_rms_dbfs": -27.41290275764921,
+    "original_pcm_peak_dbfs": -0.25772531704709145,
+    "original_pcm_rms_dbfs": -29.6017023047039,
     "original_full_scale_samples": 0,
-    "final_aac_integrated_lufs": -19.07,
-    "final_aac_true_peak_dbtp": -1.89,
-    "final_aac_loudness_range_lu": 4.8
+    "final_aac_integrated_lufs": -17.0,
+    "final_aac_true_peak_dbtp": -2.17,
+    "final_aac_loudness_range_lu": 4.5
   },
   "production": "Original 3D Manim animation and original two-student script",
   "render_engine_metadata": "Rendered with Manim Community v0.19.0",
-  "sha256": "60c530a9388a4d9ef153e807cb556e48fae2a8d78b263e68bb52ecc848608324",
-  "bytes": 1948987,
+  "sha256": "ecb925d87ce36a55dd885a8500fb22ee61f7fd88cec6577db21ea34f09ddea7d",
+  "bytes": 3592548,
   "dialogue_turns": 11,
   "all_captions_within_video": true,
   "full_final_mp4_decode": true,
-  "source_audio_sha256": "22500b91f149c465d4da006c18a327009e8349e3d5dba1d168c72f0dcae9c840",
-  "source_timeline_sha256": "54396f7f9ff6d25439f36bb84b1f12703a604b780bfda7ff7d314442b7a9a9e8",
+  "visual_cue_count": 8,
+  "visual_cue_timing": "Provider word metadata adjusted for trim/tempo; actual objects highlighted in Manim. Not independently forced-aligned.",
+  "source_audio_sha256": "fe22d378a006fdd1e244de15356821268270611abe992bde59a0f06b9175f823",
+  "source_timeline_sha256": "52747dcb20772c8a8fff5ab3412684dd7c7c657fe71f0f4b03cd6ef6cafae533",
   "final_aac_turn_alignment": [
     {
       "index": 0,
-      "correlation": 0.99986,
+      "correlation": 0.99973,
       "offset_ms": 0
     },
     {
       "index": 1,
-      "correlation": 0.99959,
+      "correlation": 0.96757,
       "offset_ms": 0
     },
     {
       "index": 2,
-      "correlation": 0.99592,
+      "correlation": 0.99995,
       "offset_ms": 0
     },
     {
       "index": 3,
-      "correlation": 0.99769,
+      "correlation": 0.98783,
       "offset_ms": 0
     },
     {
       "index": 4,
-      "correlation": 0.9981,
+      "correlation": 0.99981,
       "offset_ms": 0
     },
     {
       "index": 5,
-      "correlation": 0.99549,
+      "correlation": 0.9896,
       "offset_ms": 0
     },
     {
       "index": 6,
-      "correlation": 0.99879,
+      "correlation": 0.99971,
       "offset_ms": 0
     },
     {
       "index": 7,
-      "correlation": 0.99994,
+      "correlation": 0.99966,
       "offset_ms": 0
     },
     {
       "index": 8,
-      "correlation": 0.99991,
+      "correlation": 0.99996,
       "offset_ms": 0
     },
     {
       "index": 9,
-      "correlation": 0.99978,
+      "correlation": 0.99943,
       "offset_ms": 0
     },
     {
       "index": 10,
-      "correlation": 0.99967,
+      "correlation": 0.99772,
       "offset_ms": 0
     }
   ],
-  "visual_review": {
-    "method": "representative-frame visual inspection",
-    "seconds": [
-      3,
-      7,
-      28
-    ],
-    "checks": [
-      "brighter thicker field vectors",
-      "entry and exit markers visible",
-      "deformed surface and Gauss relation intact",
-      "opposite sources give zero enclosed net charge",
-      "no caption overflow or overlapping text"
-    ],
-    "revision_note": "Auxiliary vectors brightened at fixed physical directions and length ratios.",
-    "scene_review_frames": [
-      "production/qa-flux-bright-7.jpg",
-      "production/qa-flux-bright-28.jpg"
-    ]
-  },
+  "visual_review": "Representative encoded frame inspected: centered source, expanding Gaussian sphere and radius/area compensation; direction and sign captions retained.",
   "human_listening_review": false
 }

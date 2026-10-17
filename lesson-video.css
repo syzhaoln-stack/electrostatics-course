@@ -11,3 +11,21 @@
 @media(max-width:600px){.lesson-film-controls{gap:6px}.lesson-film-controls button{padding:7px;font-size:10px}.lesson-film-controls [data-film-play]{min-width:62px}.lesson-film-controls [data-film-mute]{font-size:0}.lesson-film-controls [data-film-mute]:before{content:'♫';font-size:14px}}
 .lesson-film-questions{display:flex;gap:7px;flex-wrap:wrap;margin:13px 0 3px;font:10px/1.6 "Microsoft YaHei",sans-serif}.lesson-film-questions button{color:#688579;background:transparent;border:0;border-bottom:1px solid #c7d7cb;border-radius:0;padding:6px 4px;cursor:pointer;box-shadow:none;font:inherit}.lesson-film-questions small{color:#a2b3a6;margin-right:5px}.lesson-film-questions button[aria-current=true]{color:#2d6859;border-color:#61997b}.lesson-film-questions .lesson-film-try{margin-left:auto;border:1px solid #b5cebd;border-radius:4px;padding:6px 9px;color:#356e58;background:#f0f5ec}.lesson-highlight{outline:2px solid #91bba7;outline-offset:3px;transition:outline-color .3s}
 @media(max-width:600px){.lesson-film-questions{gap:5px;font-size:9px}.lesson-film-questions .lesson-film-try{margin-left:0}.lesson-film-controls [data-film-rate]{padding-left:4px;padding-right:4px}.lesson-film-controls output{min-width:27px}}
+
+/* Desktop notebook remains beside the film, including in fullscreen. */
+.lesson-film-layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:0;background:#07111b;border:1px solid #243943}
+.lesson-film-layout .lesson-film-screen{border:0;align-self:center}.lesson-film-layout video{max-height:none}
+.lesson-film-notebook{padding:20px 18px;color:#d4e0e0;background:#0d1b24;border-left:1px solid #283c44;max-height:510px;overflow:auto;font:13px/1.75 system-ui,'Microsoft YaHei',sans-serif;scrollbar-color:#44646a #0d1b24}
+.lesson-film-notebook header{font-size:12px;letter-spacing:.07em;color:#8babad;padding-bottom:12px;border-bottom:1px solid #273c43}
+.lesson-film-notebook article{border-bottom:1px solid #273c43;padding:12px 0}.lesson-film-notebook article[hidden],.lesson-film-notebook p[hidden]{display:none}
+.lesson-film-notebook button{border:0;background:none;box-shadow:none;padding:0;color:#ccdadb;text-align:left;font:600 13px/1.7 inherit;cursor:pointer;display:flex;gap:10px;width:100%}
+.lesson-film-notebook button small{font:11px/2 system-ui;color:#749ba4}.lesson-film-notebook button[aria-current=true]{color:#8ee1dd}.lesson-film-notebook button:hover{color:#fff}.lesson-film-notebook button:focus-visible{outline:2px solid #8ee1dd;outline-offset:4px}
+.lesson-film-notebook p{font:12px/1.85 system-ui,'Microsoft YaHei',sans-serif;color:#a6b8bf;margin:9px 0 0 25px}.lesson-film-notebook .lesson-film-wait{margin:18px 0;color:#78949d}
+.lesson-film:fullscreen{padding:24px;margin:0;overflow:auto;background:#07111b;color:#d8e6e6}.lesson-film:fullscreen .lesson-film-layout{grid-template-columns:minmax(0,1fr) 330px}.lesson-film:fullscreen .lesson-film-layout video{max-height:73vh}.lesson-film:fullscreen .lesson-film-notebook{max-height:73vh}.lesson-film:fullscreen .lesson-film-current{color:#d8e6e6}
+@media(max-width:850px){.lesson-film-layout{grid-template-columns:minmax(0,1fr) 250px}.lesson-film-notebook{padding:14px 12px}}
+@media(max-width:650px){.lesson-film-layout{grid-template-columns:1fr}.lesson-film-notebook{max-height:260px;border-left:0;border-top:1px solid #283c44}}
+.lesson-film .lesson-film-controls button{color:#365d52;background:#eff5ef}.lesson-film .lesson-film-controls button:hover{background:#dbeae0}.lesson-film .lesson-film-controls [data-film-play]{background:#e3eee5;color:#244b40}
+.lesson-film .lesson-film-notebook button{font-family:system-ui,'Microsoft YaHei',sans-serif;font-size:13px;line-height:1.7;font-weight:600;background:transparent;border-radius:0;color:#ccdadb;box-shadow:none}.lesson-film .lesson-film-notebook button[aria-current=true]{color:#8ee1dd}.lesson-film .lesson-film-notebook button:hover{color:#fff}
+
+.lesson-film-notebook{position:relative;min-height:0;max-height:none;padding:0;overflow:hidden}.lesson-film-notebook-body{position:absolute;inset:0;overflow:auto;padding:18px;scrollbar-color:#44646a #0d1b24}
+@media(max-width:650px){.lesson-film-notebook{height:260px}.lesson-film-notebook-body{padding:14px}}

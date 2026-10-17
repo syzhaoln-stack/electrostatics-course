@@ -13,6 +13,9 @@ http.createServer((req,res)=>{
   const headers={'Content-Type':types[path.extname(file)]||'application/octet-stream','Cache-Control':'no-cache','Accept-Ranges':'bytes'};
   let start=0,end=stat.size-1,status=200;
   if(req.headers.range){const match=/^bytes=(\d*)-(\d*)$/.exec(req.headers.range);if(!match){res.writeHead(416,{'Content-Range':`bytes */${stat.size}`}).end();return}start=match[1]?Number(match[1]):Math.max(0,stat.size-Number(match[2]));end=match[1]&&match[2]?Math.min(Number(match[2]),end):end;if(start>end||start>=stat.size){res.writeHead(416,{'Content-Range':`bytes */${stat.size}`}).end();return}status=206;headers['Content-Range']=`bytes ${start}-${end}/${stat.size}`;}
-  headers['Content-Length']=end-start+1;res.writeHead(status,headers);if(req.method==='HEAD'){res.end();return}fs.createReadStream(file,{start,end}).pipe(res);
+  headers['Content-Length']=end-start+1;res.writeHead(status,headers);if(req.method==='HEAD'){res.end();return}
+  const stream=fs.createReadStream(file,{start,end});
+  // Release a paused/abandoned video range too, so Windows can install new media.
+  res.once('close',()=>stream.destroy());stream.once('error',()=>res.destroy());stream.pipe(res);
  });
 }).listen(port,'127.0.0.1',()=>console.log(`Local: http://127.0.0.1:${port}`));

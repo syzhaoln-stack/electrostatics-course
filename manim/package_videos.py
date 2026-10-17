@@ -107,17 +107,21 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     return file.relative_to(ROOT).as_posix()
 
 
-def package(lesson, version='v3-1'):
+def package(lesson, version='v3-3'):
     production = OUT / 'production'
     work = production / version / lesson
     module, scene = SCENES[lesson]
-    rendered = production / f'manim-render/videos/{module}/720p24' / f'{scene}.mp4'
+    render_dir = {'foundations':'manim-render','field':'manim-render-field','flux':'manim-render-flux'}[lesson]
+    rendered = production / version / f'{render_dir}/videos/{module}/720p24' / f'{scene}.mp4'
     audio = work / 'dialogue.wav'
     if not rendered.is_file() or not audio.is_file():
         raise RuntimeError(f'Missing rendered video or original audio for {lesson}')
     if rendered.stat().st_mtime < (work / 'timeline.json').stat().st_mtime:
         raise RuntimeError(f'{lesson}: rendered picture predates the current audio timeline; render the new scene first')
     timeline = json.loads((work / 'timeline.json').read_text(encoding='utf-8'))
+    cues = json.loads((work / 'visual-cues.json').read_text(encoding='utf-8'))
+    if not cues or any(c['start'] < timeline[c['turn']]['start'] or c['end'] > timeline[c['turn']]['end']+.7 for c in cues):
+        raise RuntimeError('Invalid visual cue timing')
     audio_manifest = json.loads((work / 'manifest.json').read_text(encoding='utf-8'))
     ass_file = write_subtitles(work, timeline)
     # Never destroy the currently published video while encoding or verifying.
@@ -139,7 +143,7 @@ def package(lesson, version='v3-1'):
     vs = next(s for s in streams if s['codec_type'] == 'video')
     aud = next(s for s in streams if s['codec_type'] == 'audio')
     duration = float(info['format']['duration'])
-    if not 25 <= duration <= 110:
+    if not 25 <= duration <= 180:
         raise RuntimeError(f'{lesson}: actual duration outside requested sample range: {duration}')
     if timeline[-1]['end'] >= duration or any(t['end'] <= t['start'] for t in timeline):
         raise RuntimeError('Invalid dialogue timeline')
@@ -187,6 +191,8 @@ def package(lesson, version='v3-1'):
         'render_engine_metadata': info.get('format', {}).get('tags', {}).get('comment', ''),
         'sha256': hashlib.sha256(video.read_bytes()).hexdigest(), 'bytes': video.stat().st_size,
         'dialogue_turns': len(timeline), 'all_captions_within_video': True, 'full_final_mp4_decode': True,
+        'visual_cue_count':len(cues),
+        'visual_cue_timing':'Provider word metadata adjusted for trim/tempo; actual objects highlighted in Manim. Not independently forced-aligned.',
         'source_audio_sha256': hashlib.sha256(audio.read_bytes()).hexdigest(),
         'source_timeline_sha256': hashlib.sha256((work / 'timeline.json').read_bytes()).hexdigest(),
         'final_aac_turn_alignment': alignment,
@@ -199,6 +205,7 @@ def package(lesson, version='v3-1'):
     for source, target in [(video, OUT / f'{lesson}.mp4'), (poster, OUT / f'{lesson}.poster.jpg'),
                            (work / 'timeline.json', OUT / f'{lesson}.timeline.json'),
                            (work / 'dialogue.vtt', OUT / f'{lesson}.vtt'),
+                           (work / 'visual-cues.json', OUT / f'{lesson}.cues.json'),
                            (manifest_path, OUT / f'{lesson}.manifest.json')]:
         staged = target.with_name(target.name+'.installing')
         staged.write_bytes(source.read_bytes())
@@ -210,7 +217,7 @@ def package(lesson, version='v3-1'):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('lessons', nargs='*')
-    parser.add_argument('--version', default='v3-1')
+    parser.add_argument('--version', default='v3-3')
     args = parser.parse_args()
     for name in (args.lessons or list(SCENES)):
         package(name, args.version)

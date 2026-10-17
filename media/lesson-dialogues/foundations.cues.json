@@ -1,0 +1,121 @@
+[
+  {
+    "turn": 1,
+    "phrase": "源电荷",
+    "target": "source-Q",
+    "start": 6.2471,
+    "end": 6.9471
+  },
+  {
+    "turn": 1,
+    "phrase": "试探电荷",
+    "target": "probe-q",
+    "start": 8.9671,
+    "end": 9.6871
+  },
+  {
+    "turn": 1,
+    "phrase": "金箭头",
+    "target": "force-F",
+    "start": 11.3671,
+    "end": 12.0671
+  },
+  {
+    "turn": 4,
+    "phrase": "金箭头",
+    "target": "force-F",
+    "start": 34.3745,
+    "end": 35.1431
+  },
+  {
+    "turn": 5,
+    "phrase": "两球连线",
+    "target": "source-probe-distance",
+    "start": 37.5045,
+    "end": 38.3521
+  },
+  {
+    "turn": 7,
+    "phrase": "加倍",
+    "target": "probe-q",
+    "start": 58.9755,
+    "end": 59.6755
+  },
+  {
+    "turn": 7,
+    "phrase": "力也加倍",
+    "target": "force-F",
+    "start": 59.9496,
+    "end": 60.6496
+  },
+  {
+    "turn": 9,
+    "phrase": "电场强度",
+    "target": "field-E",
+    "start": 77.5927,
+    "end": 78.3527
+  },
+  {
+    "turn": 10,
+    "phrase": "每个位置",
+    "target": "field-map",
+    "start": 84.3949,
+    "end": 85.0949
+  },
+  {
+    "turn": 11,
+    "phrase": "场不变",
+    "target": "field-E",
+    "start": 98.0944,
+    "end": 98.7944
+  },
+  {
+    "turn": 11,
+    "phrase": "力会变",
+    "target": "force-F",
+    "start": 98.9464,
+    "end": 99.6464
+  },
+  {
+    "turn": 12,
+    "phrase": "电子",
+    "target": "probe-q",
+    "start": 100.3763,
+    "end": 101.0763
+  },
+  {
+    "turn": 12,
+    "phrase": "力箭头",
+    "target": "force-F",
+    "start": 103.7363,
+    "end": 104.4563
+  },
+  {
+    "turn": 12,
+    "phrase": "电场箭头",
+    "target": "field-E",
+    "start": 105.1363,
+    "end": 105.8363
+  },
+  {
+    "turn": 13,
+    "phrase": "源的电荷量",
+    "target": "source-Q",
+    "start": 108.9135,
+    "end": 109.8047
+  },
+  {
+    "turn": 13,
+    "phrase": "距离",
+    "target": "source-probe-distance",
+    "start": 110.6959,
+    "end": 111.3959
+  },
+  {
+    "turn": 13,
+    "phrase": "库仑常量",
+    "target": "coefficient-k",
+    "start": 112.4487,
+    "end": 113.1487
+  }
+]

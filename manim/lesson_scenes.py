@@ -10,6 +10,7 @@ import textwrap
 import numpy as np
 from manim import *
 from manim.animation.animation import prepare_animation
+from speech_cues import SpeechCues, phrase_window
 
 ROOT = Path(__file__).resolve().parent.parent
 MEDIA = ROOT / 'media' / 'lesson-dialogues'
@@ -45,6 +46,8 @@ def ball(pos, radius=0.22, color=SOURCE, resolution=(16, 8)):
 def vector(start, delta, color=FIELD, width=2.2):
     start, delta = np.array(start, dtype=float), np.array(delta, dtype=float)
     length = np.linalg.norm(delta)
+    if length < 1e-10:
+        return VGroup()
     end = start + delta
     head = min(.14, length * .29)
     shaft = Line(start, end, color=color, stroke_width=width).set_shade_in_3d(True)
@@ -84,7 +87,7 @@ def ghost_ring(radius, color=FIELD):
     return rings.set_stroke(opacity=.3)
 
 
-class DialogueScene(ThreeDScene):
+class DialogueScene(SpeechCues, ThreeDScene):
     lesson = ''
     heading = ''
 
@@ -94,7 +97,7 @@ class DialogueScene(ThreeDScene):
         # Do not overwrite the published timeline while pictures are rendering.
         timeline_root = os.getenv('LESSON_TIMELINE_DIR')
         staged = (Path(timeline_root) / self.lesson / 'timeline.json') if timeline_root else (
-            MEDIA / 'production' / 'v3-1' / self.lesson / 'timeline.json')
+            MEDIA / 'production' / 'v3-3' / self.lesson / 'timeline.json')
         timeline_file = staged if staged.is_file() else MEDIA / f'{self.lesson}.timeline.json'
         self.timeline = json.loads(timeline_file.read_text(encoding='utf-8'))
         self.set_camera_orientation(phi=69*DEGREES, theta=-78*DEGREES, zoom=.90, frame_center=[0, 0, .25])
@@ -176,7 +179,11 @@ class FoundationsDialogue(DialogueScene):
             if item.width > 4.05:
                 item.scale_to_fit_width(4.05)
         if tex:
-            formula = math(tex, 32, color)
+            if tex == r'|\mathbf E|=\frac{k|Q|}{r^2}':
+                formula = MathTex(r'|\mathbf E|=', r'k', r'\frac{|Q|}{r^2}', font_size=32, color=color)
+                self.constant_k = formula[1]
+            else:
+                formula = math(tex, 32, color)
             if formula.width > 4.05:
                 formula.scale_to_fit_width(4.05)
             items.add(formula.move_to([4.65, .95, 0]))
@@ -271,6 +278,26 @@ class FoundationsDialogue(DialogueScene):
         e_label.add_updater(lambda m: m.move_to(position()+[0, 0, .15]
                            + 1.05*magnitude()*source_sign.get_value()*direction()+[0, 0, .24]))
         self.add(source, probe)
+        self.init_cues('foundations')
+        for turn, phrase, key, getter, fixed in [
+            (1,'源电荷','source-Q',lambda:source,False),
+            (1,'试探电荷','probe-q',lambda:probe,False),
+            (1,'金箭头','force-F',lambda:force,False),
+            (4,'金箭头','force-F',lambda:force,False),
+            (5,'两球连线','source-probe-distance',lambda:join,False),
+            (7,'加倍','probe-q',lambda:probe,False),
+            (7,'力也加倍','force-F',lambda:force,False),
+            (9,'电场强度','field-E',lambda:e_arrow,False),
+            (10,'每个位置','field-map',lambda:field,False),
+            (11,'场不变','field-E',lambda:e_arrow,False),
+            (11,'力会变','force-F',lambda:force,False),
+            (12,'电子','probe-q',lambda:probe,False),
+            (12,'力箭头','force-F',lambda:force,False),
+            (12,'电场箭头','field-E',lambda:e_arrow,False),
+            (13,'源的电荷量','source-Q',lambda:source,False),
+            (13,'距离','source-probe-distance',lambda:join,False),
+            (13,'库仑常量','coefficient-k',lambda:self.constant_k,True),
+        ]: self.cue(turn,phrase,key,getter,fixed)
         self.question_chain(0)
         scale_note = label('模型尺寸为示意；金色 F 箭头始终采用同一比例尺', 16, MUTED).move_to([-2.2, -2.58, 0])
         self.add_fixed_in_frame_mobjects(scale_note)
@@ -350,9 +377,9 @@ class FoundationsDialogue(DialogueScene):
                      ('虚线只表示两球距离', '淡色箭头保留上一次测量'), FORCE)
         self.play_turn(6, radius_value.animate.set_value(2.9), duration=2.3)
         self.wait_until(self.timeline[6]['start']+(self.timeline[6]['end']-self.timeline[6]['start'])*.58)
-        self.concept('实测推翻了“减半”的猜想', '距离 ×2，力 ÷4',
+        self.concept('模拟读数推翻了“减半”的猜想', '距离 ×2，力 ÷4',
                      r'r\to2r\qquad |\mathbf F|\to\frac{F_0}{4}',
-                     ('r₀ → 2r₀', '实测 F₀/4，而不是 F₀/2', '平方反比，不是正比'), FORCE)
+                     ('r₀ → 2r₀', '模拟读数 F₀/4，而不是 F₀/2', '平方反比，不是正比'), FORCE)
         self.end_turn(6)
 
         self.subtitle(7)
@@ -449,7 +476,7 @@ def sampled_field(source, sign=1):
                 if r < .48:
                     continue
                 length = min(.75, 1.5/r**2)
-            result.add(vector(p, sign*length*d/r, FIELD, 2.4).set_opacity(.82))
+                result.add(vector(p, sign*length*d/r, FIELD, 2.4).set_opacity(.82))
     return result
 
 
@@ -464,6 +491,17 @@ class FluxDialogue(DialogueScene):
         boundary = shell()
         field = sampled_field(qpos)
         self.add(boundary, source, field)
+        self.init_cues('flux')
+        for turn,phrase,key,getter in [
+            (1,'正电荷','source-Q',lambda:source),
+            (1,'穿进','entry-point',lambda:mark_in),
+            (1,'穿出去','exit-point',lambda:mark_out),
+            (3,'电场','field-E',lambda:field),
+            (4,'正电荷','source-Q',lambda:source),
+            (5,'负电荷','source-Q',lambda:source),
+            (7,'面积','gaussian-surface',lambda:boundary),
+            (9,'正负电荷','enclosed-pair',lambda:VGroup(minus,plus)),
+        ]: self.cue(turn,phrase,key,getter)
         self.formula(r'\Phi_E=\oiint_S\mathbf E\cdot\mathrm d\mathbf A', '闭合面 S：把穿出的贡献减去穿入的贡献')
         self.subtitle(0)
         self.camera_turn(0, theta=-64*DEGREES, duration=1.5)
@@ -476,8 +514,10 @@ class FluxDialogue(DialogueScene):
         ray_arrows = VGroup(vector([-2.2, 0, 0], [.55, 0, 0], INWARD, 4),
                             vector([1.55, 0, 0], [.55, 0, 0], OUTWARD, 4))
         self.add(ray, cursor, ray_arrows)
-        self.play_turn(1, cursor.animate.move_to([-1.8, 0, 0]), FadeIn(mark_in), duration=1)
-        self.play_turn(1, cursor.animate.move_to([1.8, 0, 0]), FadeIn(mark_out), duration=1.5)
+        self.wait_until(phrase_window(self.timeline[1],'穿进')[0]-.4)
+        self.play_turn(1, cursor.animate.move_to([-1.8, 0, 0]), FadeIn(mark_in), duration=.7)
+        self.wait_until(phrase_window(self.timeline[1],'穿出去')[0]-.4)
+        self.play_turn(1, cursor.animate.move_to([1.8, 0, 0]), FadeIn(mark_out), duration=.7)
         self.play_turn(1, cursor.animate.move_to([3.4, 0, 0]), duration=.7)
         self.add_fixed_in_frame_mobjects(label('亮点只引导视线；场线不是飞行轨迹', 16, MUTED).move_to([0, -2.62, 0]))
         self.end_turn(1)
@@ -486,7 +526,7 @@ class FluxDialogue(DialogueScene):
         self.play_turn(2, Indicate(mark_in, color=INWARD), Indicate(mark_out, color=OUTWARD), duration=1)
         self.end_turn(2)
         self.subtitle(3)
-        self.formula(r'Q_{\rm enclosed}=0\qquad\Longrightarrow\qquad\Phi_E=0', '电荷在面外：所有场线的穿入、穿出净贡献相抵')
+        self.formula(r'\mathrm d\Phi_E=E\cos\theta\,\mathrm dA', 'θ：电场与外法线的夹角 · 取法向分量，再乘小面积')
         self.end_turn(3)
         self.subtitle(4)
         self.remove(ray, cursor, mark_in, mark_out, ray_arrows)
@@ -513,6 +553,11 @@ class FluxDialogue(DialogueScene):
         self.formula(r'\Phi_E=-\frac Q{\varepsilon_0}\quad\text{unchanged}', '包围的净电荷不变，换大小与形状也不改变净通量')
         self.end_turn(6)
         self.subtitle(7)
+        self.play_turn(7, Transform(boundary,shell(.95)), duration=.8)
+        self.formula(r'r\to2r:\quad |E|\to |E|/4,\quad A\to4A', '同一球心点源：场弱四倍，面积大四倍，净通量不变')
+        self.wait_until(phrase_window(self.timeline[7],'半径加倍')[0])
+        self.play_turn(7,boundary.animate.scale(2),duration=2.5)
+        self.wait_until(phrase_window(self.timeline[7],'高斯定理')[0])
         self.formula(r'\boxed{\displaystyle\oiint_S\mathbf E\cdot\mathrm d\mathbf A=\frac{Q_{\rm enclosed}}{\varepsilon_0}}', '测整个面的净通量，就能得到里面的净电荷')
         self.camera_turn(7, theta=-78*DEGREES, duration=1.5)
         self.end_turn(7)

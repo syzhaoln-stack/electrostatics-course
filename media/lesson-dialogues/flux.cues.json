@@ -1,0 +1,58 @@
+[
+  {
+    "turn": 1,
+    "phrase": "正电荷",
+    "target": "source-Q",
+    "start": 5.2803,
+    "end": 5.9803
+  },
+  {
+    "turn": 1,
+    "phrase": "穿进",
+    "target": "entry-point",
+    "start": 9.4558,
+    "end": 10.1558
+  },
+  {
+    "turn": 1,
+    "phrase": "穿出去",
+    "target": "exit-point",
+    "start": 11.3505,
+    "end": 12.0505
+  },
+  {
+    "turn": 3,
+    "phrase": "电场",
+    "target": "field-E",
+    "start": 25.1324,
+    "end": 25.8324
+  },
+  {
+    "turn": 4,
+    "phrase": "正电荷",
+    "target": "source-Q",
+    "start": 33.4975,
+    "end": 34.1975
+  },
+  {
+    "turn": 5,
+    "phrase": "负电荷",
+    "target": "source-Q",
+    "start": 42.2898,
+    "end": 42.9898
+  },
+  {
+    "turn": 7,
+    "phrase": "面积",
+    "target": "gaussian-surface",
+    "start": 57.1795,
+    "end": 57.8795
+  },
+  {
+    "turn": 9,
+    "phrase": "正负电荷",
+    "target": "enclosed-pair",
+    "start": 72.0968,
+    "end": 72.7968
+  }
+]

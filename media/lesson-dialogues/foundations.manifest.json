@@ -1,8 +1,8 @@
 {
   "lesson": "foundations",
-  "edition": "v3-1",
+  "edition": "v3-3",
   "state": "rendered_muxed_decode_verified",
-  "duration_seconds": 76.264,
+  "duration_seconds": 125.432,
   "video": {
     "codec": "h264",
     "width": 1280,
@@ -23,140 +23,126 @@
       "xia": "爽快思思",
       "che": "清爽男大"
     },
-    "speech_rate_request": 40,
+    "speech_rate_request": {
+      "che": -8,
+      "xia": 5
+    },
     "pitch_rate": 0,
-    "inter_turn_silence_seconds": 0.1,
-    "character_proxy_per_second": 5.789,
+    "inter_turn_silence_seconds": 0.3,
+    "character_proxy_per_second": 4.007,
     "pacing_note": "Measured character proxy per processed whole phrase, not phoneme alignment or listening review.",
     "local_tempo_by_turn": [
+      1.3671,
       1.0,
-      1.058405,
-      1.18,
-      1.08236,
+      1.398694,
       1.0,
-      1.18,
-      1.083959,
-      1.169969,
+      1.197,
+      1.132614,
+      1.229812,
+      1.437214,
+      0.928571,
       1.0,
-      1.075278,
+      1.18285,
+      1.40852,
       1.0,
-      1.18,
-      1.088547,
-      1.0,
-      1.0
+      1.346463,
+      1.232613
     ],
-    "original_pcm_peak_dbfs": -0.35630952704871405,
-    "original_pcm_rms_dbfs": -28.48838425042331,
+    "original_pcm_peak_dbfs": -6.322673214132275,
+    "original_pcm_rms_dbfs": -29.94095280799744,
     "original_full_scale_samples": 0,
-    "final_aac_integrated_lufs": -16.93,
-    "final_aac_true_peak_dbtp": -2.02,
-    "final_aac_loudness_range_lu": 4.4
+    "final_aac_integrated_lufs": -17.1,
+    "final_aac_true_peak_dbtp": -2.62,
+    "final_aac_loudness_range_lu": 4.9
   },
   "production": "Original 3D Manim animation and original two-student script",
   "render_engine_metadata": "Rendered with Manim Community v0.19.0",
-  "sha256": "252c88f2aaa5a06b534ec579fc4a56bde7516ea359f1dc1e304184fc19472708",
-  "bytes": 2899146,
+  "sha256": "b2e6b4cebf833733546c114a990bfbc9d25412989819440ec7d695de782bd970",
+  "bytes": 4503617,
   "dialogue_turns": 15,
   "all_captions_within_video": true,
   "full_final_mp4_decode": true,
-  "source_audio_sha256": "93601481c150da3d58ad08bc80530e50665df6d1b438811712495bb1a892cee1",
-  "source_timeline_sha256": "a130720b920ad71f6679e1d22f996b880e53900db3e74764b22455079ddbe91d",
+  "visual_cue_count": 17,
+  "visual_cue_timing": "Provider word metadata adjusted for trim/tempo; actual objects highlighted in Manim. Not independently forced-aligned.",
+  "source_audio_sha256": "9bdfb2a60eb9fdc51952be1e804e7582a1e7f16f9fcf367438101d8576a9a153",
+  "source_timeline_sha256": "dbe77cd88f6e0aac274e8cd9b5b3b2cfa72fc8c56a6042c1601769720e6fa48f",
   "final_aac_turn_alignment": [
     {
       "index": 0,
-      "correlation": 0.99913,
+      "correlation": 0.9882,
       "offset_ms": 0
     },
     {
       "index": 1,
-      "correlation": 0.98913,
+      "correlation": 0.99395,
       "offset_ms": 0
     },
     {
       "index": 2,
-      "correlation": 0.9999,
+      "correlation": 0.99511,
       "offset_ms": 0
     },
     {
       "index": 3,
-      "correlation": 0.99473,
+      "correlation": 0.99684,
       "offset_ms": 0
     },
     {
       "index": 4,
-      "correlation": 0.99794,
-      "offset_ms": 0
-    },
-    {
-      "index": 5,
-      "correlation": 0.99233,
-      "offset_ms": 0
-    },
-    {
-      "index": 6,
       "correlation": 0.9998,
       "offset_ms": 0
     },
     {
+      "index": 5,
+      "correlation": 0.99847,
+      "offset_ms": 0
+    },
+    {
+      "index": 6,
+      "correlation": 0.99985,
+      "offset_ms": 0
+    },
+    {
       "index": 7,
-      "correlation": 0.99988,
+      "correlation": 0.99957,
       "offset_ms": 0
     },
     {
       "index": 8,
-      "correlation": 0.99983,
+      "correlation": 0.99986,
       "offset_ms": 0
     },
     {
       "index": 9,
-      "correlation": 0.9979,
+      "correlation": 0.99865,
       "offset_ms": 0
     },
     {
       "index": 10,
-      "correlation": 0.99975,
+      "correlation": 0.99798,
       "offset_ms": 0
     },
     {
       "index": 11,
-      "correlation": 0.99961,
+      "correlation": 0.99973,
       "offset_ms": 0
     },
     {
       "index": 12,
-      "correlation": 0.99989,
+      "correlation": 0.99991,
       "offset_ms": 0
     },
     {
       "index": 13,
-      "correlation": 0.99884,
+      "correlation": 0.99996,
       "offset_ms": 0
     },
     {
       "index": 14,
-      "correlation": 0.99983,
+      "correlation": 0.99958,
       "offset_ms": 0
     }
   ],
-  "visual_review": {
-    "method": "representative-frame visual inspection of final MP4",
-    "seconds": [
-      16,
-      23,
-      33,
-      48,
-      62,
-      72
-    ],
-    "checks": [
-      "charge units and elementary charge definition legible",
-      "early scenes discuss force before defining E",
-      "equal-radius force comparison",
-      "inverse-square counterexample",
-      "F over q table and E definition",
-      "negative probe force opposite E",
-      "summary without overlapping text or caption overflow"
-    ]
-  },
+  "visual_review": "Representative encoded frames inspected: separate E/F arrows and formula coefficient k emphasis; coefficient changes luminance at the spoken cue.",
   "human_listening_review": false
 }

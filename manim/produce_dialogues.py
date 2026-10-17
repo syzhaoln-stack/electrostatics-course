@@ -1,4 +1,4 @@
-"""Produce brisk original student dialogue with Doubao and measured PCM timing.
+"""Produce conversational original student dialogue with Doubao and measured PCM timing.
 
 The locked script lives in dialogue-scripts.json. New paid records are versioned,
 never overwritten/retried automatically. Public MP4/timelines stay unchanged until
@@ -23,8 +23,9 @@ HELPER = Path(os.getenv('DOUBAO_TTS_HELPER', str(Path.home() / '.codex/skills/co
 VOICES = {'xia': 'zh_female_shuangkuaisisi_uranus_bigtts', 'che': 'zh_male_qingshuangnanda_uranus_bigtts'}
 VOICE_NAMES = {'xia': '爽快思思', 'che': '清爽男大'}
 NAMES = {'xia': '小夏', 'che': '阿澈'}
-PROMPT = ('二十岁大学生跟同学边操作边聊天，轻快、有朝气、反应敏捷，口语自然，保持好奇，'
-          '语速偏快，句中逗号轻轻带过，不用讲课或新闻播音腔，不拖长字尾。'
+PROMPT = ('两个大学生坐在电脑前一起试一个物理模型。这是对身边同学说的一句话，'
+          '自然、放松、清楚，有思考的停顿；不要广告感、主持腔或夸张的惊叹。'
+          '正常交谈速度，遇到新概念稍停一下，不抢话，不刻意拖字尾。'
           'F读英文字母F，E读英文字母E，Q和q读英文字母Q，P读英文字母P，r读英文字母R。'
           '不要添加音乐、笑声、解释，只说下面这句话，不朗读控制说明：\n')
 
@@ -101,7 +102,7 @@ def synthesize_turn(work, idx, speaker, text, speech_rate):
         for existing in (OUT / 'production').rglob('*.record.json'):
             prior = json.loads(existing.read_text(encoding='utf-8-sig'))
             request = prior.get('request', {})
-            same = prior.get('expected_text') == text and request.get('references') == body['references'] and request.get('audio_config') == body['audio_config']
+            same = prior.get('expected_text') == text and request == body
             if not same:
                 continue
             existing_wav = Path(str(existing).removesuffix('.record.json') + '.wav')
@@ -114,7 +115,7 @@ def synthesize_turn(work, idx, speaker, text, speech_rate):
         if prior.get('state') != 'completed_pcm_verified' or not raw.exists():
             raise RuntimeError(f'{work.name} turn {idx}: existing incomplete record, no retry sent')
         request = prior.get('request', {})
-        if prior.get('expected_text') != text or request.get('references') != [{'speaker': VOICES[speaker]}] or request.get('audio_config', {}).get('speech_rate') != speech_rate:
+        if prior.get('expected_text') != text or request != body:
             raise RuntimeError(f'{work.name} turn {idx}: frozen paid record differs from requested script/config; choose a deliberate new version')
     else:
         txt.write_text(text, encoding='utf-8')
@@ -132,7 +133,12 @@ def synthesize_turn(work, idx, speaker, text, speech_rate):
     trimmed_duration = len(trimmed) / p.nchannels / p.sampwidth / p.framerate
     proxy_count = chars(text)
     raw_rate = proxy_count / trimmed_duration
-    tempo = min(1.18, 5.8/raw_rate) if raw_rate < 5.5 else 1.0
+    # A conversational band per speaker replaces the old blanket fast setting.
+    # Avoid both rushed explanations and stretched synthetic syllables.
+    ceiling = 4.65 if speaker == 'che' else 5.2
+    floor = 3.6 if speaker == 'che' else 3.9
+    target = 3.8 if speaker == 'che' else 4.2
+    tempo = min(1.6,target/raw_rate) if raw_rate < floor else max(.65,min(1.0,ceiling/raw_rate))
     if tempo != 1.0:
         subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', str(trimmed_path),
                         '-af', f'atempo={tempo:.8f}', '-c:a', 'pcm_s16le', str(processed)], check=True)
@@ -148,6 +154,11 @@ def synthesize_turn(work, idx, speaker, text, speech_rate):
             'spoken_character_proxy_count': proxy_count, 'character_proxy_per_second': round(proxy_count/duration, 3),
             'sha256': hashlib.sha256(final_data).hexdigest()}
     turn['paid_record'] = rec.relative_to(ROOT).as_posix()
+    subtitles = json.loads(raw.with_suffix('.subtitle.json').read_text(encoding='utf-8'))
+    words = [w for s in (subtitles.get('subtitle') or {}).get('sentences', []) for w in s.get('words', [])]
+    turn['words'] = [{'text': w['text'], 'start': round(max(0, (w['start_time']/1000-head)/tempo),4),
+                      'end': round(min(duration, max(0, (w['end_time']/1000-head)/tempo)),4)} for w in words]
+    turn['word_timing_source'] = 'Provider subtitle metadata, adjusted for edge trim and pitch-preserving tempo; not independently forced-aligned.'
     save(work / f'turn-{idx:02}.pacing.json', turn)
     print(f'{work.name}: turn {idx} ready ({duration:.2f}s, {proxy_count/duration:.2f} character proxy/s)', flush=True)
     return turn
@@ -158,8 +169,8 @@ def produce(lesson, lines, version, speech_rate, workers):
     work.mkdir(parents=True, exist_ok=True)
     status = {'lesson': lesson, 'edition': version, 'state': 'generating', 'provider': 'Doubao OpenSpeech',
               'model': 'seed-audio-1.0', 'synthetic_voices': VOICES, 'voice_names': VOICE_NAMES,
-              'speech_rate_request': speech_rate, 'pitch_rate': 0, 'inter_turn_silence_seconds': .1,
-              'character_proxy_target_per_second': [5.5, 6.5], 'human_listening_review': False,
+              'speech_rate_request': speech_rate, 'pitch_rate': 0, 'inter_turn_silence_seconds': .3,
+              'character_proxy_ceiling_per_second': {'che':4.65,'xia':5.2}, 'human_listening_review': False,
               'pacing_note': 'Measured character proxy per processed whole phrase, not phoneme alignment or listening review.',
               'official_api_reference': 'https://docs.volcengine.com/docs/DoubaoVoice/audio-generation-http?lang=zh',
               'official_voice_reference': 'https://docs.volcengine.com/docs/DoubaoVoice/Tonelist-1?lang=zh',
@@ -167,7 +178,7 @@ def produce(lesson, lines, version, speech_rate, workers):
     save(work / 'manifest.json', status)
     turns = {}
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        futures = {pool.submit(synthesize_turn, work, idx, speaker, text, speech_rate): idx for idx, (speaker, text) in enumerate(lines, 1)}
+        futures = {pool.submit(synthesize_turn, work, idx, speaker, text, speech_rate[speaker]): idx for idx, (speaker, text) in enumerate(lines, 1)}
         errors = []
         for future in as_completed(futures):
             try:
@@ -195,9 +206,11 @@ def produce(lesson, lines, version, speech_rate, workers):
                 raise RuntimeError('Audio segment formats differ')
             out.writeframes(data)
             timeline.append({'index': i, 'start': round(current, 4), 'end': round(current + turn['duration'], 4),
-                             'speaker': turn['speaker'], 'name': turn['name'], 'text': turn['text']})
+                             'speaker': turn['speaker'], 'name': turn['name'], 'text': turn['text'],
+                             'words': [{**w,'start':round(current+w['start'],4),'end':round(current+w['end'],4)} for w in turn['words']],
+                             'word_timing_source': turn['word_timing_source']})
             current += turn['duration']
-            gap = .1 if i < len(status['turns'])-1 else .6
+            gap = .3 if i < len(status['turns'])-1 else .6
             out.writeframes(silence(gap))
             current += gap
     save(work / 'timeline.json', timeline)
@@ -217,8 +230,9 @@ if __name__ == '__main__':
         sys.stdout.reconfigure(encoding='utf-8')
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('lessons', nargs='*')
-    parser.add_argument('--version', default='v3-1')
-    parser.add_argument('--speech-rate', type=int, default=40)
+    parser.add_argument('--version', default='v3-3')
+    parser.add_argument('--male-rate', type=int, default=-8)
+    parser.add_argument('--female-rate', type=int, default=5)
     parser.add_argument('--workers', type=int, default=3)
     args = parser.parse_args()
     if not re.fullmatch(r'[A-Za-z0-9_-]+', args.version):
@@ -229,4 +243,4 @@ if __name__ == '__main__':
         raise SystemExit('Doubao speech environment is unavailable. No substitute provider used.')
     scripts = json.loads((ROOT / 'manim/dialogue-scripts.json').read_text(encoding='utf-8-sig'))
     for key in (args.lessons or ['foundations', 'flux']):
-        produce(key, scripts[key], args.version, args.speech_rate, max(1, min(3, args.workers)))
+        produce(key, scripts[key], args.version, {'che':args.male_rate,'xia':args.female_rate}, max(1, min(3, args.workers)))

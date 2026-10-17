@@ -11,6 +11,7 @@ import os
 import textwrap
 import numpy as np
 from manim import *
+from speech_cues import SpeechCues, phrase_window
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'media' / 'lesson-dialogues'
@@ -85,12 +86,12 @@ def background(second_sign=-1):
     return group
 
 
-class SuperpositionDialogue(ThreeDScene):
+class SuperpositionDialogue(SpeechCues, ThreeDScene):
     """Twelve measured turns: conjecture -> experiment -> vector correction."""
 
     def setup(self):
         super().setup()
-        timeline_dir = Path(os.getenv('LESSON_TIMELINE_DIR', str(OUT/'production/v3-1')))
+        timeline_dir = Path(os.getenv('LESSON_TIMELINE_DIR', str(OUT/'production/v3-3')))
         candidate = timeline_dir / 'field' / 'timeline.json'
         if not candidate.is_file():
             candidate = OUT / 'field.timeline.json'
@@ -161,13 +162,14 @@ class SuperpositionDialogue(ThreeDScene):
         world = CENTER+p
         e1, e2, total = contributions(p, sign2)
         local = VGroup()
+        local.cue_parts={}
         for source in (S1, S2):
             local.add(DashedLine(CENTER+source, world, color=MUTED,
                                  stroke_width=1.15, dash_length=.07).set_opacity(.6))
         if 'e1' in visible:
-            local.add(arrow(world, ARROW_SCALE*e1, LEFT_FIELD, 3.4))
+            a=arrow(world, ARROW_SCALE*e1, LEFT_FIELD, 3.4);local.add(a);local.cue_parts['e1']=a
         if 'e2' in visible:
-            local.add(arrow(world, ARROW_SCALE*e2, RIGHT_FIELD, 3.4))
+            a=arrow(world, ARROW_SCALE*e2, RIGHT_FIELD, 3.4);local.add(a);local.cue_parts['e2']=a
         if construction and np.linalg.norm(total) > 1e-8:
             local.add(DashedLine(world+ARROW_SCALE*e1, world+ARROW_SCALE*total,
                                  color=RIGHT_FIELD, stroke_width=1.5, dash_length=.065),
@@ -178,12 +180,11 @@ class SuperpositionDialogue(ThreeDScene):
                 local.add(Circle(radius=.28, color=FIELD, stroke_width=2.5)
                           .rotate(PI/2, axis=RIGHT).move_to(world))
             else:
-                local.add(arrow(world, ARROW_SCALE*total, FIELD, 5.0))
+                a=arrow(world, ARROW_SCALE*total, FIELD, 5.0);local.add(a);local.cue_parts['total']=a
         if 'force' in visible:
             # F has its own N scale, selected so +/-e is easy to compare by
             # direction. No claim that E and F share a physical unit.
-            local.add(arrow(world+[0, -.08, 0], test_sign*ARROW_SCALE*total,
-                            FORCE, 4.0))
+            a=arrow(world+[0,-.08,0],test_sign*ARROW_SCALE*total,FORCE,4.0);local.add(a);local.cue_parts['force']=a
         return local
 
     def set_local(self, p, sign2, visible, test_sign=1, construction=False):
@@ -217,6 +218,20 @@ class SuperpositionDialogue(ThreeDScene):
         scale_note = words('P 处电场箭头同一比例 · 源电量绝对值各 1 pC', 16, MUTED).move_to([-2.22, -2.70, 0])
         self.add_fixed_in_frame_mobjects(legend, scale_note)
         self.set_local(self.p, -1, [])
+        self.init_cues('field')
+        for turn,phrase,key,getter in [
+            (0,'金球','probe-P',lambda:self.probe),
+            (1,'左边的源','source-Q1',lambda:self.q1),
+            (1,'E一','field-E1',lambda:self.local.cue_parts.get('e1')),
+            (1,'右边的源','source-Q2',lambda:self.q2),
+            (1,'E二','field-E2',lambda:self.local.cue_parts.get('e2')),
+            (4,'合起来的箭头','field-total',lambda:self.local.cue_parts.get('total')),
+            (5,'矢量','field-total',lambda:self.local.cue_parts.get('total')),
+            (7,'同向','field-total',lambda:self.local.cue_parts.get('total')),
+            (8,'电子','probe-P',lambda:self.probe),
+            (9,'合场E','field-total',lambda:self.local.cue_parts.get('total')),
+            (9,'金色力箭头','force-F',lambda:self.local.cue_parts.get('force')),
+        ]: self.cue(turn,phrase,key,getter)
 
         self.turn(0, 0)
         self.card_text('先找同一个观察点', r'P',
@@ -229,7 +244,7 @@ class SuperpositionDialogue(ThreeDScene):
         self.card_text('各个源，在 P 的贡献', r'\mathbf E_1\quad\mathbf E_2',
                        ['E₁：左源在 P 的场', 'E₂：右源在 P 的场', '单位：N/C（牛顿每库仑）'])
         self.set_local(self.p, -1, ['e1'])
-        self.wait_to((self.timeline[1]['start']+self.timeline[1]['end'])/2)
+        self.wait_to(phrase_window(self.timeline[1],'右边的源')[0])
         self.set_local(self.p, -1, ['e1', 'e2'])
         self.end_turn(1)
 
@@ -253,7 +268,7 @@ class SuperpositionDialogue(ThreeDScene):
 
         self.turn(5, 1)
         self.card_text('场强 E：矢量', r'\mathbf E=\mathbf E_1+\mathbf E_2',
-                       ['有大小，也有方向', '虚线补成平行四边形', '对角线：这个 P 的合场', '三支电场箭头同尺比较'])
+                       ['Ex = E₁x + E₂x', 'Ey = E₁y + E₂y', 'Ez = E₁z + E₂z', '同一点 · 同坐标系 · 带正负相加'])
         self.field = background(-1)
         self.play(FadeIn(self.field), run_time=.6)
         self.end_turn(5)
@@ -271,7 +286,7 @@ class SuperpositionDialogue(ThreeDScene):
         self.turn(7, 2)
         # Let “equal and opposite” finish while the zero-field experiment is
         # still visible; change the sign when the next spoken action starts.
-        self.wait_to(self.timeline[7]['start']+1.9)
+        self.wait_to(phrase_window(self.timeline[7],'再换成异号')[0])
         self.q2.set_color(NEGATIVE)
         self.source2_label.become(words('−Q₂', 23, NEGATIVE).move_to(CENTER+S2+[0, 0, -.43]))
         self.set_local(self.p, -1, ['e1', 'e2', 'total'])

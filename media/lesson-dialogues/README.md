@@ -6,7 +6,7 @@
 
 - 小夏：豆包“爽快思思”，预设合成音色 `zh_female_shuangkuaisisi_uranus_bigtts`。
 - 阿澈：豆包“清爽男大”，预设合成音色 `zh_male_qingshuangnanda_uranus_bigtts`。
-- 3.1版重录为年轻同学边操作边聊天的口语语气，请求语速参数为 `+40`、音高为 `0`，话轮间隔约0.10秒。裁切仅针对经波形检测的首尾低电平静默，必要时进行小幅保音高节奏校准；实际逐句时长和字速代理记录在对应 manifest，不把自动测量当作听审。
+- 3.3 版重新写稿录制，男声请求参数 −8、女声 +5，音高 0；根据整句字速代理做保音高校准，男声以约 3.8 字/秒、女声约 4.2 字/秒为参考，保留自然停顿。间隔 0.30 秒。没有采用旧版两人统一 +40 的快速设置。字符代理不是音节计数或听审。
 - 两人均为虚构同学，网页主头像为本项目用 AI 生成的角色插画，不影射真人；同目录 SVG 为原创、可复现的替补插画。声音不是录制学生真人对话，也不是声音克隆。
 - `*.timeline.json` 是实际处理后 PCM 时长的逐句时间轴；字幕、画面切换和网页头像高亮共用同一时间轴。
 - 每次请求留有独立脱敏记录，既有记录不被自动覆盖或重发。凭据只存在于本机进程环境，不属于源代码或课堂包。
@@ -37,4 +37,8 @@
 
 源脚本位于 `manim/`。语音 production/ 与中间 WAV、请求记录保留本地，网页构建只复制最终 MP4、封面、VTT、时间轴和头像。`*.manifest.json` 记录实际尺寸、时长、哈希和完整解码结果。没有人工听审时明确保留 `human_listening_review: false`，不把技术解码或自动字幕匹配冒充人工听审。
 
-3.1版逐句定稿由 `manim/dialogue-scripts.json` 统一管理。运行 `python manim/produce_dialogues.py` 会建立新的 `production/v3-1/<lesson>/` 音轨、时间轴与记录；`python manim/package_videos.py <lesson>` 只在新成片完整解码、音画时长和字幕时序都通过后替换公开文件。旧版请求记录与原始WAV保留；相同文本、声线和音频设置可复用已完成的同句录音，未完成或结果不明的记录不会自动重试。
+3.3 版逐句定稿由 `manim/dialogue-scripts.json` 管理。`python manim/produce_dialogues.py foundations field flux --version v3-3` 在独立生产目录生成或复用完全相同请求的已完成结果。API 提供的字词时间戳按静默裁剪量与节奏比例修正；`speech_cues.py` 用这些时间标记强调实际场景对象，缺少所需词组会拒绝渲染。`*.cues.json` 保留词组、对象名称和起止时刻，`*.timeline.json` 保留逐字 metadata。提供商字幕不是对读音、措辞或语气的独立验证。
+
+渲染时设置 `LESSON_TIMELINE_DIR` 指向 `media/lesson-dialogues/production/v3-3`；基础输出到该目录下 `manim-render`，叠加输出到 `manim-render-field`，通量输出到 `manim-render-flux`，避免并行 TeX 临时文件互相删除。分别渲染 `lesson_scenes.py` 的 FoundationsDialogue、FluxDialogue 和 `field_scene.py` 的 SuperpositionDialogue。运行 `python manim/package_videos.py foundations field flux --version v3-3`，通过完整解码、时长、AAC 逐句波形对齐与真峰值检查后才安装公开文件。语音请求记录、WAV 和中间片段只在本地生产目录，不进入网页或 GitHub。
+
+教材新增历史依据：Gauss, *Allgemeine Lehrsätze …*, Leipzig, 1840，尤其 §§1–4、22。可核对原文 https://textgridrep.org/browse/4bj80.0 。历史记号没有直接冒充现代 SI 公式；场线是教学图示，不是原文中的观测实验。

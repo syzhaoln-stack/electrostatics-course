@@ -1,0 +1,79 @@
+[
+  {
+    "turn": 0,
+    "phrase": "金球",
+    "target": "probe-P",
+    "start": 2.0469,
+    "end": 2.7469
+  },
+  {
+    "turn": 1,
+    "phrase": "左边的源",
+    "target": "source-Q1",
+    "start": 5.8207,
+    "end": 6.5207
+  },
+  {
+    "turn": 1,
+    "phrase": "E一",
+    "target": "field-E1",
+    "start": 8.6372,
+    "end": 9.3372
+  },
+  {
+    "turn": 1,
+    "phrase": "右边的源",
+    "target": "source-Q2",
+    "start": 10.2059,
+    "end": 10.9059
+  },
+  {
+    "turn": 1,
+    "phrase": "E二",
+    "target": "field-E2",
+    "start": 12.9511,
+    "end": 13.6511
+  },
+  {
+    "turn": 4,
+    "phrase": "合起来的箭头",
+    "target": "field-total",
+    "start": 28.0651,
+    "end": 29.0505
+  },
+  {
+    "turn": 5,
+    "phrase": "矢量",
+    "target": "field-total",
+    "start": 39.5291,
+    "end": 40.2291
+  },
+  {
+    "turn": 7,
+    "phrase": "同向",
+    "target": "field-total",
+    "start": 58.8086,
+    "end": 59.5086
+  },
+  {
+    "turn": 8,
+    "phrase": "电子",
+    "target": "probe-P",
+    "start": 63.1093,
+    "end": 63.8093
+  },
+  {
+    "turn": 9,
+    "phrase": "合场E",
+    "target": "field-total",
+    "start": 65.4601,
+    "end": 66.1601
+  },
+  {
+    "turn": 9,
+    "phrase": "金色力箭头",
+    "target": "force-F",
+    "start": 72.209,
+    "end": 72.909
+  }
+]
