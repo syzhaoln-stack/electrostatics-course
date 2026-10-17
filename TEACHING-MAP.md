@@ -20,12 +20,15 @@
 - [OpenStax · Explaining Gauss’s Law](https://openstax.org/books/university-physics-volume-2/pages/6-2-explaining-gausss-law)：核对净通量与包围电荷的条件。
 - [费曼物理学讲义 · 静电学](https://www.feynmanlectures.caltech.edu/II_04.html)、[高斯定理的应用](https://www.feynmanlectures.caltech.edu/II_05.html)：参考“局部场—整体约束—对称性求解”的联系；不复制原图和原文。
 - 用户指定的视觉参照：[81QNyDnYtg0](https://www.youtube.com/watch?v=81QNyDnYtg0)、[How wiggling charges give rise to light](https://www.youtube.com/watch?v=aXRTczANuIs)。借鉴深色空间、节制箭头、逐层出现与稳定视觉记号，视频及互动代码均原创。振荡与辐射作为电磁学拓展，不拿时变传播场冒充静电学。
-- [Manim 官方示例](https://docs.manim.community/en/stable/examples.html)：三维场、相机与数学动画的实现参照；实际制作环境为 Manim Community 0.18.1。
+- [Manim 官方示例](https://docs.manim.community/en/stable/examples.html)：三维场、相机与数学动画的实现参照；3.1 成片记录的实际制作环境为 Manim Community 0.19.0。
 - 第一节金属球火花是有署名的实验实拍，来源见图旁；学生头像是 AI 生成的虚构形象，见 assets/lesson-characters/SOURCE.md。事故调查照片、实验照片、AI 头像和定性三维动画分别标注。
 
-## 两段样片
+## 三段发现式短片
 
-1. 电荷与电场：同一点换电荷、距离加倍、线源与面源。
-2. 电通量：一条线穿入穿出，闭合面积分为什么能推断净电荷。
+1. 电荷与电场（约 76 秒）：同距换方向、距离加倍的错误猜想与实测 1/4、固定 P 换 q、比较 F/q 后定义 E。Q/q/F/E 与单位逐个出现。
+2. 电场叠加（约 57 秒）：同一点两个源的贡献、只加大小的反例、同号中点抵消、异号中点增强、负试探电荷的力反向。
+3. 电通量（约 43 秒）：一条线穿入穿出，闭合面积分为什么能推断净电荷。
 
-均为原创 Manim 场景，豆包双声线逐句生成后合成音轨；头像随真实音轨时间轴高亮。全片解码、字幕时间轴、服务返回文本与脚本匹配、浏览器播放/暂停/跳句已核验；没有把技术核验标为人工听审。
+均为原创 Manim 场景，豆包“爽快思思＋清爽男大”以较快语速逐句生成，话轮间隔 0.10 秒；头像随真实音轨时间轴高亮。基础、叠加片将四个问题保留在画面中；三片的网页问题链可跳到对应实验，再进入互动图验证。全片解码、字幕时间轴、服务返回文本与脚本匹配、浏览器播放/暂停/跳句已核验；没有把技术核验标为人工听审。
+
+第一节正文新增五组三维对照图：+e/+2e、r/2r、同半径方位、m/2m、有限线/无限线。符号和单位贴近图示；明确电场力与合力、W=0 与 F=0、大小与方向、示意球尺寸与真实电荷量的区别。元电荷精确值引用 BIPM，库仑 1785 年扭秤与法拉第磁场铁屑分别引用 APS/MIT 与 Royal Institution，避免混成同一次发现。

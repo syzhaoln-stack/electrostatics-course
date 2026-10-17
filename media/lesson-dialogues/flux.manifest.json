@@ -1,7 +1,8 @@
 {
   "lesson": "flux",
+  "edition": "v3-1",
   "state": "rendered_muxed_decode_verified",
-  "duration_seconds": 76.6,
+  "duration_seconds": 42.766,
   "video": {
     "codec": "h264",
     "width": 1280,
@@ -12,39 +13,126 @@
     "provider": "Doubao OpenSpeech",
     "model": "seed-audio-1.0",
     "codec": "aac",
-    "sample_rate": "96000",
+    "sample_rate": "48000",
     "channels": 2,
     "voices": {
-      "xia": "zh_female_vv_uranus_bigtts",
-      "che": "zh_male_m191_uranus_bigtts"
+      "xia": "zh_female_shuangkuaisisi_uranus_bigtts",
+      "che": "zh_male_qingshuangnanda_uranus_bigtts"
     },
-    "original_pcm_peak_dbfs": -7.684326807400652,
-    "original_pcm_rms_dbfs": -32.16694390645492,
-    "original_full_scale_samples": 0
+    "voice_names": {
+      "xia": "爽快思思",
+      "che": "清爽男大"
+    },
+    "speech_rate_request": 40,
+    "pitch_rate": 0,
+    "inter_turn_silence_seconds": 0.1,
+    "character_proxy_per_second": 5.757,
+    "pacing_note": "Measured character proxy per processed whole phrase, not phoneme alignment or listening review.",
+    "local_tempo_by_turn": [
+      1.08454,
+      1.094508,
+      1.112875,
+      1.129513,
+      1.18,
+      1.124425,
+      1.18,
+      1.0,
+      1.095708,
+      1.0,
+      1.0
+    ],
+    "original_pcm_peak_dbfs": -0.37870832523945774,
+    "original_pcm_rms_dbfs": -27.41290275764921,
+    "original_full_scale_samples": 0,
+    "final_aac_integrated_lufs": -19.07,
+    "final_aac_true_peak_dbtp": -1.89,
+    "final_aac_loudness_range_lu": 4.8
   },
-  "production": "Original 3D Manim Community 0.18.1 animation and original two-student script",
-  "sha256": "5cfe21101428abd5267ec231828e4bf1ffc9b6afbb4535f0586aec151f642ef3",
-  "bytes": 2789126,
+  "production": "Original 3D Manim animation and original two-student script",
+  "render_engine_metadata": "Rendered with Manim Community v0.19.0",
+  "sha256": "60c530a9388a4d9ef153e807cb556e48fae2a8d78b263e68bb52ecc848608324",
+  "bytes": 1948987,
   "dialogue_turns": 11,
   "all_captions_within_video": true,
   "full_final_mp4_decode": true,
+  "source_audio_sha256": "22500b91f149c465d4da006c18a327009e8349e3d5dba1d168c72f0dcae9c840",
+  "source_timeline_sha256": "54396f7f9ff6d25439f36bb84b1f12703a604b780bfda7ff7d314442b7a9a9e8",
+  "final_aac_turn_alignment": [
+    {
+      "index": 0,
+      "correlation": 0.99986,
+      "offset_ms": 0
+    },
+    {
+      "index": 1,
+      "correlation": 0.99959,
+      "offset_ms": 0
+    },
+    {
+      "index": 2,
+      "correlation": 0.99592,
+      "offset_ms": 0
+    },
+    {
+      "index": 3,
+      "correlation": 0.99769,
+      "offset_ms": 0
+    },
+    {
+      "index": 4,
+      "correlation": 0.9981,
+      "offset_ms": 0
+    },
+    {
+      "index": 5,
+      "correlation": 0.99549,
+      "offset_ms": 0
+    },
+    {
+      "index": 6,
+      "correlation": 0.99879,
+      "offset_ms": 0
+    },
+    {
+      "index": 7,
+      "correlation": 0.99994,
+      "offset_ms": 0
+    },
+    {
+      "index": 8,
+      "correlation": 0.99991,
+      "offset_ms": 0
+    },
+    {
+      "index": 9,
+      "correlation": 0.99978,
+      "offset_ms": 0
+    },
+    {
+      "index": 10,
+      "correlation": 0.99967,
+      "offset_ms": 0
+    }
+  ],
   "visual_review": {
-    "method": "Representative final MP4 frames inspected",
-    "frame_seconds": [
+    "method": "representative-frame visual inspection",
+    "seconds": [
       3,
-      48
+      7,
+      28
     ],
-    "layout": "formula and geometry remain visible"
+    "checks": [
+      "brighter thicker field vectors",
+      "entry and exit markers visible",
+      "deformed surface and Gauss relation intact",
+      "opposite sources give zero enclosed net charge",
+      "no caption overflow or overlapping text"
+    ],
+    "revision_note": "Auxiliary vectors brightened at fixed physical directions and length ratios.",
+    "scene_review_frames": [
+      "production/qa-flux-bright-7.jpg",
+      "production/qa-flux-bright-28.jpg"
+    ]
   },
-  "human_listening_review": false,
-  "all_returned_subtitles_match_script": true,
-  "player_review": {
-    "desktop": true,
-    "mobile_width": 390,
-    "mobile_scroll_width": 390,
-    "play_pause_speaker_sync": true,
-    "click_transcript_seek": true,
-    "keyboard_space_and_5s_seek": true,
-    "runtime_errors": []
-  }
+  "human_listening_review": false
 }

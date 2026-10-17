@@ -1,12 +1,18 @@
-"""Original two-student lessons, using the existing Doubao TTS helper only.
+"""Produce brisk original student dialogue with Doubao and measured PCM timing.
 
-Existing paid request records are never overwritten or silently retried.
-Credentials stay in process environment and are never written to files.
+The locked script lives in dialogue-scripts.json. New paid records are versioned,
+never overwritten/retried automatically. Public MP4/timelines stay unchanged until
+package_videos.py validates and installs the completed replacement.
 """
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import argparse
+import array
 import hashlib
 import json
+import math
 import os
+import re
 import subprocess
 import sys
 import wave
@@ -14,50 +20,63 @@ import wave
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'media' / 'lesson-dialogues'
 HELPER = Path(os.getenv('DOUBAO_TTS_HELPER', str(Path.home() / '.codex/skills/construction-safety-video/scripts/doubao_tts.py')))
-VOICES = {'xia': 'zh_female_vv_uranus_bigtts', 'che': 'zh_male_m191_uranus_bigtts'}
+VOICES = {'xia': 'zh_female_shuangkuaisisi_uranus_bigtts', 'che': 'zh_male_qingshuangnanda_uranus_bigtts'}
+VOICE_NAMES = {'xia': '爽快思思', 'che': '清爽男大'}
 NAMES = {'xia': '小夏', 'che': '阿澈'}
-LESSONS = {
-    'foundations': [
-        ('xia', '换成两倍电量，电场箭头也该变长吧？'),
-        ('che', '先别挪位置。蓝箭头是这里的电场，金箭头才是小球受到的力。'),
-        ('xia', '哦！正二 e 的力变成两倍，电场没动。'),
-        ('che', '对。源电荷不变，同一个位置的电场就不变。力等于电荷量乘电场。'),
-        ('xia', '那换成电子呢？哎，力反过来了！'),
-        ('che', '电子带负电。电场方向按正电荷规定，所以电子受力跟它相反。'),
-        ('xia', '拖远一倍，两个箭头都缩得好厉害。'),
-        ('che', '点电荷的场按距离平方衰减。距离变成两倍，电场和同一个小球的力，都剩四分之一。'),
-        ('xia', '长线、大平面，也一样吗？'),
-        ('che', '不一样。无限长线的场垂直于线，距离加倍，强度减半。无限大平面的场垂直于面，强度不随距离变。'),
-        ('xia', '明白！认出源，找到位置，再看放进去的电荷。轮到我拖一拖。'),
-    ],
-    'flux': [
-        ('xia', '看不到球面里面，能从外面知道它带了多少电吗？'),
-        ('che', '试试看。这枚正电荷先放外面。沿这条场线看，它穿进来，又穿出去。'),
-        ('xia', '一进一出，抵消了？可球面上明明还有电场。'),
-        ('che', '对。穿入记负，穿出记正。把整个闭合面的贡献加起来，外面的电荷净贡献是零。'),
-        ('xia', '把电荷拖进来呢？这次只看见往外穿！'),
-        ('che', '包住正电荷，净通量就为正。换成负电荷，箭头反过来，净通量为负。'),
-        ('xia', '那我把面变大、捏扁，会不会算出另一份电量？'),
-        ('che', '只要包住的净电荷没变，净通量就不变。各处场强会变，但总和相同。这就是高斯定理。'),
-        ('xia', '所以测到零，就能说里面什么电荷都没有？'),
-        ('che', '还不能。等量正负电荷也会抵消。它告诉我们的是净电荷，不是电荷总个数。'),
-        ('xia', '原来如此！我来挪这枚电荷，看看什么时候少了那个穿入点。'),
-    ],
-}
+PROMPT = ('二十岁大学生跟同学边操作边聊天，轻快、有朝气、反应敏捷，口语自然，保持好奇，'
+          '语速偏快，句中逗号轻轻带过，不用讲课或新闻播音腔，不拖长字尾。'
+          'F读英文字母F，E读英文字母E，Q和q读英文字母Q，P读英文字母P，r读英文字母R。'
+          '不要添加音乐、笑声、解释，只说下面这句话，不朗读控制说明：\n')
 
 
 def save(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding='utf-8')
+    tmp = path.with_name(path.name + '.tmp')
+    tmp.write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding='utf-8')
+    os.replace(tmp, path)
 
 
 def pcm(path):
     with wave.open(str(path), 'rb') as wav:
         p = wav.getparams()
         data = wav.readframes(p.nframes)
-    if len(data) != p.nframes * p.nchannels * p.sampwidth:
-        raise RuntimeError('Incomplete audio PCM')
+    if p.sampwidth != 2 or p.comptype != 'NONE' or len(data) != p.nframes * p.nchannels * p.sampwidth:
+        raise RuntimeError('Expected complete 16-bit PCM WAV')
     return p, data
+
+
+def write_wav(path, p, data):
+    with wave.open(str(path), 'wb') as wav:
+        wav.setnchannels(p.nchannels)
+        wav.setsampwidth(p.sampwidth)
+        wav.setframerate(p.framerate)
+        wav.writeframes(data)
+
+
+def chars(text):
+    """Syllable proxy only, not phoneme alignment or a listening review."""
+    return len(re.findall(r'[\u4e00-\u9fffA-Za-z0-9]', text))
+
+
+def trim_edges(p, data):
+    """Trim only low-energy edges, retaining 60 ms around detected speech."""
+    samples = array.array('h', data)
+    window = max(1, round(p.framerate * .01)) * p.nchannels
+    threshold = 32768 * 10 ** (-52 / 20)
+    active = []
+    for start in range(0, len(samples), window):
+        block = samples[start:start+window]
+        rms = math.sqrt(sum(s*s for s in block) / len(block))
+        if rms >= threshold:
+            active.append(start)
+    if not active:
+        raise RuntimeError('Generated audio contains no detected speech')
+    pad = round(p.framerate * .06) * p.nchannels
+    start = max(0, active[0] - pad)
+    end = min(len(samples), active[-1] + window + pad)
+    start -= start % p.nchannels
+    end -= end % p.nchannels
+    return samples[start:end].tobytes(), start / p.nchannels / p.framerate, (len(samples)-end) / p.nchannels / p.framerate
 
 
 def stamp(seconds):
@@ -65,44 +84,105 @@ def stamp(seconds):
     return f'{ms // 3600000:02}:{ms // 60000 % 60:02}:{ms // 1000 % 60:02}.{ms % 1000:03}'
 
 
-def produce(lesson):
-    work = OUT / 'production' / lesson
+def synthesize_turn(work, idx, speaker, text, speech_rate):
+    if (work / 'PAUSE_NEW_REQUESTS').exists():
+        raise RuntimeError('New synthesis paused before submission')
+    body = {'model': 'seed-audio-1.0', 'text_prompt': PROMPT + text,
+            'references': [{'speaker': VOICES[speaker]}],
+            'audio_config': {'format': 'wav', 'sample_rate': 48000, 'speech_rate': speech_rate,
+                             'pitch_rate': 0, 'loudness_rate': 0, 'enable_subtitle': True}}
+    request_hash = hashlib.sha256(json.dumps(body, ensure_ascii=False, sort_keys=True).encode('utf-8')).hexdigest()
+    stem = work / 'requests' / f'{speaker}-{request_hash[:16]}'
+    stem.parent.mkdir(parents=True, exist_ok=True)
+    req, txt, rec, raw = (Path(str(stem) + suffix) for suffix in ('.request.json', '.txt', '.record.json', '.wav'))
+    # Reuse an already completed deliberately generated sentence even if its index
+    # moved. Never turn an in-flight/uncertain record into another paid request.
+    if not rec.exists():
+        for existing in (OUT / 'production').rglob('*.record.json'):
+            prior = json.loads(existing.read_text(encoding='utf-8-sig'))
+            request = prior.get('request', {})
+            same = prior.get('expected_text') == text and request.get('references') == body['references'] and request.get('audio_config') == body['audio_config']
+            if not same:
+                continue
+            existing_wav = Path(str(existing).removesuffix('.record.json') + '.wav')
+            if prior.get('state') != 'completed_pcm_verified' or not existing_wav.exists():
+                raise RuntimeError(f'{work.name} turn {idx}: matching incomplete paid record exists; inspect it, no retry sent')
+            rec, raw = existing, existing_wav
+            break
+    if rec.exists():
+        prior = json.loads(rec.read_text(encoding='utf-8'))
+        if prior.get('state') != 'completed_pcm_verified' or not raw.exists():
+            raise RuntimeError(f'{work.name} turn {idx}: existing incomplete record, no retry sent')
+        request = prior.get('request', {})
+        if prior.get('expected_text') != text or request.get('references') != [{'speaker': VOICES[speaker]}] or request.get('audio_config', {}).get('speech_rate') != speech_rate:
+            raise RuntimeError(f'{work.name} turn {idx}: frozen paid record differs from requested script/config; choose a deliberate new version')
+    else:
+        txt.write_text(text, encoding='utf-8')
+        save(req, body)
+        result = subprocess.run([sys.executable, str(HELPER), 'synthesize', '--request', str(req),
+                                 '--expected-text', str(txt), '--record', str(rec), '--output', str(raw)],
+                                capture_output=True, text=True, encoding='utf-8')
+        if result.returncode:
+            raise RuntimeError(f'{work.name} turn {idx}: synthesis failed; redacted record retained, no retry sent')
+    p, data = pcm(raw)
+    trimmed, head, tail = trim_edges(p, data)
+    trimmed_path = work / f'turn-{idx:02}.trimmed.wav'
+    processed = work / f'turn-{idx:02}.paced.wav'
+    write_wav(trimmed_path, p, trimmed)
+    trimmed_duration = len(trimmed) / p.nchannels / p.sampwidth / p.framerate
+    proxy_count = chars(text)
+    raw_rate = proxy_count / trimmed_duration
+    tempo = min(1.18, 5.8/raw_rate) if raw_rate < 5.5 else 1.0
+    if tempo != 1.0:
+        subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', str(trimmed_path),
+                        '-af', f'atempo={tempo:.8f}', '-c:a', 'pcm_s16le', str(processed)], check=True)
+    else:
+        write_wav(processed, p, trimmed)
+    final_p, final_data = pcm(processed)
+    duration = final_p.nframes / final_p.framerate
+    turn = {'index': idx, 'speaker': speaker, 'name': NAMES[speaker], 'text': text, 'voice': VOICES[speaker],
+            'raw_duration': p.nframes/p.framerate, 'duration': duration,
+            'edge_silence_removed': {'head_seconds': round(head, 4), 'tail_seconds': round(tail, 4),
+                                     'rms_threshold_dbfs': -52, 'retained_pad_seconds': .06},
+            'pitch_preserving_local_tempo': round(tempo, 6), 'speech_rate_request': speech_rate,
+            'spoken_character_proxy_count': proxy_count, 'character_proxy_per_second': round(proxy_count/duration, 3),
+            'sha256': hashlib.sha256(final_data).hexdigest()}
+    turn['paid_record'] = rec.relative_to(ROOT).as_posix()
+    save(work / f'turn-{idx:02}.pacing.json', turn)
+    print(f'{work.name}: turn {idx} ready ({duration:.2f}s, {proxy_count/duration:.2f} character proxy/s)', flush=True)
+    return turn
+
+
+def produce(lesson, lines, version, speech_rate, workers):
+    work = OUT / 'production' / version / lesson
     work.mkdir(parents=True, exist_ok=True)
-    lines = LESSONS[lesson]
-    status = {'lesson': lesson, 'state': 'generating', 'provider': 'Doubao OpenSpeech',
-              'model': 'seed-audio-1.0', 'synthetic_voices': VOICES, 'human_listening_review': False,
+    status = {'lesson': lesson, 'edition': version, 'state': 'generating', 'provider': 'Doubao OpenSpeech',
+              'model': 'seed-audio-1.0', 'synthetic_voices': VOICES, 'voice_names': VOICE_NAMES,
+              'speech_rate_request': speech_rate, 'pitch_rate': 0, 'inter_turn_silence_seconds': .1,
+              'character_proxy_target_per_second': [5.5, 6.5], 'human_listening_review': False,
+              'pacing_note': 'Measured character proxy per processed whole phrase, not phoneme alignment or listening review.',
+              'official_api_reference': 'https://docs.volcengine.com/docs/DoubaoVoice/audio-generation-http?lang=zh',
+              'official_voice_reference': 'https://docs.volcengine.com/docs/DoubaoVoice/Tonelist-1?lang=zh',
               'script': [{'speaker': s, 'name': NAMES[s], 'text': t} for s, t in lines], 'turns': []}
     save(work / 'manifest.json', status)
-    for idx, (speaker, text) in enumerate(lines, 1):
-        stem = work / f'turn-{idx:02}'
-        req, txt, rec, wav = (Path(str(stem) + suffix) for suffix in ('.request.json', '.txt', '.record.json', '.wav'))
-        if rec.exists():
-            prior = json.loads(rec.read_text(encoding='utf-8'))
-            if prior.get('state') != 'completed_pcm_verified' or not wav.exists():
-                raise RuntimeError(f'{lesson} turn {idx} existing incomplete record: no retry sent')
-        else:
-            txt.write_text(text, encoding='utf-8')
-            save(req, {'model': 'seed-audio-1.0',
-                       'text_prompt': '自然清楚的普通话，年轻大学生和朋友聊天，语气轻快、有好奇心，句间稍有停顿。不要播音腔，不加音乐或笑声，只朗读以下正文，不读说明：\n' + text,
-                       'references': [{'speaker': VOICES[speaker]}],
-                       'audio_config': {'format': 'wav', 'sample_rate': 48000, 'speech_rate': 7,
-                                        'pitch_rate': 0, 'loudness_rate': 0, 'enable_subtitle': True}})
-            result = subprocess.run([sys.executable, str(HELPER), 'synthesize', '--request', str(req),
-                                     '--expected-text', str(txt), '--record', str(rec), '--output', str(wav)],
-                                    capture_output=True, text=True, encoding='utf-8')
-            if result.returncode:
-                status.update(state='failed_no_retry', failed_turn=idx)
+    turns = {}
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        futures = {pool.submit(synthesize_turn, work, idx, speaker, text, speech_rate): idx for idx, (speaker, text) in enumerate(lines, 1)}
+        errors = []
+        for future in as_completed(futures):
+            try:
+                turn = future.result()
+                turns[turn['index']] = turn
+                status['turns'] = [turns[i] for i in sorted(turns)]
                 save(work / 'manifest.json', status)
-                raise RuntimeError(f'{lesson} turn {idx}: synthesis failed, redacted record retained; no retry sent')
-        p, data = pcm(wav)
-        status['turns'].append({'index': idx, 'speaker': speaker, 'name': NAMES[speaker], 'text': text,
-                                'voice': VOICES[speaker], 'duration': p.nframes / p.framerate,
-                                'sha256': hashlib.sha256(data).hexdigest()})
-        save(work / 'manifest.json', status)
-        print(f'{lesson}: turn {idx}/{len(lines)} ready ({p.nframes / p.framerate:.2f}s)', flush=True)
-    params, _ = pcm(work / 'turn-01.wav')
-    current, timeline = 1.2, []
-    gap = 0.24
+            except Exception as exc:
+                errors.append(str(exc))
+        if errors:
+            status.update(state='failed_no_retry', errors=errors)
+            save(work / 'manifest.json', status)
+            raise RuntimeError('; '.join(errors))
+    params, _ = pcm(work / 'turn-01.paced.wav')
+    current, timeline = .35, []
     with wave.open(str(work / 'dialogue.wav'), 'wb') as out:
         out.setnchannels(params.nchannels)
         out.setsampwidth(params.sampwidth)
@@ -110,33 +190,43 @@ def produce(lesson):
         silence = lambda seconds: b'\0' * round(seconds * params.framerate) * params.nchannels * params.sampwidth
         out.writeframes(silence(current))
         for i, turn in enumerate(status['turns']):
-            p, data = pcm(work / f'turn-{i+1:02}.wav')
+            p, data = pcm(work / f'turn-{i+1:02}.paced.wav')
             if (p.nchannels, p.sampwidth, p.framerate) != (params.nchannels, params.sampwidth, params.framerate):
                 raise RuntimeError('Audio segment formats differ')
             out.writeframes(data)
             timeline.append({'index': i, 'start': round(current, 4), 'end': round(current + turn['duration'], 4),
                              'speaker': turn['speaker'], 'name': turn['name'], 'text': turn['text']})
             current += turn['duration']
+            gap = .1 if i < len(status['turns'])-1 else .6
             out.writeframes(silence(gap))
             current += gap
-        out.writeframes(silence(1.5))
-        current += 1.5
-    save(OUT / f'{lesson}.timeline.json', timeline)
+    save(work / 'timeline.json', timeline)
     vtt = ['WEBVTT', '']
     for i, turn in enumerate(timeline, 1):
         vtt += [str(i), f"{stamp(turn['start'])} --> {stamp(turn['end'])}", f"{turn['name']}：{turn['text']}", '']
-    (OUT / f'{lesson}.vtt').write_text('\n'.join(vtt), encoding='utf-8')
-    status.update(state='generated_pcm_verified', duration=round(current, 4))
+    (work / 'dialogue.vtt').write_text('\n'.join(vtt), encoding='utf-8')
+    status.update(state='generated_pcm_verified', duration=round(current, 4),
+                  character_proxy_count=sum(t['spoken_character_proxy_count'] for t in status['turns']),
+                  character_proxy_per_second=round(sum(t['spoken_character_proxy_count'] for t in status['turns']) / sum(t['duration'] for t in status['turns']), 3))
     save(work / 'manifest.json', status)
-    print(f'{lesson}: complete audio timeline {current:.2f}s', flush=True)
+    print(f'{lesson}: AUDIO TIMELINE READY {current:.2f}s at {status["character_proxy_per_second"]} character proxy/s: {work / "timeline.json"}', flush=True)
 
 
 if __name__ == '__main__':
     if hasattr(sys.stdout, 'reconfigure'):
         sys.stdout.reconfigure(encoding='utf-8')
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('lessons', nargs='*')
+    parser.add_argument('--version', default='v3-1')
+    parser.add_argument('--speech-rate', type=int, default=40)
+    parser.add_argument('--workers', type=int, default=3)
+    args = parser.parse_args()
+    if not re.fullmatch(r'[A-Za-z0-9_-]+', args.version):
+        raise SystemExit('Version must be one safe directory name')
     if not HELPER.is_file():
         raise SystemExit('Existing Doubao helper not found. Set DOUBAO_TTS_HELPER; no substitute provider used.')
     if not os.getenv('DOUBAO_SPEECH_API_KEY'):
         raise SystemExit('Doubao speech environment is unavailable. No substitute provider used.')
-    for key in (sys.argv[1:] or list(LESSONS)):
-        produce(key)
+    scripts = json.loads((ROOT / 'manim/dialogue-scripts.json').read_text(encoding='utf-8-sig'))
+    for key in (args.lessons or ['foundations', 'flux']):
+        produce(key, scripts[key], args.version, args.speech_rate, max(1, min(3, args.workers)))

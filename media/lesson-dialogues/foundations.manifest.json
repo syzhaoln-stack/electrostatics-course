@@ -1,7 +1,8 @@
 {
   "lesson": "foundations",
+  "edition": "v3-1",
   "state": "rendered_muxed_decode_verified",
-  "duration_seconds": 74.135,
+  "duration_seconds": 76.264,
   "video": {
     "codec": "h264",
     "width": 1280,
@@ -12,39 +13,150 @@
     "provider": "Doubao OpenSpeech",
     "model": "seed-audio-1.0",
     "codec": "aac",
-    "sample_rate": "96000",
+    "sample_rate": "48000",
     "channels": 2,
     "voices": {
-      "xia": "zh_female_vv_uranus_bigtts",
-      "che": "zh_male_m191_uranus_bigtts"
+      "xia": "zh_female_shuangkuaisisi_uranus_bigtts",
+      "che": "zh_male_qingshuangnanda_uranus_bigtts"
     },
-    "original_pcm_peak_dbfs": -7.513934985287296,
-    "original_pcm_rms_dbfs": -31.86502939788148,
-    "original_full_scale_samples": 0
+    "voice_names": {
+      "xia": "爽快思思",
+      "che": "清爽男大"
+    },
+    "speech_rate_request": 40,
+    "pitch_rate": 0,
+    "inter_turn_silence_seconds": 0.1,
+    "character_proxy_per_second": 5.789,
+    "pacing_note": "Measured character proxy per processed whole phrase, not phoneme alignment or listening review.",
+    "local_tempo_by_turn": [
+      1.0,
+      1.058405,
+      1.18,
+      1.08236,
+      1.0,
+      1.18,
+      1.083959,
+      1.169969,
+      1.0,
+      1.075278,
+      1.0,
+      1.18,
+      1.088547,
+      1.0,
+      1.0
+    ],
+    "original_pcm_peak_dbfs": -0.35630952704871405,
+    "original_pcm_rms_dbfs": -28.48838425042331,
+    "original_full_scale_samples": 0,
+    "final_aac_integrated_lufs": -16.93,
+    "final_aac_true_peak_dbtp": -2.02,
+    "final_aac_loudness_range_lu": 4.4
   },
-  "production": "Original 3D Manim Community 0.18.1 animation and original two-student script",
-  "sha256": "cb35a530d2adc3034ecc5b66fcde1d5d8d4f2aedb27444fae37f6085b6375928",
-  "bytes": 2349641,
-  "dialogue_turns": 11,
+  "production": "Original 3D Manim animation and original two-student script",
+  "render_engine_metadata": "Rendered with Manim Community v0.19.0",
+  "sha256": "252c88f2aaa5a06b534ec579fc4a56bde7516ea359f1dc1e304184fc19472708",
+  "bytes": 2899146,
+  "dialogue_turns": 15,
   "all_captions_within_video": true,
   "full_final_mp4_decode": true,
+  "source_audio_sha256": "93601481c150da3d58ad08bc80530e50665df6d1b438811712495bb1a892cee1",
+  "source_timeline_sha256": "a130720b920ad71f6679e1d22f996b880e53900db3e74764b22455079ddbe91d",
+  "final_aac_turn_alignment": [
+    {
+      "index": 0,
+      "correlation": 0.99913,
+      "offset_ms": 0
+    },
+    {
+      "index": 1,
+      "correlation": 0.98913,
+      "offset_ms": 0
+    },
+    {
+      "index": 2,
+      "correlation": 0.9999,
+      "offset_ms": 0
+    },
+    {
+      "index": 3,
+      "correlation": 0.99473,
+      "offset_ms": 0
+    },
+    {
+      "index": 4,
+      "correlation": 0.99794,
+      "offset_ms": 0
+    },
+    {
+      "index": 5,
+      "correlation": 0.99233,
+      "offset_ms": 0
+    },
+    {
+      "index": 6,
+      "correlation": 0.9998,
+      "offset_ms": 0
+    },
+    {
+      "index": 7,
+      "correlation": 0.99988,
+      "offset_ms": 0
+    },
+    {
+      "index": 8,
+      "correlation": 0.99983,
+      "offset_ms": 0
+    },
+    {
+      "index": 9,
+      "correlation": 0.9979,
+      "offset_ms": 0
+    },
+    {
+      "index": 10,
+      "correlation": 0.99975,
+      "offset_ms": 0
+    },
+    {
+      "index": 11,
+      "correlation": 0.99961,
+      "offset_ms": 0
+    },
+    {
+      "index": 12,
+      "correlation": 0.99989,
+      "offset_ms": 0
+    },
+    {
+      "index": 13,
+      "correlation": 0.99884,
+      "offset_ms": 0
+    },
+    {
+      "index": 14,
+      "correlation": 0.99983,
+      "offset_ms": 0
+    }
+  ],
   "visual_review": {
-    "method": "Representative final MP4 frames inspected",
-    "frame_seconds": [
-      3,
-      44
+    "method": "representative-frame visual inspection of final MP4",
+    "seconds": [
+      16,
+      23,
+      33,
+      48,
+      62,
+      72
     ],
-    "layout": "formula and geometry remain visible"
+    "checks": [
+      "charge units and elementary charge definition legible",
+      "early scenes discuss force before defining E",
+      "equal-radius force comparison",
+      "inverse-square counterexample",
+      "F over q table and E definition",
+      "negative probe force opposite E",
+      "summary without overlapping text or caption overflow"
+    ]
   },
-  "human_listening_review": false,
-  "all_returned_subtitles_match_script": true,
-  "player_review": {
-    "desktop": true,
-    "mobile_width": 390,
-    "mobile_scroll_width": 390,
-    "play_pause_speaker_sync": true,
-    "click_transcript_seek": true,
-    "keyboard_space_and_5s_seek": true,
-    "runtime_errors": []
-  }
+  "human_listening_review": false
 }

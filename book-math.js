@@ -1,7 +1,7 @@
 import katex from './vendor/katex/katex.esm.js';
 const T=String.raw;
 export const DISPLAY_MATH={
- foundations:[T`\mathbf E(P)=\frac{\mathbf F}{q},\qquad \mathbf F=q\mathbf E(P)`,T`\mathbf E(P)=\frac{1}{4\pi\varepsilon_0}\frac{Q}{r^2}\,\hat{\mathbf r}`],
+ foundations:[T`\mathbf E(P)=\frac{\mathbf F}{q},\qquad \mathbf F=q\mathbf E(P)`,T`E=\frac{k|Q|}{r^2}`],
  field:[T`\mathbf E(P)=\mathbf E_1(P)+\mathbf E_2(P),\qquad \mathbf F(P)=q\mathbf E(P)`],
  flux:[T`\Phi_E=\oiint_S\mathbf E\cdot\mathrm d\mathbf A=\frac{Q_{\mathrm{in}}}{\varepsilon_0}`],
  symmetry:[T`\oiint_S\mathbf E\cdot\mathrm d\mathbf A\;\overset{\text{对称性}}{=}\;E A_{\mathrm{eff}}`,T`E_{\mathrm{sphere}}=\frac{|Q|}{4\pi\varepsilon_0r^2},\qquad E_{\mathrm{line}}=\frac{|\lambda|}{2\pi\varepsilon_0r},\qquad E_{\mathrm{plane}}=\frac{|\sigma|}{2\varepsilon_0}`],
@@ -31,6 +31,7 @@ export function typesetBook(root,unit,index){
   const tex=DISPLAY_MATH[unit.id]?.[count-1];if(tex){renderMath(formula,tex,true);original.replaceWith(formula);block.insertBefore(number,formula.nextSibling);}
  }
  for(const node of root.querySelectorAll('.book-prose b,.book-table td')){const tex=INLINE.get(node.textContent.trim());if(tex)renderMath(node,tex);}
+ for(const node of root.querySelectorAll('[data-tex]:not(.book-equation-math)'))renderMath(node,node.dataset.tex,false);
  let sub=0;for(const heading of root.querySelectorAll('.book-prose h2')){const marker=document.createElement('span');marker.className='book-subnumber';marker.textContent=`${index+1}.${++sub}`;heading.prepend(marker);}
  let example=0;for(const block of root.querySelectorAll('.book-example')){const head=block.querySelector('b');if(head){const marker=document.createElement('span');marker.className='book-example-number';marker.textContent=`例 ${index+1}.${++example}　`;head.prepend(marker);}}
 }
