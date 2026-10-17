@@ -1,6 +1,6 @@
 # 静电场 · 交互教材
 
-大学物理 A，JC05 静电场，12 学时。发现版 3.1 采用本地宋体衬线字、LaTeX 数学排版、规范公式编号和图号；正文中嵌入可旋转、可拖动的真实三维模型。每节以一个具体问题开始，列出学习目标；图中一次呈现一个操作任务，按测量值核对完成状态。必要定义、单位和模型条件与插图对应。
+大学物理 A，JC05 静电场，12 学时。发现版 3.2 采用本地宋体衬线字、LaTeX 数学排版、规范公式编号和图号；正文中嵌入可旋转、可拖动的真实三维模型。每节以一个具体问题开始，列出学习目标；图中一次呈现一个操作任务，按测量值核对完成状态。必要定义、单位和模型条件与插图对应。
 
 - 教材：https://syzhaoln-stack.github.io/electrostatics-course/
 - 大纲对照：https://syzhaoln-stack.github.io/electrostatics-course/syllabus.html
@@ -55,3 +55,12 @@ node serve.mjs --directory dist --port 4174
 GitHub Actions 在 main 更新后测试、构建并发布 Pages。QA 页面不进入构建。原实验详细模型说明保留于 `legacy-model-notes.md` 和 `physics-notes.md`；旧运行入口仅作版本记录。
 
 公开参考：[OpenStax University Physics Volume 2，第 5—7 章](https://openstax.org/books/university-physics-volume-2/pages/5-introduction)。各节页末有相关章节链接。正文根据物理定义独立编写，未复制原教材整段内容。
+
+
+## 3.2 历史实验档案
+
+- `coulomb.html`：提供的1785论文现代英译本完整中译（6页正文）、原图版、逐页影印与法文原刊；据法文cosinus校正英译中的sine，并明确标注编者校注。
+- 三维扭秤按主要历史尺寸构建，支持旋转、全机/两球/俯视、上端旋钮直接拖动、三次历史读数重放；几何显示适度放大小球与细丝。
+- 史料读数与现代假定力律的平衡模型严格区分。历史β/α为0/36、126/18、567/8.5，第三次算术总扭转575.5°、原文576°同时保留。模型含弦长、余弦力臂、漏电示例与接触停止条件，过渡动画不代表真实动力学。
+- `history.html`：核实MIT2001课程四项实验；另列库仑实验课程记录。正文范围限定JC05，六个装置/情境映射七项要求，设计建议与已有交互区分。光学列表折叠为教师参考。
+- 所有原稿资产在 `assets/coulomb/`；出处与SHA-256见 `source.json`。不改动独立实验版。
