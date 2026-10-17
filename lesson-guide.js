@@ -30,16 +30,20 @@ export const LESSONS={
   ['potential-charge','保持这层电势，换成 −e。','同一个位置的 V 不变，U = qV 的符号改变。'],
   ['zero','选 0 V 面，让粒子在两源之间移动。','V₁ 与 V₂ 抵消；V = 0 的位置仍有 E 和 F。'],
   ['energy','切到“释放电荷”，让粒子从静止开始运动。','核对电场做功 W = −ΔU = ΔK，数值不再为零。'],
+  ['energy-sign','把负试探电荷放到某一层，让电势能达到 −1.400 eV。','直接选图中的电势面，换 q 的符号；源电荷不变。'],
   ['reference','展开“∞ 零电势参考”，把测量点拖向远处。','有限电荷体系在 r → ∞ 时 V → 0；无穷远不是近处某个零势点。']
  ]},
  paths:{question:'绕一条更长的路，电场会多做功吗？',why:'路线各段的功可能不同；固定起点和终点，看两条路最后的累计值。',goals:['分别用 q∫E·dr 和 q(VA−VB) 计算电场做功。','沿有正功也有负功的闭路走完，核对 ∮E·dr = 0。','转动并缩短一小步，比较 E·û 与 −ΔV/Δs。'],codes:[3,5,6],tasks:[
   ['routes','拖金色柄绕远一些，再让两颗粒子同时走到 B。','比较两条路累计的功与 q(VA−VB)，允许 0.01 eV 误差。'],
   ['loop','选“闭合一圈”，完整走回起点。','中途有正、负功，最后累计功接近 0。'],
+  ['zero-step','转动紫色位移柄：让力还在，但沿程分量接近零。','把 |cos θ| 降到 0.035 以下，再将步长缩到 0.06 mm 以内。'],
+  ['target-work','拖动终点 B，让这趟电场做功达到 +0.500 eV。','允许 ±0.020 eV；调整后走完一次，比较端点公式和沿路积分。'],
   ['gradient','选“转动一小步”，把紫色方向对准 E，再缩短步长。','核对 −ΔV/Δs 逐渐接近 E 在该方向的分量。']
  ]},
  conductors:{question:'外场还在，金属里面为什么可以没有总电场？',why:'剖开金属球，分别看外场与感应场；两者在材料内部相消。',goals:['移动探针，核对中性球内 E外 + E感应 = 0。','沿表面测量，辨认等势与切向场为零。','对孤立带电球分别求球内外 E、V，核对表面势连续。'],codes:[7],tasks:[
   ['inside','在剖开的中性球内部挪动 P，测几个位置。','外场非零、感应场反向，合场约为零。'],
   ['surface','点“沿表面”，再把 P 拖到另一处表面。','V 不变，切向场为零；法向场可随位置变化。'],
+  ['pole','在中性球表面找到场最强的位置。','挪动 P，或转动外场，让表面场强达到外场的 3 倍，允许 2% 误差。'],
   ['charged','选孤立带电球，把 P 从球外拖到球内。','球内 E = 0、V = kQ/R；球外 E 随 1/r²、V 随 1/r。']
  ]},
  applications:{question:'同样是静电，什么时候帮助我们，什么时候引发风险？',why:'先看实物和现场，再追踪电荷积累、局部强场、放电与后果之间的联系。',goals:['从有来源的照片中辨认设备、放电间隙与相关物料。','用 E、F、V、做功及静电平衡解释一个具体过程。','在案例内用 5W2H 检查事实和机制，改变一个防护条件。'],codes:[1,6,7],tasks:[
@@ -58,16 +62,36 @@ export function readObservation(id,host,eventState){
  if(id==='symmetry')return eventState||{mode:d.symmetryMode,radius:n(d.symmetryRadius),E:n(d.symmetryE),offset:Math.abs(n(d.symmetryOffset)),spread:n(d.symmetrySpread),fluxRatio:n(d.symmetryFluxRatio)};
  if(id==='field')return {unit:id,E:json(c.vectorE),F:json(c.vectorF),E1:json(c.vectorE1),E2:json(c.vectorE2),P:json(c.probe),sources:json(c.sources),q:n(c.forceSign),preset:host.querySelector('[data-preset].active')?.dataset.preset};
  if(id==='potential'){const P=json(d.potentialProbe),f=P.length?fieldAt(P,d.potentialStep==='3'?DIPOLE_SOURCES:SINGLE_SOURCE):{E:[0,0,0]},far=json(d.potentialFarReference,{});return{unit:id,mode:n(d.potentialStep),q:n(host.querySelector('[data-probe-sign].active')?.dataset.probeSign)||1,progress:n(d.potentialProgress),W:n(d.potentialWork),K:n(d.potentialDeltaK),deltaU:n(d.potentialDeltaU),V:n(d.potentialVoltage),level:n(d.potentialSelectedLevel),E:norm(f.E),tangent:n(d.potentialNormalDotTangent),U:n(d.potentialEnergy),P,farV:far.V,farDistance:far.distance};}
- if(id==='paths')return{unit:id,mode:d.pathMode,progress:n(d.pathProgress),W1:n(d.pathWorkDirect),W2:n(d.pathWorkDetour),endpoint:n(d.pathEndpointWork),slope:n(d.pathLocalSlope),parallel:n(d.pathLocalParallel),step:n(host.querySelector('#paths-step')?.value),handle:json(d.pathHandle)};
+ if(id==='paths')return{unit:id,mode:d.pathMode,progress:n(d.pathProgress),W1:n(d.pathWorkDirect),W2:n(d.pathWorkDetour),endpoint:n(d.pathEndpointWork),slope:n(d.pathLocalSlope),parallel:n(d.pathLocalParallel),step:n(host.querySelector('#paths-step')?.value),handle:json(d.pathHandle),localE:json(d.pathLocalE),localDirection:json(d.pathLocalDirection)};
  if(id==='conductors')return{unit:id,mode:d.conductorMode,P:json(d.conductorProbe),E:json(d.conductorE),V:n(d.conductorV),inside:d.conductorInside==='true',surface:d.conductorSurface==='true',tangent:n(d.conductorTangential),external:json(d.conductorExternal),induced:json(d.conductorInduced),radius:n(d.conductorRadius),Q:n(d.conductorNetQ)*1e-12};
  return{unit:id,case:new URLSearchParams(location.search).get('case'),analysis:[...host.querySelectorAll('details[open]>summary')].some(el=>el.textContent.includes('5W2H')),stage:n(host.querySelector('[data-step][aria-pressed=true]')?.dataset.step),condition:JSON.stringify([...host.querySelectorAll('input:checked,[data-state].active')].map(el=>el.id||el.dataset.state))};
 }
+
+function prepareTask(lab,id,task){
+ const click=s=>lab.querySelector(s)?.click();
+ if(id==='potential'){
+  if(task==='surface')click('[data-potential-step="1"]');
+  if(task==='zero'||task==='energy-sign')click('[data-potential-step="3"]');
+  if(task==='zero')click('[data-potential-level="0"]');
+  if(task==='energy')click('[data-potential-step="0"]');
+  if(task==='reference')click('[data-potential-step="1"]');
+ }
+ if(id==='paths'){
+  const mode=task==='zero-step'||task==='gradient'?'local':task==='loop'?'loop':'routes';click('[data-path-mode="'+mode+'"]');
+  if(task==='zero-step'){click('#paths-along');const el=lab.querySelector('#paths-step');el.value=.3;el.dispatchEvent(new Event('input',{bubbles:true}));}
+ }
+ if(id==='conductors'){
+  click('[data-conductor-mode="'+(task==='charged'?'charged':'induced')+'"]');
+  click('#conductor-'+(task==='surface'||task==='pole'?'surface':task==='charged'?'outside':'inside'));
+ }
+}
+
 export function mountLessonGuide(host,id,experience){
  const l=LESSONS[id];let index=0,memory={},interaction=0,eventState=null,pendingSince=0,completed=false,disposed=false;
  let saved={};const storageKey='electrostatics-observations-v3-'+id;try{saved=JSON.parse(sessionStorage.getItem(storageKey)||'{}')}catch{}
  host.innerHTML=`<div class="lesson-task-top"><span class="lesson-task-count"></span><strong class="lesson-task-title"></strong><button class="lesson-task-next" hidden>下一件事 →</button></div><p class="lesson-task-instruction"></p><output class="lesson-task-evidence" aria-live="polite"></output>`;
  const $=s=>host.querySelector(s);
- const draw=()=>{const t=l.tasks[index];$('.lesson-task-count').textContent=`动手 ${index+1} / ${l.tasks.length}`;$('.lesson-task-title').textContent=t[1];$('.lesson-task-instruction').textContent=t[2];$('.lesson-task-evidence').textContent='直接操作图中的物体，结果会显示在这里。';host.dataset.task=t[0];host.dataset.complete='false';host.classList.remove('is-complete');$('.lesson-task-next').hidden=true;memory={};interaction=0;pendingSince=0;completed=false;};
+ const draw=()=>{const t=l.tasks[index];$('.lesson-task-count').textContent=`动手 ${index+1} / ${l.tasks.length}`;$('.lesson-task-title').textContent=t[1];$('.lesson-task-instruction').textContent=t[2];$('.lesson-task-evidence').textContent='直接操作图中的物体，结果会显示在这里。';host.dataset.task=t[0];host.dataset.complete='false';host.classList.remove('is-complete');$('.lesson-task-next').hidden=true;memory={};interaction=0;pendingSince=0;completed=false;prepareTask(experience,id,t[0]);};
  const act=e=>{if(e.isTrusted)interaction++;};for(const type of ['pointerdown','input','keydown','click'])experience.addEventListener(type,act);
  const state=e=>{if((e.detail?.unit||e.detail?.lab)===id)eventState=e.detail;};experience.addEventListener('lab-state',state);
  function update(){if(disposed||completed)return;const value=readObservation(id,experience,eventState);if(!value)return;const result=evaluateObservation(id,l.tasks[index][0],value,memory);$('.lesson-task-evidence').textContent=result.evidence||'等待图中测量值…';

@@ -1,3 +1,4 @@
+import {GLTFLoader} from './vendor/GLTFLoader.js';
 import {FieldScene,THREE} from './scene.js';
 
 // Qualitative mechanisms linked to investigation evidence; dimensions are not reconstructions.
@@ -5,7 +6,7 @@ export function mountCaseScene(host,{caseId='desmoines',state={},onInspect}={}){
  const view=new FieldScene(host,{extent:6}),compact=host.clientWidth<500;view.camera.position.set(...(compact?[11,7,14]:[8,5,10]));view.controls.target.set(0,-.7,0);if(caseId==='esd'){view.camera.position.set(...(compact?[7,4,9]:[5,2.6,6]));view.controls.target.set(0,-1.6,0);}
  host.style.position='relative';const notes=document.createElement('div');notes.style.cssText='position:absolute;top:12px;left:12px;right:12px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;pointer-events:none;z-index:2';host.append(notes);
  let current={step:0,bonded:false,grounded:true,liquid:'diesel',fieldOn:true,chargeOn:true,vaporVisible:true,...state};
- let dust=[],cueMarks=[],cueMesh=null,cueText='',animationTime=0,lastTime=null;
+ let actualModel=null;let dust=[],cueMarks=[],cueMesh=null,cueText='',animationTime=0,lastTime=null;
  const motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
  const cue=document.createElement('div');cue.className='case-attention-cue';cue.hidden=true;host.append(cue);
  function attention(mesh,text){
@@ -20,7 +21,7 @@ export function mountCaseScene(host,{caseId='desmoines',state={},onInspect}={}){
  function cylinder(r,h,pos,color,opacity=1){const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,56),material(color,opacity,.45));m.position.set(...pos);m.castShadow=true;group().add(m);return m}
  function tube(points,color,r=.035){const curve=new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(...p)));const m=new THREE.Mesh(new THREE.TubeGeometry(curve,48,r,8,false),material(color));group().add(m);return m}
  function label(text,p,color='#c4dce9',size=.48){
-  if(caseId==='esd'&&!['芯片与引脚','+'].includes(text))return null;
+  if(caseId==='esd'&&text!=='+')return null;
   if(caseId==='esp'&&!['放电电极侧','收集极板'].includes(text))return null;
   if(text.length>15){const note=document.createElement('div');note.textContent=text;note.style.cssText=`max-width:100%;font:12px/1.7 'Microsoft YaHei',sans-serif;color:#c7dce9;background:#0b1929e8;border:1px solid #2e465b;border-radius:6px;padding:5px 9px`;notes.append(note);return null;}
   const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');ctx.font='600 40px "Microsoft YaHei",sans-serif';canvas.width=Math.max(128,Math.ceil(ctx.measureText(text).width+32));canvas.height=80;ctx.font='600 40px "Microsoft YaHei",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#0b1929dc';ctx.fillRect(0,5,canvas.width,70);ctx.fillStyle=new THREE.Color(color).lerp(new THREE.Color('#e1f4ff'),.5).getStyle();ctx.fillText(text,canvas.width/2,40);
@@ -64,8 +65,10 @@ export function mountCaseScene(host,{caseId='desmoines',state={},onInspect}={}){
   if(current.step===3){label('事件后果请对照现场照片',[0,2.15,0],'#a75641',.5);if(caseId==='glenpool'||!current.bonded){const glow=sphere(r*1.1,[0,-.3,0],'#d97940',.07);glow.scale.y=.7;}}
  }
  function chip(){
-  box([5.4,.16,4],[-.2,-2.6,0],'#547f78');const chipBody=box([2.15,.38,1.65],[0,-2.28,0],'#263b4b');let targetPin;
+  let chipBody,targetPin;if(actualModel){chipBody=actualModel.getObjectByName('silicon_die');targetPin=actualModel.getObjectByName('pin_1_6');}else{
+  box([5.4,.16,4],[-.2,-2.6,0],'#547f78');chipBody=box([2.15,.38,1.65],[0,-2.28,0],'#263b4b');
   for(let side of [-1,1])for(let i=0;i<7;i++){const x=-.85+i*.28;const pin=box([.13,.11,.62],[x,-2.32,side*1.05],'#c1cbd1');if(side===1&&i===6)targetPin=pin;view.line([[x,-2.48,side*1.3],[x,-2.48,side*1.8],[x+.2,-2.48,side*1.8]],'#accdb0','case-vectors');}
+  }
   label('芯片与引脚',[-.7,-1.6,-.9]);const gap=[1.2,.5,.08,.08][current.step],target=[.84,-2.265,1.05];
   const tool=new THREE.Mesh(new THREE.CylinderGeometry(.16,.07,2.1,24),material('#a9b7c2',1,.7));tool.rotation.z=-.5;tool.position.set(target[0]+Math.sin(.5)*1.05,target[1]+gap+Math.cos(.5)*1.05,target[2]);group().add(tool);
   const tip=[target[0],target[1]+gap,target[2]],top=[tool.position.x+Math.sin(.5)*1.05,tool.position.y+Math.cos(.5)*1.05,target[2]];
@@ -87,7 +90,7 @@ export function mountCaseScene(host,{caseId='desmoines',state={},onInspect}={}){
   label(charged?'颗粒带正电（示例）':'颗粒未带电',[1,-2.2,2.4],charged?'#8a621c':'#4d6877',.43);if(!field)label(current.step<2?'此步尚未引入收集电场':'收集电场已关闭',[0,.5,0],'#596d78',.4);
   if(current.step===3&&charged&&field)label('接触极板即停留；动画循环补入新颗粒',[0,2.5,0],'#356d8b',.4);
  }
- function rebuild(){for(const name of ['case','case-labels','case-vectors'])view.clearLayer(name);notes.replaceChildren();dust=[];cueMarks=[];cueMesh=null;cueText='';cue.hidden=true;if(caseId==='esd')chip();else if(caseId==='esp')collector();else tank();}
+ function rebuild(){for(const mark of cueMarks){mark.removeFromParent();mark.geometry.dispose();mark.material.dispose();}for(const name of ['case','case-labels','case-vectors'])view.clearLayer(name);notes.replaceChildren();dust=[];cueMarks=[];cueMesh=null;cueText='';cue.hidden=true;if(caseId==='esd')chip();else if(caseId==='esp')collector();else tank();}
  view.onPick((p,obj)=>{if(obj?.userData?.part)onInspect?.(obj.userData.part)});
  view.frameFn=t=>{
   const delta=lastTime===null?0:Math.min(80,t-lastTime);lastTime=t;if(!motionPreference.matches)animationTime+=delta;
@@ -95,6 +98,7 @@ export function mountCaseScene(host,{caseId='desmoines',state={},onInspect}={}){
   if(caseId==='esp')for(const d of dust){const u=((animationTime/6500+d.phase)%1);let z=d.startZ,x=-4+u*8;if(current.step>=2&&current.fieldOn&&current.chargeOn){const contact=1.61-d.radius,hit=Math.sqrt((contact-d.startZ)/3),a=Math.min(u,hit);z=d.startZ+3*a*a;x=-4+8*a;}d.mesh.position.set(x,d.startY,z);}
   if(cueMesh){const position=cueMesh.getWorldPosition(new THREE.Vector3()).project(view.camera);cue.style.left=`${Math.max(.2,Math.min(.8,(position.x+1)/2))*100}%`;cue.style.top=`${Math.max(.25,Math.min(.85,(1-position.y)/2))*100}%`;cue.dataset.component=cueText;}
  };
+ if(caseId==='esd')new GLTFLoader().load(new URL('./assets/models/esd.glb',import.meta.url).href,g=>{if(view.disposed){g.scene.traverse(o=>{o.geometry?.dispose();o.material?.dispose();});return;}actualModel=g.scene;view.layer('esd-model').add(actualModel);host.dataset.engine='blender-glb';rebuild();});
  rebuild();return {update(next){current={...current,...next};rebuild()},dispose(){notes.remove();cue.remove();view.dispose()}};
 }
 

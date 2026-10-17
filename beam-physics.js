@@ -9,13 +9,20 @@ export const BEAM_GROUPS=[{group:'A',chargeUnits:1,massUnits:1},{group:'B',charg
 export const BEAM_LEVELS=[
  {title:'收集一束电子',subtitle:'让有一点散开的电子，一起穿过接收孔。',target:[6,1.2,0],radius:.60,required:75,emitters:1,boost:0,steerY:45,steerZ:0,spread:.5,speed:1,moving:false,solution:{steerY:95,steerZ:0}},
  {title:'加速与转向',subtitle:'提高纵向动能，同时调整横向场，让束流对准孔。',target:[6,1.2,-.8],radius:.64,required:75,emitters:2,boost:4,steerY:95,steerZ:0,spread:.5,speed:1,moving:false,solution:{boost:4,steerY:200,steerZ:-130}},
- {title:'接住移动的目标',subtitle:'孔在上下移动。让导向场按相同周期变化，再调它提前多久。',target:[6,1.2,-.8],radius:.58,required:75,emitters:2,boost:4,steerY:200,steerZ:-130,spread:.5,speed:1,moving:true,solution:{boost:4,steerY:200,steerZ:-130,modulation:160,phase:90}}
+ {title:'接住移动的目标',subtitle:'孔在上下移动。让导向场按相同周期变化，再调它提前多久。',target:[6,1.2,-.8],radius:.58,required:75,emitters:2,boost:4,steerY:200,steerZ:-130,spread:.5,speed:1,moving:true,solution:{boost:4,steerY:200,steerZ:-130,modulation:160,phase:90}},
+ {title:'用点电荷送进孔',subtitle:'下方的负源排斥电子。拖动 Q 手柄，收集至少 75 个。',sourceModel:'point',sourceStrength:-.04,target:[6,1.2,0],radius:.60,required:75,emitters:1,boost:0,steerY:0,steerZ:0,spread:.5,speed:1,moving:false,solution:{sourceStrength:-.20}},
+ {title:'换成无限长线',subtitle:'线沿 z 延伸。调 λ，把电子束送进孔；比较沿途的弯曲。',sourceModel:'line',sourceStrength:-5,target:[6,1.2,0],radius:.60,required:75,emitters:1,boost:0,steerY:0,steerZ:0,spread:.5,speed:1,moving:false,solution:{sourceStrength:-28}}
 ];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const smooth=u=>{u=clamp(u,0,1);return u*u*u*(10+u*(-15+6*u));};
 const smoothD=u=>u>0&&u<1?30*u*u*(1-u)*(1-u):0;
 export function beamOptions(level=0,overrides={}){const o={level,...BEAM_LEVELS[level],modulation:0,phase:0,mode:'electron',profile:'normal',speedSpread:.07,pitch:0,yaw:0,seed:1805,interval:.14,...overrides};o.spread=clamp(o.spread,0,1);o.pitch=clamp(o.pitch,-1,1);o.yaw=clamp(o.yaw,-1,1);return o;}
 export function beamField(position,time,o){
+ if(o.sourceModel==='point'||o.sourceModel==='line'){
+  const d=[position[0]*.001,(position[1]+2.8)*.001,position[2]*.001],strength=o.sourceStrength*1e-12;
+  if(o.sourceModel==='line'){d[2]=0;const r=Math.max(.0001,Math.hypot(...d));return{E:d.map(v=>v===0?0:2*C.k*strength*v/r**2),V:-2*C.k*strength*Math.log(r/.0028),guide:1,accelerator:false};}
+  const r=Math.max(.0001,Math.hypot(...d));return{E:d.map(v=>C.k*strength*v/r**3),V:C.k*strength/r,guide:1,accelerator:false};
+ }
  const [x,y,z]=position,accU=(x+4.8)/2.2,boost=o.boost||0;
 
  const oscillation=o.moving?(o.modulation||0)*Math.sin(2*Math.PI*time/22+(o.phase||0)*Math.PI/180):0;
@@ -44,6 +51,12 @@ export function simulateElectron(particle,o,{dt=.025,sampleEvery=3}={}){
  const samples=[sample(state,time,o,charge,mass)],initialK=kineticEnergy(particle.velocity,mass);let afterBoostK=null;
  while(time<particle.launchTime+32&&index<5000){
   const next=step(state,time,dt,o,qOverM);index++;
+  if(o.sourceModel){
+   // Stop at a visible source boundary; never integrate a point/line singularity.
+   const a=[state[0],state[1]+2.8,o.sourceModel==='line'?0:state[2]],d=[next[0]-state[0],next[1]-state[1],o.sourceModel==='line'?0:next[2]-state[2]];
+   const t=clamp(-a.reduce((s,v,i)=>s+v*d[i],0)/(d.reduce((s,v)=>s+v*v,0)||1),0,1);
+   if(Math.hypot(...a.map((v,i)=>v+t*d[i]))<.18)return {...particle,samples,arrival:time,hit:false,outcome:'source-contact',initialK,afterBoostK};
+  }
   if(state[0]<-2.6&&next[0]>=-2.6){const f=(-2.6-state[0])/(next[0]-state[0]);afterBoostK=kineticEnergy(state.slice(3).map((v,i)=>v+(next[i+3]-v)*f),mass);}
   if(state[0]<6&&next[0]>=6){const f=(6-state[0])/(next[0]-state[0]),finish=state.map((v,i)=>v+(next[i]-v)*f),arrival=time+dt*f,gate=gateAt(arrival,o),error=Math.hypot(finish[1]-gate[1],finish[2]-gate[2]);samples.push(sample(finish,arrival,o,charge,mass));return {...particle,samples,arrival,gate,error,hit:error<=o.radius,outcome:error<=o.radius?'collected':'missed',initialK,afterBoostK};}
   state=next;time+=dt;if(index%sampleEvery===0)samples.push(sample(state,time,o,charge,mass));

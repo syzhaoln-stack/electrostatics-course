@@ -10,6 +10,7 @@ qa-*.ttf
 *.tgz
 media/podcast-production/
 media/*.wav
+media/esp-epa-source.mp4
 podcast-manifest.json
 *.tar.gz
 node_modules/

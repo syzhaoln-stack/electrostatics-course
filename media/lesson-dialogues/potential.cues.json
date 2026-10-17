@@ -1,0 +1,65 @@
+[
+  {
+    "turn": 0,
+    "phrase": "金色小球",
+    "target": "probe",
+    "start": 2.0582,
+    "end": 2.7582
+  },
+  {
+    "turn": 1,
+    "phrase": "金箭头",
+    "target": "force",
+    "start": 8.2743,
+    "end": 9.0743
+  },
+  {
+    "turn": 1,
+    "phrase": "紫箭头",
+    "target": "displacement",
+    "start": 10.2343,
+    "end": 10.9343
+  },
+  {
+    "turn": 2,
+    "phrase": "垂直",
+    "target": "right-angle",
+    "start": 21.8187,
+    "end": 22.5187
+  },
+  {
+    "turn": 3,
+    "phrase": "不受力",
+    "target": "force",
+    "start": 26.6439,
+    "end": 27.3439
+  },
+  {
+    "turn": 4,
+    "phrase": "电势",
+    "target": "formula",
+    "start": 39.0282,
+    "end": 39.7282
+  },
+  {
+    "turn": 5,
+    "phrase": "两倍电荷",
+    "target": "energy",
+    "start": 55.1116,
+    "end": 55.8116
+  },
+  {
+    "turn": 6,
+    "phrase": "金箭头",
+    "target": "force",
+    "start": 59.8378,
+    "end": 60.5378
+  },
+  {
+    "turn": 7,
+    "phrase": "电势差",
+    "target": "formula",
+    "start": 75.5022,
+    "end": 76.2022
+  }
+]

@@ -18,7 +18,10 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'media' / 'lesson-dialogues'
 SCENES = {'foundations': ('lesson_scenes', 'FoundationsDialogue'),
           'flux': ('lesson_scenes', 'FluxDialogue'),
-          'field': ('field_scene', 'SuperpositionDialogue')}
+          'field': ('field_scene', 'SuperpositionDialogue'),
+          'potential': ('energy_scenes', 'PotentialDialogue'),
+          'paths': ('energy_scenes', 'WorkDialogue'),
+          'conductors': ('energy_scenes', 'EquilibriumDialogue')}
 
 
 def run(*args):
@@ -111,7 +114,7 @@ def package(lesson, version='v3-3'):
     production = OUT / 'production'
     work = production / version / lesson
     module, scene = SCENES[lesson]
-    render_dir = {'foundations':'manim-render','field':'manim-render-field','flux':'manim-render-flux'}[lesson]
+    render_dir = 'manim-render' if lesson=='foundations' else 'manim-render-'+lesson
     rendered = production / version / f'{render_dir}/videos/{module}/720p24' / f'{scene}.mp4'
     audio = work / 'dialogue.wav'
     if not rendered.is_file() or not audio.is_file():

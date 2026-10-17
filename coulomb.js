@@ -1,3 +1,4 @@
+import './embed-layout.js';
 import {RECORDS,reading,equilibrium,historicalPoints,fittedPower} from './coulomb-physics.js';
 import {MEMOIR,TRANSLATION_NOTES} from './coulomb-text.js';
 import {mountBalance} from './coulomb-scene.js';

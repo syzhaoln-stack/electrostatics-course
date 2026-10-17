@@ -1,0 +1,106 @@
+{
+  "lesson": "potential",
+  "edition": "v3-4",
+  "state": "rendered_muxed_decode_verified",
+  "duration_seconds": 76.724,
+  "video": {
+    "codec": "h264",
+    "width": 1280,
+    "height": 720,
+    "fps": "24/1"
+  },
+  "audio": {
+    "provider": "Doubao OpenSpeech",
+    "model": "seed-audio-1.0",
+    "codec": "aac",
+    "sample_rate": "48000",
+    "channels": 2,
+    "voices": {
+      "xia": "zh_female_shuangkuaisisi_uranus_bigtts",
+      "che": "zh_male_qingshuangnanda_uranus_bigtts"
+    },
+    "voice_names": {
+      "xia": "爽快思思",
+      "che": "清爽男大"
+    },
+    "speech_rate_request": {
+      "che": -8,
+      "xia": 5
+    },
+    "pitch_rate": 0,
+    "inter_turn_silence_seconds": 0.3,
+    "character_proxy_per_second": 4.046,
+    "pacing_note": "Measured character proxy per processed whole phrase, not phoneme alignment or listening review.",
+    "local_tempo_by_turn": [
+      1.223502,
+      1.0,
+      1.217202,
+      1.374861,
+      1.24748,
+      1.25698,
+      1.380222,
+      1.0
+    ],
+    "original_pcm_peak_dbfs": -4.533286451144268,
+    "original_pcm_rms_dbfs": -30.251070784941575,
+    "original_full_scale_samples": 0,
+    "final_aac_integrated_lufs": -16.4,
+    "final_aac_true_peak_dbtp": -2.53,
+    "final_aac_loudness_range_lu": 5.3
+  },
+  "production": "Original 3D Manim animation and original two-student script",
+  "render_engine_metadata": "Rendered with Manim Community v0.18.1",
+  "sha256": "19bb72072adb1516afc082e35f0124b2212f5110000e8aecdf1a95a62abc5ee2",
+  "bytes": 2364941,
+  "dialogue_turns": 8,
+  "all_captions_within_video": true,
+  "full_final_mp4_decode": true,
+  "visual_cue_count": 9,
+  "visual_cue_timing": "Provider word metadata adjusted for trim/tempo; actual objects highlighted in Manim. Not independently forced-aligned.",
+  "source_audio_sha256": "2c63bb5220540a58359aff890798095a1310ec7131df8716689334ab0c680ec1",
+  "source_timeline_sha256": "0dc3643275eb6b30ce10f7b9507d9171f31231438a1316d372e4183845debabb",
+  "final_aac_turn_alignment": [
+    {
+      "index": 0,
+      "correlation": 0.99989,
+      "offset_ms": 0
+    },
+    {
+      "index": 1,
+      "correlation": 0.99882,
+      "offset_ms": 0
+    },
+    {
+      "index": 2,
+      "correlation": 0.99994,
+      "offset_ms": 0
+    },
+    {
+      "index": 3,
+      "correlation": 0.98299,
+      "offset_ms": 0
+    },
+    {
+      "index": 4,
+      "correlation": 0.99984,
+      "offset_ms": 0
+    },
+    {
+      "index": 5,
+      "correlation": 0.99984,
+      "offset_ms": 0
+    },
+    {
+      "index": 6,
+      "correlation": 0.99992,
+      "offset_ms": 0
+    },
+    {
+      "index": 7,
+      "correlation": 0.99999,
+      "offset_ms": 0
+    }
+  ],
+  "visual_review": "sample_frames_reviewed; release follows normalized inverse-square radial motion from rest",
+  "human_listening_review": false
+}

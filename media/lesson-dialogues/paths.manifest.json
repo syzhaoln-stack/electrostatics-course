@@ -1,0 +1,114 @@
+{
+  "lesson": "paths",
+  "edition": "v3-4",
+  "state": "rendered_muxed_decode_verified",
+  "duration_seconds": 81.846,
+  "video": {
+    "codec": "h264",
+    "width": 1280,
+    "height": 720,
+    "fps": "24/1"
+  },
+  "audio": {
+    "provider": "Doubao OpenSpeech",
+    "model": "seed-audio-1.0",
+    "codec": "aac",
+    "sample_rate": "48000",
+    "channels": 2,
+    "voices": {
+      "xia": "zh_female_shuangkuaisisi_uranus_bigtts",
+      "che": "zh_male_qingshuangnanda_uranus_bigtts"
+    },
+    "voice_names": {
+      "xia": "爽快思思",
+      "che": "清爽男大"
+    },
+    "speech_rate_request": {
+      "che": -8,
+      "xia": 5
+    },
+    "pitch_rate": 0,
+    "inter_turn_silence_seconds": 0.3,
+    "character_proxy_per_second": 3.933,
+    "pacing_note": "Measured character proxy per processed whole phrase, not phoneme alignment or listening review.",
+    "local_tempo_by_turn": [
+      1.0,
+      1.069542,
+      1.1365,
+      1.128741,
+      1.357125,
+      1.10084,
+      1.436378,
+      1.074859
+    ],
+    "original_pcm_peak_dbfs": -6.868038015589246,
+    "original_pcm_rms_dbfs": -29.15675407502578,
+    "original_full_scale_samples": 0,
+    "final_aac_integrated_lufs": -16.7,
+    "final_aac_true_peak_dbtp": -2.84,
+    "final_aac_loudness_range_lu": 4.5
+  },
+  "production": "Original 3D Manim animation and original two-student script",
+  "render_engine_metadata": "Rendered with Manim Community v0.19.0",
+  "sha256": "0c0d2dc431f601b66fdf26be0e340ea9ae7764ec7a150ee1d57fc351b1b645d7",
+  "bytes": 2551380,
+  "dialogue_turns": 8,
+  "all_captions_within_video": true,
+  "full_final_mp4_decode": true,
+  "visual_cue_count": 8,
+  "visual_cue_timing": "Provider word metadata adjusted for trim/tempo; actual objects highlighted in Manim. Not independently forced-aligned.",
+  "source_audio_sha256": "07e129985825cadcbe4b332ab0a072c9822f56baf3efd392fb6481a3e60afe5d",
+  "source_timeline_sha256": "ed0176b76f6a28116d890cb58ef96cb9ac5a0d906ba14576a205fff07d9791f7",
+  "final_aac_turn_alignment": [
+    {
+      "index": 0,
+      "correlation": 0.99909,
+      "offset_ms": 0
+    },
+    {
+      "index": 1,
+      "correlation": 0.99968,
+      "offset_ms": 0
+    },
+    {
+      "index": 2,
+      "correlation": 0.99986,
+      "offset_ms": 0
+    },
+    {
+      "index": 3,
+      "correlation": 0.99974,
+      "offset_ms": 0
+    },
+    {
+      "index": 4,
+      "correlation": 0.99991,
+      "offset_ms": 0
+    },
+    {
+      "index": 5,
+      "correlation": 0.99983,
+      "offset_ms": 0
+    },
+    {
+      "index": 6,
+      "correlation": 0.99983,
+      "offset_ms": 0
+    },
+    {
+      "index": 7,
+      "correlation": 0.99988,
+      "offset_ms": 0
+    }
+  ],
+  "visual_review": {
+    "status": "sample_frames_reviewed",
+    "resolution": [
+      1280,
+      720
+    ],
+    "focus": "force versus displacement, work counters, surface normal",
+    "reviewed_at": "2026-10-17"
+  },
+  "human_listening_review": false
+}

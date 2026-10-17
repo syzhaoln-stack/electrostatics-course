@@ -12,7 +12,7 @@ function copyDirectory(from,to){fs.mkdirSync(to,{recursive:true});for(const item
 copyDirectory('vendor','dist/vendor');
 if(fs.existsSync('assets'))copyDirectory('assets','dist/assets');
 fs.mkdirSync('dist/media',{recursive:true});
-for(const name of ['electric-field-dialogue.mp3','electric-field-dialogue.timeline.json','electric-field-dialogue.vtt','podcast-status.json'])if(fs.existsSync('media/'+name))fs.copyFileSync('media/'+name,'dist/media/'+name);
+for(const name of ['electric-field-dialogue.mp3','electric-field-dialogue.timeline.json','electric-field-dialogue.vtt','podcast-status.json','esp-epa-training.mp4'])if(fs.existsSync('media/'+name))fs.copyFileSync('media/'+name,'dist/media/'+name);
 if(fs.existsSync('media/lesson-dialogues')){
  fs.mkdirSync('dist/media/lesson-dialogues',{recursive:true});
  for(const item of fs.readdirSync('media/lesson-dialogues',{withFileTypes:true}))if(item.isFile()&&/\.(mp4|json|vtt|svg|jpg|png|webp)$/.test(item.name))fs.copyFileSync('media/lesson-dialogues/'+item.name,'dist/media/lesson-dialogues/'+item.name);

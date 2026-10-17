@@ -1,0 +1,58 @@
+[
+  {
+    "turn": 0,
+    "phrase": "绕远路",
+    "target": "detour",
+    "start": 2.58,
+    "end": 3.28
+  },
+  {
+    "turn": 1,
+    "phrase": "起点",
+    "target": "start",
+    "start": 14.3298,
+    "end": 15.0298
+  },
+  {
+    "turn": 2,
+    "phrase": "一样",
+    "target": "work-readouts",
+    "start": 28.6535,
+    "end": 29.3535
+  },
+  {
+    "turn": 3,
+    "phrase": "电势差",
+    "target": "formula",
+    "start": 32.1679,
+    "end": 32.8679
+  },
+  {
+    "turn": 4,
+    "phrase": "起点",
+    "target": "start",
+    "start": 44.5647,
+    "end": 45.2647
+  },
+  {
+    "turn": 5,
+    "phrase": "总功为零",
+    "target": "formula",
+    "start": 51.8981,
+    "end": 52.6975
+  },
+  {
+    "turn": 6,
+    "phrase": "这一小步",
+    "target": "displacement",
+    "start": 61.8316,
+    "end": 62.5316
+  },
+  {
+    "turn": 7,
+    "phrase": "直的切线",
+    "target": "displacement",
+    "start": 78.013,
+    "end": 78.72
+  }
+]

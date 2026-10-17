@@ -1,0 +1,7 @@
+{
+  "name": "通用开盖芯片与静电放电教学模型",
+  "authoring": "Blender 4.5.13",
+  "source": "blender/build_esd.py",
+  "model": "assets/models/esd.glb",
+  "scope": "通用器件构型；非 NASA 或具体事故器件复原。比例及键合线厚度为教学可见性调整。"
+}

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-14",
+  "checkedAt": "2026-10-17",
   "purpose": "物理教学案例：真实证据、设备对照、调查示意分开标注",
   "imagePolicy": "没有生成式事故照片。报告图片保留图号、页码和证据类别；不把报告内全部单幅摄影笼统标为公有领域。Commons图片按作者许可单独署名。",
   "assets": [
@@ -176,6 +176,45 @@
       "source": "https://commons.wikimedia.org/wiki/File:Inside_of_the_electrostatic_precipitator.jpg",
       "localPath": "assets/cases/esp-interior.jpg",
       "processing": "下载来源网站浏览尺寸图；内容未编辑"
+    },
+    {
+      "id": "espDiagram",
+      "file": "esp-components-epa.jpg",
+      "title": "板式静电除尘器原理图",
+      "type": "机构原始示意图，不是事故照片",
+      "credit": "Institute of Clean Air Companies / U.S. EPA",
+      "license": "EPA 页面署名 ICAC；未发现开放许可声明，不声称公有领域",
+      "source": "https://www.epa.gov/air-emissions-monitoring-knowledge-base/monitoring-control-technique-electrostatic-precipitators",
+      "download": "https://www.epa.gov/sites/default/files/2016-05/esp.jpg",
+      "localPath": "assets/cases/esp-components-epa.jpg",
+      "processing": "原图，无生成或重绘",
+      "sha256": "4330335aae3f92b28c619df2e368dcdf67e9149a304aacd2d48597783aef4df6",
+      "bytes": 78556
+    },
+    {
+      "id": "espTraining",
+      "file": "esp-epa-training.mp4",
+      "title": "EPA 静电除尘器历史教学录像",
+      "type": "官方公开教学录像，英语；234 × 180，约 18 分 27 秒",
+      "credit": "U.S. EPA 公开培训资料",
+      "license": "来源页面公开提供下载；保留影片自身署名，未将其中全部第三方画面标为公有领域",
+      "source": "https://www.epa.gov/sites/default/files/2020-11/electrostatic-precipitators.zip",
+      "localPath": "media/esp-epa-training.mp4",
+      "processing": "从官方 ZIP 提取，转为 H.264/AAC，保留完整时长及原始分辨率；未用生成式补帧或超分辨率",
+      "sha256": "cb3da8fd7c4086e50bff8ad2c0474ea1f26e0e78283638b83396830a4a7d369a",
+      "bytes": 17026195
+    },
+    {
+      "id": "espPoster",
+      "file": "esp-training-poster.jpg",
+      "title": "EPA 教学录像封面帧",
+      "type": "影片第 150 秒截图",
+      "credit": "U.S. EPA 公开培训资料",
+      "source": "https://www.epa.gov/sites/default/files/2020-11/electrostatic-precipitators.zip",
+      "localPath": "assets/cases/esp-training-poster.jpg",
+      "processing": "由本地保留的同源影片提取",
+      "sha256": "9240970d4de80ad0b425604827a603025879c398f4895722f6f178cdf2b60cf6",
+      "bytes": 6643
     }
   ]
 }

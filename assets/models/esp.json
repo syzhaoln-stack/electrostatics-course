@@ -1,0 +1,26 @@
+{
+  "asset": "esp.glb",
+  "type": "original Blender teaching reconstruction",
+  "coordinates": "metres; Y up; gas +X; plate normals ±Z",
+  "sources": [
+    "https://www.epa.gov/air-emissions-monitoring-knowledge-base/monitoring-control-technique-electrostatic-precipitators",
+    "https://www.babcock.com/home/products/electrostatic-precipitators-dry-esp"
+  ],
+  "cutaway_hide": [
+    "front_casing",
+    "roof"
+  ],
+  "dimensions": "illustrative; no manufacturer dimensions inferred",
+  "blender_version": "4.5.13 LTS",
+  "components": [
+    "inlet gas distributor",
+    "negative discharge wires",
+    "grounded collecting plates",
+    "porcelain insulators",
+    "transformer rectifier",
+    "rappers",
+    "dust hoppers",
+    "outlet"
+  ],
+  "limits": "No corona-plasma or dust resistivity solution; web simulation separately labelled."
+}

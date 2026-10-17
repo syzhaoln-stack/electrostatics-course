@@ -35,6 +35,7 @@ export function evaluateObservation(unit,task,s,m={}){
   if(!m.models)m.models={};if(mode==='line'||mode==='plane'){if(!m.models[mode])m.models[mode]={size,E:s.E,r:s.radius};else if(m.models[mode].size!==size&&close(s.E/m.models[mode].E,mode==='line'?m.models[mode].r/s.radius:1,.02))m[mode]=true;}return result(m.line&&m.plane,`长线${m.line?' ✓':'：拖高斯面，核对 E r 不变'} · 平面${m.plane?' ✓':'：拖测量高度，核对 E 不变'}`);
  }
  if(unit==='potential'){
+  if(task==='energy-sign')return result(s.mode===3&&Math.abs(s.V-1.4)<.003&&s.q<0&&Math.abs(s.U+1.4)<.003,`目标 U = −1.400 eV · 当前 V = ${f(s.V,3)} V，U = ${f(s.U,3)} eV`);
   if(task==='surface')return result(s.mode!==0&&s.progress>.85&&Math.abs(s.W)<.002&&s.E>1,`沿面 ${f(s.progress*100,0)}% · |E| = ${f(s.E)} V/m · W = ${f(s.W,4)} eV`);
   if(task==='potential-charge'){if(!m.b&&s.mode!==0)m.b={q:s.q,V:s.V};return result(m.b&&s.mode!==0&&s.q!==m.b.q&&Math.abs(s.V)>.01&&close(s.V,m.b.V,0,.002)&&close(s.U,s.q*s.V,.002,.002),`V = ${f(s.V,3)} V · q = ${s.q<0?'−e':'+e'} · U = ${f(s.U,3)} eV`);}
   if(task==='zero')return result(s.mode===3&&Math.abs(s.level)<1e-8&&s.progress>.3&&Math.abs(s.V)<.003&&s.E>1,`V = ${f(s.V,4)} V · |E| = ${f(s.E)} V/m · W = ${f(s.W,4)} eV`);
@@ -42,12 +43,15 @@ export function evaluateObservation(unit,task,s,m={}){
   return result(s.mode===0&&s.progress>.35&&Math.abs(s.W)>.03&&close(s.W,s.K,.02,.004)&&close(s.W,-s.deltaU,.02,.004),`W = ${f(s.W,3)} eV · −ΔU = ${f(-s.deltaU,3)} eV · ΔK = ${f(s.K,3)} eV`);
  }
  if(unit==='paths'){
+  if(task==='zero-step'){const E=norm(s.localE),ratio=E>0?Math.abs(s.parallel)/E:Infinity;if(s.mode==='local'&&!m.initial)m.initial=s.localDirection;return result(s.mode==='local'&&E>10&&ratio<.035&&s.step<=.06&&dist(m.initial,s.localDirection)>.05,`力仍在 · |cos θ| = ${f(ratio,3)}，目标 < 0.035 · 步长 ${f(s.step,2)} mm，目标 ≤ 0.06`);}
+  if(task==='target-work')return result(s.mode==='routes'&&s.progress>.999&&Math.abs(s.endpoint-.5)<.02&&Math.abs(s.W2-.5)<.02,`目标 +0.500 ± 0.020 eV · 当前端点功 ${f(s.endpoint,3)} eV · 沿路积分 ${f(s.W2,3)} eV`);
   if(task==='routes')return result(s.mode==='routes'&&s.progress>.999&&close(s.W1,s.W2,0,.01)&&close(s.W2,s.endpoint,0,.01),`直达 ${f(s.W1,4)} · 绕行 ${f(s.W2,4)} · q(VA−VB) ${f(s.endpoint,4)} eV`);
   if(task==='loop')return result(s.mode==='loop'&&s.progress>.999&&Math.abs(s.W2)<.01,`闭路进度 ${f(s.progress*100,0)}% · 累计功 ${f(s.W2,5)} eV`);
   return result(s.mode==='local'&&s.step<=.08&&Math.abs(s.parallel)>10&&close(s.slope,s.parallel,.08),`−ΔV/Δs = ${f(s.slope)} V/m · E·û = ${f(s.parallel)} V/m · Δs = ${f(s.step,2)} mm`);
  }
  if(unit==='conductors'){
   const E=norm(s.E),external=norm(s.external),induced=norm(s.induced);
+  if(task==='pole')return result(s.mode==='induced'&&s.surface&&external>1&&Math.abs(E/external-3)<.06,`球面 |E| / |E外| = ${f(E/external,3)} · 目标 3（误差 2%） · 切向场 ${f(s.tangent,4)} V/m`);
   if(task==='inside'){if(!m.P&&s.P)m.P=[...s.P];return result(s.mode==='induced'&&s.inside&&s.P&&dist(s.P,m.P)>.1&&external>1&&E<.01,`|E外| = ${f(external)} · |E感应| = ${f(induced)} · |E总| = ${f(E)} V/m`);}
   if(task==='surface'){if(s.surface&&!m.b)m.b={P:s.P,V:s.V};return result(s.surface&&m.b&&dist(s.P,m.b.P)>.3&&close(s.V,m.b.V,0,.002)&&Math.abs(s.tangent)<.01,`V = ${f(s.V,4)} V · 切向 E = ${f(s.tangent,4)} V/m`);}
   if(s.mode==='charged'&&Math.abs(s.Q)>0){const k=8.9875517923e9,r=norm(s.P)*1e-3,R=s.radius*1e-3;if(s.inside)m.inside=E<.01&&close(s.V,k*s.Q/R,.003);else if(E>0)m.outside=close(E,Math.abs(k*s.Q)/r**2,.003)&&close(s.V,k*s.Q/r,.003);}return result(m.inside&&m.outside,`已核对${m.outside?'球外 E=kQ/r²、V=kQ/r ✓':'球外 ○'} · ${m.inside?'球内 E=0、V=kQ/R ✓':'球内 ○'} · 当前 V = ${f(s.V,3)} V`);

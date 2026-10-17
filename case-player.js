@@ -1,9 +1,11 @@
 import {mountCaseScene as mountReferenceScene} from './case-scene.js';
+import {mountEspScene} from './esp-scene.js';
 
 // Blender assets and the Godot simulation are the default for the three
 // investigated industrial incidents. Other engineering examples keep their
 // existing lightweight teaching scene.
 export function mountCaseScene(host,{caseId='desmoines',state={},onInspect}={}){
+ if(caseId==='esp')return mountEspScene(host,{state});
  if(!['desmoines','valley','glenpool'].includes(caseId))return mountReferenceScene(host,{caseId,state,onInspect});
  let current={...state},disposed=false,ready=false;
  const frame=document.createElement('iframe');frame.title='事故装置与过程 · 可旋转的三维教学推演';frame.src=new URL('./assets/godot/index.html?case='+encodeURIComponent(caseId),import.meta.url).href;frame.allow='fullscreen';frame.style.cssText='display:block;width:100%;height:100%;border:0;background:#07101b';

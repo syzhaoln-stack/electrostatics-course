@@ -2,6 +2,9 @@ import {VIDEO_QUESTIONS,questionProgress} from './lesson-questions.js';
 /** Two original student voices, synchronized with the actual Manim film time. */
 const MEDIA = new URL('./media/lesson-dialogues/', import.meta.url);
 export const LESSON_VIDEOS = Object.freeze({
+  potential:{title:'不做功，为什么还受力？',caption:'同一个点：看力、位移与功，再比较自由释放。',file:'potential.mp4',timeline:'potential.timeline.json',captions:'potential.vtt',poster:'potential.poster.jpg'},
+  paths:{title:'绕远路，会多做功吗？',caption:'改变路线、回到起点、转动一小步。',file:'paths.mp4',timeline:'paths.timeline.json',captions:'paths.vtt',poster:'paths.poster.jpg'},
+  conductors:{title:'外场还在，球内为什么是零？',caption:'外场与感应场相消，表面外侧仍可有场。',file:'conductors.mp4',timeline:'conductors.timeline.json',captions:'conductors.vtt',poster:'conductors.poster.jpg'},
   foundations: {
     title: '换电荷，场也会变吗？',
     caption: '同一个位置的电场，与放进去的电荷所受的力。',
@@ -29,7 +32,7 @@ export function mountLessonVideo(host, { lesson = 'foundations' } = {}) {
   const config = LESSON_VIDEOS[lesson];
   if (!config) throw new Error(`Unknown lesson video: ${lesson}`);
   ensureStyle();
-  const asset = file => {const url=new URL(file,MEDIA);url.searchParams.set('v','3.3.0');return url.href;};
+  const asset = file => {const url=new URL(file,MEDIA);url.searchParams.set('v','3.4.0');return url.href;};
   const portraits = new URL('./assets/lesson-characters/students-ai.png', import.meta.url).href;
   host.innerHTML = `<figure class="lesson-film" tabindex="0" aria-keyshortcuts="Space ArrowLeft ArrowRight" aria-label="${config.title}，双人对话视频。空格播放暂停，左右方向键快退快进。">
     <figcaption class="lesson-film-heading"><span class="lesson-film-kicker">同学聊一聊</span><strong>${config.title}</strong><span class="lesson-film-duration"></span></figcaption>
@@ -75,6 +78,16 @@ export function mountLessonVideo(host, { lesson = 'foundations' } = {}) {
     video.pause();const key=QUESTIONS[lesson][currentQuestion].action,lab=document.querySelector('#experience');
     if(lesson==='foundations'){lab?.querySelector('[data-model="point"]')?.click();if(key==='charge')lab?.querySelector('[data-q="1"]')?.click();lab?.dispatchEvent(new CustomEvent('foundation-demonstration',{detail:{kind:key}}));}
     if(lesson==='field')lab?.querySelector(`[data-preset="${key==='same'?'same':'dipole'}"]`)?.click();
+    if(lesson==='potential'){
+      lab?.querySelector(`[data-potential-step="${key==='release'?0:key==='zero'?3:1}"]`)?.click();
+      if(key==='zero')lab?.querySelector('[data-potential-level="0"]')?.click();
+      if(key==='charge')lab?.querySelector('[data-probe-sign="-1"]')?.click();
+    }
+    if(lesson==='paths')lab?.querySelector(`[data-path-mode="${key}"]`)?.click();
+    if(lesson==='conductors'){
+      lab?.querySelector(`[data-conductor-mode="${key==='charged'?'charged':'induced'}"]`)?.click();
+      lab?.querySelector(`#conductor-${key==='surface'?'surface':key==='charged'?'outside':'inside'}`)?.click();
+    }
     const target=lab;target?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});
     if(lab){lab.classList.remove('lesson-highlight');requestAnimationFrame(()=>lab.classList.add('lesson-highlight'));}
   };

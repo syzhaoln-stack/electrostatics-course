@@ -1,3 +1,4 @@
+import './embed-layout.js';
 document.body.classList.add('cinematic','academic');
 const academicSheet=document.createElement('link');academicSheet.rel='stylesheet';academicSheet.href='./academic-figures.css';document.head.append(academicSheet);
 document.querySelector('meta[name="theme-color"]')?.setAttribute('content','#fffefa');
@@ -30,7 +31,8 @@ try{
  if(key==='symmetry')dispose=(await import('./symmetry-page.js')).mountSymmetry(container);
  if(key==='paths')dispose=(await import('./paths-page.js')).mountPaths(container);
  if(key==='conductors')dispose=(await import('./conductors-page.js')).mountConductors(container);
- if(key==='beam'){const hero=document.createElement('div');hero.id='home-oscillation';document.querySelector('.page-intro').before(hero);const disposeHero=(await import('./home-field.js')).mountHomeField(hero);const disposeBeam=(await import('./beam-page.js')).mountBeam(container);dispose=()=>{disposeHero();disposeBeam?.()};}
+ if(key==='beam'&&new URLSearchParams(location.search).get('embed')==='1')dispose=(await import('./beam-page.js')).mountBeam(container);
+ if(key==='beam'&&new URLSearchParams(location.search).get('embed')!=='1'){const hero=document.createElement('div');hero.id='home-oscillation';document.querySelector('.page-intro').before(hero);const disposeHero=(await import('./home-field.js')).mountHomeField(hero);const disposeBeam=(await import('./beam-page.js')).mountBeam(container);dispose=()=>{disposeHero();disposeBeam?.()};}
  if(key==='engine')dispose=(await import('./engine-page.js')).mountEngine(container);
  if(key==='aim')dispose=(await import('./aim-page.js')).mountAim(container);
  if(key==='collector')dispose=(await import('./wall-page.js')).mountWall(container);

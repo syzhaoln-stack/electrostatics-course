@@ -42,3 +42,6 @@
 渲染时设置 `LESSON_TIMELINE_DIR` 指向 `media/lesson-dialogues/production/v3-3`；基础输出到该目录下 `manim-render`，叠加输出到 `manim-render-field`，通量输出到 `manim-render-flux`，避免并行 TeX 临时文件互相删除。分别渲染 `lesson_scenes.py` 的 FoundationsDialogue、FluxDialogue 和 `field_scene.py` 的 SuperpositionDialogue。运行 `python manim/package_videos.py foundations field flux --version v3-3`，通过完整解码、时长、AAC 逐句波形对齐与真峰值检查后才安装公开文件。语音请求记录、WAV 和中间片段只在本地生产目录，不进入网页或 GitHub。
 
 教材新增历史依据：Gauss, *Allgemeine Lehrsätze …*, Leipzig, 1840，尤其 §§1–4、22。可核对原文 https://textgridrep.org/browse/4bj80.0 。历史记号没有直接冒充现代 SI 公式；场线是教学图示，不是原文中的观测实验。
+
+
+3.4 新增 potential、paths、conductors 三段，同一学生角色与已调整的语速。生产目录 v3-4；渲染 energy_scenes.py 三个对应 Scene，输出到 manim-render-各课名。potential 的自由释放位置按平方反比斥力从静止出发的归一化时间计算；沿面运动是受约束示意。三段均通过完整解码与音画时间轴检验。

@@ -1,0 +1,65 @@
+[
+  {
+    "turn": 0,
+    "phrase": "外面的电场",
+    "target": "external",
+    "start": 0.59,
+    "end": 1.29
+  },
+  {
+    "turn": 1,
+    "phrase": "两支箭头",
+    "target": "components",
+    "start": 7.7831,
+    "end": 8.5006
+  },
+  {
+    "turn": 1,
+    "phrase": "表面",
+    "target": "surface-charge",
+    "start": 12.6003,
+    "end": 13.3003
+  },
+  {
+    "turn": 2,
+    "phrase": "探针",
+    "target": "probe",
+    "start": 21.3501,
+    "end": 22.0501
+  },
+  {
+    "turn": 3,
+    "phrase": "法线",
+    "target": "surface-normal",
+    "start": 29.1119,
+    "end": 29.8119
+  },
+  {
+    "turn": 4,
+    "phrase": "电势",
+    "target": "potential",
+    "start": 41.7019,
+    "end": 42.4019
+  },
+  {
+    "turn": 5,
+    "phrase": "正的常数",
+    "target": "potential",
+    "start": 55.9099,
+    "end": 56.6099
+  },
+  {
+    "turn": 6,
+    "phrase": "正有负",
+    "target": "surface-charge",
+    "start": 58.7929,
+    "end": 59.4929
+  },
+  {
+    "turn": 7,
+    "phrase": "转动",
+    "target": "external",
+    "start": 67.6105,
+    "end": 68.3105
+  }
+]
