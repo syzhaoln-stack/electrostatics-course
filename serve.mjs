@@ -4,7 +4,7 @@ import path from 'node:path';
 const args=process.argv.slice(2), option=(key,fallback)=>{const i=args.indexOf(key);return i>=0?args[i+1]:fallback};
 const root=path.resolve(option('--directory',process.cwd())),port=Number(option('--port',process.env.PORT||4174));
 if(!Number.isInteger(port)||port<1||port>65535)throw Error('Invalid port');
-const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.vtt':'text/vtt; charset=utf-8','.mp3':'audio/mpeg','.wasm':'application/wasm','.pck':'application/octet-stream','.woff2':'font/woff2'};
+const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.vtt':'text/vtt; charset=utf-8','.mp3':'audio/mpeg','.mp4':'video/mp4','.webp':'image/webp','.wasm':'application/wasm','.pck':'application/octet-stream','.woff2':'font/woff2'};
 http.createServer((req,res)=>{
  let p;try{p=decodeURIComponent(new URL(req.url,'http://localhost').pathname)}catch{res.writeHead(400).end();return}
  if(p==='/')p='/index.html';if(!path.extname(p)&&fs.existsSync(path.join(root,p+'.html')))p+='.html';const file=path.resolve(root,'.'+p);if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return}

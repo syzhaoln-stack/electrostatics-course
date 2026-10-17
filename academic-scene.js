@@ -6,6 +6,11 @@ export function academicColor(value){
  return c;
 }
 export function applyAcademicScene(view){
+ if(document.body.classList.contains('intuitive-edition')){
+  view.academic=false;view.scene.background.set('#07111d');view.scene.fog.color.set('#07111d');view.scene.fog.near=28;view.scene.fog.far=65;view.renderer.setClearColor('#07111d');view.grid.visible=false;view.floor.visible=false;view.layer('axes').visible=false;
+  view.scene.children.filter(o=>o.isHemisphereLight).forEach(o=>{o.color.set('#d9efff');o.groundColor.set('#0b1525');o.intensity=1.6;});
+  view.scene.children.filter(o=>o.isDirectionalLight).forEach((o,i)=>{o.color.set(i?'#89d2ef':'#fff5e1');o.intensity=i?1.4:2.7;});return view;
+ }
  view.academic=true;
  view.scene.background.set(ACADEMIC_COLORS.paper);view.scene.fog.color.set(ACADEMIC_COLORS.paper);view.scene.fog.near=24;view.scene.fog.far=58;
  view.renderer.setClearColor(ACADEMIC_COLORS.paper);

@@ -26,6 +26,7 @@ export function mountConductors(container){
   <details class="conductor-notes"><summary>孤立、接地，以及电势的零点</summary><p>孤立导体不能与大地交换电荷：带电球保持给定净电荷 Q；中性球的正、负感应电荷等量，总电荷始终为零。接地则把导体电势约束到大地的参考电势，净电荷可以改变，不能把“接地”一概当作“Q = 0”。</p><p id="conductor-reference"></p><p>球面色点仅示意表面电荷的正负与疏密，点数不是电子数量。模型为理想导体、静电平衡、无介质；表面读数取紧邻金属的外侧。球内是导体材料，不能据此直接推断含内部电荷的空腔也没有电场。</p><a href="charge.html#spark">双金属球充电与火花放电 →</a></details>
  </section>`;
  const $=s=>container.querySelector(s),scene=new FieldScene($('.conductor-stage'),{extent:5.5}),canvas=scene.renderer.domElement;
+ const advanced=document.createElement('details');advanced.className='conductor-optional';advanced.innerHTML='<summary>调整外场、电量与球的尺寸</summary>';const adjustments=$('.conductor-adjustments');adjustments.before(advanced);advanced.append(adjustments);
  applyAcademicScene(scene);scene.grid.visible=false;scene.layer('axes').visible=false;scene.controls.enablePan=false;scene.controls.minDistance=6;scene.controls.maxDistance=24;scene.renderer.localClippingEnabled=true;
  const clipPlane=new THREE.Plane(new THREE.Vector3(0,0,-1),0),ray=new THREE.Raycaster(),mouse=new THREE.Vector2(),dragPlane=new THREE.Plane();
  let options=conductorOptions(),p=[.45,.35,.65],probeMode='inside',angle=0,cut=true,parts=true,background=true,dragging=false,directionDrag=false,disposed=false,probeMesh=null,probeHalo=null,resizeObserver,stageObserver,plotTimer;

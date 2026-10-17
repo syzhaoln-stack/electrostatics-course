@@ -26,3 +26,7 @@ blender/*-build.log
 
 qa-*
 .local-*
+media/lesson-dialogues/production/
+__pycache__/
+*.pyc
+!assets/lesson-characters/students-ai.png

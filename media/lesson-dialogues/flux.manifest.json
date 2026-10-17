@@ -1,0 +1,50 @@
+{
+  "lesson": "flux",
+  "state": "rendered_muxed_decode_verified",
+  "duration_seconds": 76.6,
+  "video": {
+    "codec": "h264",
+    "width": 1280,
+    "height": 720,
+    "fps": "24/1"
+  },
+  "audio": {
+    "provider": "Doubao OpenSpeech",
+    "model": "seed-audio-1.0",
+    "codec": "aac",
+    "sample_rate": "96000",
+    "channels": 2,
+    "voices": {
+      "xia": "zh_female_vv_uranus_bigtts",
+      "che": "zh_male_m191_uranus_bigtts"
+    },
+    "original_pcm_peak_dbfs": -7.684326807400652,
+    "original_pcm_rms_dbfs": -32.16694390645492,
+    "original_full_scale_samples": 0
+  },
+  "production": "Original 3D Manim Community 0.18.1 animation and original two-student script",
+  "sha256": "5cfe21101428abd5267ec231828e4bf1ffc9b6afbb4535f0586aec151f642ef3",
+  "bytes": 2789126,
+  "dialogue_turns": 11,
+  "all_captions_within_video": true,
+  "full_final_mp4_decode": true,
+  "visual_review": {
+    "method": "Representative final MP4 frames inspected",
+    "frame_seconds": [
+      3,
+      48
+    ],
+    "layout": "formula and geometry remain visible"
+  },
+  "human_listening_review": false,
+  "all_returned_subtitles_match_script": true,
+  "player_review": {
+    "desktop": true,
+    "mobile_width": 390,
+    "mobile_scroll_width": 390,
+    "play_pause_speaker_sync": true,
+    "click_transcript_seek": true,
+    "keyboard_space_and_5s_seek": true,
+    "runtime_errors": []
+  }
+}

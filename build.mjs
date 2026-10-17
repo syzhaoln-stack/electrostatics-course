@@ -13,6 +13,10 @@ copyDirectory('vendor','dist/vendor');
 if(fs.existsSync('assets'))copyDirectory('assets','dist/assets');
 fs.mkdirSync('dist/media',{recursive:true});
 for(const name of ['electric-field-dialogue.mp3','electric-field-dialogue.timeline.json','electric-field-dialogue.vtt','podcast-status.json'])if(fs.existsSync('media/'+name))fs.copyFileSync('media/'+name,'dist/media/'+name);
+if(fs.existsSync('media/lesson-dialogues')){
+ fs.mkdirSync('dist/media/lesson-dialogues',{recursive:true});
+ for(const item of fs.readdirSync('media/lesson-dialogues',{withFileTypes:true}))if(item.isFile()&&/\.(mp4|json|vtt|svg|jpg|png|webp)$/.test(item.name))fs.copyFileSync('media/lesson-dialogues/'+item.name,'dist/media/lesson-dialogues/'+item.name);
+}
 console.log('Static pages and local assets built in dist');
 
 fs.writeFileSync('dist/.nojekyll','');
