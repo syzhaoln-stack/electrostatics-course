@@ -4,9 +4,9 @@
   "frenchSource": "https://webusers.imj-prg.fr/~david.aubin/cours/Textes/Coulomb.pdf",
   "assumptions": {
     "radiusMetres": 0.108,
-    "grainKilograms": 0.000053,
+    "grainKilograms": 5.3e-05,
     "gravityMetresPerSecondSquared": 9.80665,
-    "torsionStiffnessNmPerRadian": 2.627613686169207e-8,
+    "torsionStiffnessNmPerRadian": 2.627613686169207e-08,
     "calibration": "360 degrees corresponds to the weight of 1/340 grain at a 4-pouce arm",
     "unitConversionsAreRounded": true
   },
@@ -21,7 +21,7 @@
       "reportedTwistDegrees": 36,
       "distanceCm": 6.6747670784988635,
       "effectiveArmCm": 10.271410375987658,
-      "torqueNm": 1.6509783705882355e-8,
+      "torqueNm": 1.6509783705882355e-08,
       "forceMicroN": 0.16073531386184967,
       "arcDistanceCm": 6.785840131753954,
       "constantArmForceMicroN": 0.15286836764705883
@@ -36,7 +36,7 @@
       "reportedTwistDegrees": 144,
       "distanceCm": 3.378984444868987,
       "effectiveArmCm": 10.667034078427488,
-      "torqueNm": 6.603913482352942e-8,
+      "torqueNm": 6.603913482352942e-08,
       "forceMicroN": 0.6190955643151443,
       "arcDistanceCm": 3.392920065876977,
       "constantArmForceMicroN": 0.6114734705882353
@@ -51,7 +51,7 @@
       "reportedTwistDegrees": 576,
       "distanceCm": 1.6007433882206237,
       "effectiveArmCm": 10.770301999074446,
-      "torqueNm": 2.639272367426471e-7,
+      "torqueNm": 2.639272367426471e-07,
       "forceMicroN": 2.4505091571743103,
       "arcDistanceCm": 1.6022122533307945,
       "constantArmForceMicroN": 2.4437707105800657
@@ -131,11 +131,13 @@
   "timelineSeconds": {
     "leadIn": 0.4,
     "readingDuration": 12,
-    "twistAt": 1.8,
-    "followAt": 3,
-    "followDuration": 5.2,
-    "forceAt": 8.2,
-    "pointAt": 9.8,
+    "twistAt": 0.2,
+    "followAt": 0.2,
+    "followDuration": 9.4,
+    "motionAt": 0.2,
+    "motionDuration": 9.4,
+    "forceAt": 9.6,
+    "pointAt": 10.4,
     "fitStart": 36.4,
     "fitDuration": 2.2,
     "duration": 39

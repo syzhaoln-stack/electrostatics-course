@@ -1,39 +1,42 @@
 {
+  "version": "3.7.0",
   "duration": 39,
   "width": 640,
   "height": 780,
   "fps": 24,
-  "picture": "Blender native-HD follow footage: whole wire and synchronized two-sphere close-up throughout",
+  "picture": "Blender native-HD solved torsion response; advancing source and freely responding needle",
   "timing": {
     "leadIn": 0.4,
     "readingDuration": 12,
-    "approachAt": 1.8,
-    "followAt": 3,
-    "forceAt": 8.2,
-    "pointAt": 9.8,
-    "fitStart": 36.4
+    "twistAt": 0.2,
+    "followAt": 0.2,
+    "followDuration": 9.4,
+    "motionAt": 0.2,
+    "motionDuration": 9.4,
+    "forceAt": 9.6,
+    "pointAt": 10.4,
+    "fitStart": 36.4,
+    "fitDuration": 2.2,
+    "duration": 39
   },
-  "animation_easing": "Linear time-to-u mapping; smoothstep already baked into the Blender poses",
-  "force_arrow": "Rendered along the actual sphere-centre chord; fixed display length, not force magnitude",
-  "meaning": "Explanatory fixed-upper-end reference, not a historical measured motion or dynamic solution. Separation angle determines distance; cumulative relative wire torsion determines restoring torque. Force ratios use the stated small-angle, approximately constant-moment-arm comparison at equilibrium.",
-  "previous_torsions_degrees": [
-    0,
-    36,
-    144
-  ],
-  "final_torsions_degrees": [
-    36,
-    144,
-    575.5
-  ],
-  "previous_separations_degrees": [
-    72,
-    36,
-    18
-  ],
-  "final_separations_degrees": [
-    36,
-    18,
-    8.5
-  ]
+  "motion_data": "coulomb-motion-v37.json",
+  "motion": "Source advances and pauses; needle angle is solved from a damped angular equation. Times, inertia and damping are explanatory; final equilibria are calibrated to memoir observations.",
+  "sample_policy": "Nearest rendered close-up pose; web and image show the exact same numbers",
+  "force_reading": "Only after final equilibrium; original approximate ratios 1, 4, 575.5/36",
+  "force_arrow": "Rendered along the sphere-centre chord; fixed display length indicates direction, not magnitude",
+  "probe": {
+    "programs": [],
+    "streams": [
+      {
+        "width": 640,
+        "height": 780,
+        "nb_frames": "936"
+      }
+    ],
+    "format": {
+      "duration": "39.000000"
+    }
+  },
+  "video_sha256": "aaccfe7eae751e5ad29341e04e962fcf935489b9cabc9750d0252cbb4ab9bc5b",
+  "motion_sha256": "1981eccaefecd95795f39acb4dd545e1eac070abc344107cbf61f5183c4f5e58"
 }

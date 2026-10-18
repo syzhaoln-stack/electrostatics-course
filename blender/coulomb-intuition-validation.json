@@ -1,0 +1,129 @@
+{
+  "checks": [
+    {
+      "name": "twice force gives twice equilibrium angle",
+      "pass": true,
+      "first_angle_deg": 36.00212491034916,
+      "double_angle_deg": 71.99735295122144,
+      "ratio": 1.999808431599689
+    },
+    {
+      "name": "removing force returns toward zero",
+      "pass": true,
+      "released_angle_deg": -0.036798655864251316
+    },
+    {
+      "name": "half wire length gives half angle at same force",
+      "pass": true,
+      "angle_deg": 18.000112254293935
+    },
+    {
+      "name": "double arm gives twice angle at same force",
+      "pass": true,
+      "angle_deg": 71.99335215934592
+    },
+    {
+      "name": "0 final equilibrium",
+      "pass": true,
+      "theta_deg": 36.00001709398266,
+      "gap_deg": 36.00001709398266
+    },
+    {
+      "name": "0 spheres never intersect",
+      "pass": true,
+      "minimum_gap_deg": 29.191336751249498,
+      "contact_gap_deg": 6.9008846133937505
+    },
+    {
+      "name": "0 distance increases while source stops",
+      "pass": true,
+      "largest_gap_increase_in_quarter_second_deg": 3.377792018655569
+    },
+    {
+      "name": "0 source advances monotonically",
+      "pass": true
+    },
+    {
+      "name": "126 final equilibrium",
+      "pass": true,
+      "theta_deg": 144.00000706825446,
+      "gap_deg": 18.000007068254476
+    },
+    {
+      "name": "126 spheres never intersect",
+      "pass": true,
+      "minimum_gap_deg": 16.36069253632896,
+      "contact_gap_deg": 6.9008846133937505
+    },
+    {
+      "name": "126 distance increases while source stops",
+      "pass": true,
+      "largest_gap_increase_in_quarter_second_deg": 4.899719650712644
+    },
+    {
+      "name": "126 source advances monotonically",
+      "pass": true
+    },
+    {
+      "name": "567 final equilibrium",
+      "pass": true,
+      "theta_deg": 575.4999958023371,
+      "gap_deg": 8.499995802337091
+    },
+    {
+      "name": "567 spheres never intersect",
+      "pass": true,
+      "minimum_gap_deg": 7.350624218234726,
+      "contact_gap_deg": 6.9008846133937505
+    },
+    {
+      "name": "567 distance increases while source stops",
+      "pass": true,
+      "largest_gap_increase_in_quarter_second_deg": 3.2885634090224265
+    },
+    {
+      "name": "567 source advances monotonically",
+      "pass": true
+    },
+    {
+      "name": "restoring arrow always opposes signed twist",
+      "pass": true
+    },
+    {
+      "name": "long arm end forces balance",
+      "pass": true
+    },
+    {
+      "name": "sphere and force arrows stay inside camera",
+      "pass": true,
+      "failures": []
+    },
+    {
+      "name": "repulsion arrows follow actual two-sphere line",
+      "pass": true,
+      "maximum_normalized_cross_error": 1.9446787948982882e-05
+    },
+    {
+      "name": "every expected render fully decodes",
+      "pass": true,
+      "count": 1982,
+      "failures": []
+    }
+  ],
+  "physics": "Dimensionless RK4, 480 steps per second; Coulomb chord force, geometric tangential component; one calibration per historical equilibrium. These driven illustrative trajectories are not measured history and do not independently test the assumed inverse-square law.",
+  "render_note": "force_ratio in pursuit is torque ratio, which is the classroom constant-lever-arm approximation; exact_force_ratio separately contains the geometric correction.",
+  "timings": {
+    "force-cycle": 22.0,
+    "short-wire": 8.0,
+    "long-arm": 13.0,
+    "force-close": 22.0,
+    "short-wire-close": 8.0,
+    "long-arm-close": 13.0,
+    "force-double-close": 6.0,
+    "pursuit-close-0": 8.25,
+    "pursuit-close-126": 10.9375,
+    "pursuit-close-567": 14.831249999999999,
+    "pursuit-wire": 34.02291666666667,
+    "shield-and-scale": 5.0
+  }
+}
