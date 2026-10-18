@@ -1,0 +1,133 @@
+[
+  {
+    "base_id": "push-release",
+    "shot": "sensitivity-push-release",
+    "question": "这么小的斥力，怎样把它测出来？",
+    "answer": "像上发条的手感：银丝越扭，回复作用越强；撤力后带轻杆回转。",
+    "text": "两球靠近，斥力会变大。可这股力小得惊人：只有大约十六微克物体的重量。一点摩擦，甚至一阵轻风，都可能把它盖住。怎样抓住这个微小信号？想想上发条的手感：越拧，越觉得它想拧回来。这根银丝也是如此。轻推下端，银丝被扭紧；撤掉力，轻杆就转回来。",
+    "visual_beats": [
+      "两球靠近与微力问题直接进入；约 16 μg 重量和 1.5 × 10⁻⁷ N 在画面对应",
+      "以上发条的手感引入弹性回复：越拧，越想回转；不把盘簧与直银丝的变形混为一谈",
+      "直银丝下端轻杆被推转，银丝扭紧；撤力后轻杆回转"
+    ],
+    "evidence": {
+      "first_force": "1785 first memoir, revised MIT translation p. 4: 36 degrees corresponds to 1/3400 grain-weight at the stated four-pouce arm.",
+      "zero_error": "Fourth Remark, revised translation p. 6: zero uncertainty two or three degrees, described as equivalent to 1/40000 grain-weight.",
+      "conversion": "Modern approximate conversion uses one French grain = 0.053 g and standard gravity. Original force claim ≈0.153 μN; zero error equivalent ≈13 nN. This is not a modern measured resolution or a smallest force inferred from a single degree."
+    }
+  },
+  {
+    "base_id": "double-force",
+    "shot": "sensitivity-force-double",
+    "question": "力变成两倍，转角会怎样？",
+    "answer": "力臂不变、始终切向施力：平衡时，2F 对应 2θ。",
+    "text": "先等它停稳，记下这个角度。仍然从杆端横着推，把力加到两倍。再等它停稳，转角也变成两倍。在银丝保持弹性的范围内，这个比例关系，就是我们用角度测量力的依据。",
+    "visual_beats": [
+      "单力箭头与首个平衡角保留淡色参照",
+      "切向力箭头加倍后，悬杆才开始运动",
+      "第二平衡角两倍，2F 与 2θ 同时亮起"
+    ]
+  },
+  {
+    "base_id": "double-length",
+    "shot": "sensitivity-wire-double",
+    "question": "长银丝为什么更敏感？",
+    "answer": "同材质、粗细和力臂：长丝的上下两段，各扭 θ；合计 2θ。",
+    "text": "还有个线索：同样的力，换一根两倍长的银丝，会怎样？材质、粗细和施力的位置，都不变。看，在长丝中间做个记号。上下两段，都和旁边的短丝一样长，也传递着同样的扭矩。所以上半段扭过一个角度；从中间往下看，下半段又多扭了一个同样的角度。合起来，就是两倍。长银丝更敏感的原因，就在这里。",
+    "visual_beats": [
+      "两根同材质、同直径银丝并排，长度 L 与 2L；保持施力位置及切向力相同",
+      "在连续长丝中点加细参照圈；将上下两段各标 L，不切开、不加额外支撑",
+      "上端相对中点的角 θ 和中点相对下端的角 θ 依次高亮；最终显示 θ + θ = 2θ"
+    ]
+  },
+  {
+    "base_id": "shield-and-scale",
+    "shot": "sensitivity-shield-scale",
+    "question": "怎么不把风的推动误认成电力？",
+    "answer": "玻璃罩挡风，外圈刻度读角；核心是银丝、轻杆和小球。",
+    "text": "这么轻的横杆，风也能吹动。玻璃罩挡住气流，外圈刻度让转角可读。穿过玻璃，我们只看里面的银丝、轻杆和两颗小球。",
+    "visual_beats": [
+      "外围气流绕玻璃罩流过，内部轻杆不随外部风晃动",
+      "圆周刻度与下端悬杆位置对应点亮",
+      "镜头连续穿入玻璃罩，核心装置占满画面"
+    ]
+  },
+  {
+    "base_id": "historical-force",
+    "shot": "sensitivity-real-force",
+    "question": "库仑究竟测到了多小的力？",
+    "answer": "第一组约 0.15 μN；原文零位误差折合约 13 nN。",
+    "text": "库仑第一组测到的斥力，只有大约十六微克物体的重量，却把悬杆转开三十六度。他说，零位只能确定到两三度，折合约一点三微克物体的重量。这决定了能辨出多小的力：力再小，转角就很难和零位误差分开。",
+    "visual_beats": [
+      "真实装置与首组 36° 偏转",
+      "0.15 μN 与约 16 μg 的重量并排出现",
+      "零位附近放大，2–3° 对应约 13 nN；不用现代检测限标签"
+    ],
+    "evidence": {
+      "first_force": "1785 first memoir, revised MIT translation p. 4: 36 degrees corresponds to 1/3400 grain-weight at the stated four-pouce arm.",
+      "zero_error": "Fourth Remark, revised translation p. 6: zero uncertainty two or three degrees, described as equivalent to 1/40000 grain-weight.",
+      "conversion": "Modern approximate conversion uses one French grain = 0.053 g and standard gravity. Original force claim ≈0.153 μN; zero error equivalent ≈13 nN. This is not a modern measured resolution or a smallest force inferred from a single degree."
+    }
+  },
+  {
+    "base_id": "approach-response",
+    "shot": "repulsion-approach-response",
+    "question": "两球靠近以后，谁先动，谁跟着动？",
+    "answer": "施力球先靠近，悬球被推远；再追近，再转开。",
+    "text": "现在让两个小球带上同种电荷。把施力球靠近，悬球被排斥，自己转远了一点。等它停下，再把施力球追近，它又转开。看清这两步：先靠近，再被推远。一次次重复，银丝越扭越紧，最后在新的位置停稳。",
+    "visual_beats": [
+      "施力球向静止悬球靠近，距离明确缩小",
+      "施力球暂止，悬球被推远，距离重新增大",
+      "至少三次追近与响应，不以锁定间距共同前进替代"
+    ]
+  },
+  {
+    "base_id": "relative-reference",
+    "shot": "relative-twist-brief",
+    "question": "为什么这里固定上端，原装置却转动上端？",
+    "answer": "比较平衡状态：距离与银丝两端的相对扭角相同，回复力矩相同。",
+    "text": "库仑拧动银丝上端，让悬球靠近另一颗球。这里把上端固定，让外面的球一步步追近。过程不同，我们只比较最后停稳的状态。两球相隔一样远，银丝两端相对扭过的角度也一样。那么，银丝阻止小球继续转动的力矩，就是一样的。",
+    "visual_beats": [
+      "原装置上端旋钮先动，悬球逐渐靠近固定球",
+      "教学等效上端固定，外球逐次追近，悬球响应",
+      "在最终停稳状态并排对照距离、两端相对扭角、恢复力矩"
+    ]
+  },
+  {
+    "base_id": "three-readings",
+    "shot": "repulsion-three-readings",
+    "question": "球越靠近，斥力大了多少倍？",
+    "answer": "按原文近似：距离约减半，力为 4 倍；距离约为四分之一，力约 16 倍。",
+    "text": "把第一次的距离和力都记作一。追近以后，两球距离约剩一半，银丝却扭了四倍，力也约为四倍。再追近，直到两球只隔八点五度。银丝累计扭过五百七十五点五度，超过一整圈。距离约为原来的四分之一，力接近十六倍。",
+    "visual_beats": [
+      "第一点 (1, 1) 从三维对象投射到图",
+      "第二次先追近再响应，18° 距离与 144° 总扭转分色",
+      "第三次追近响应累计超过一圈，8.5° 与 575.5° 保留明显区别"
+    ],
+    "evidence": "Original small-angle and near-constant-arm comparison: distance ratios 1, 18/36, 8.5/36; force ratios 1, 144/36, 575.5/36. Exact ratios appear on the graph; spoken quarter and sixteen are approximate."
+  },
+  {
+    "base_id": "fit-law",
+    "shot": "repulsion-distance-fit",
+    "question": "这三个点透露了什么规律？",
+    "answer": "距离作横坐标、相对力作纵坐标；原始数据拟合指数约 1.92，接近平方反比。",
+    "text": "让距离落在横轴，力落在纵轴。三个点，把刚才的转动变成了一条可以比较的曲线。距离减半，力增加四倍；距离减到四分之一，力增加十六倍。这就指向平方反比。原始数据不完全整齐，拟合得到的指数约一点九二，接近二。",
+    "visual_beats": [
+      "三点依次在普通线性坐标轴上出现",
+      "1/r² 参照曲线和数据拟合曲线区分，字幕不遮数据",
+      "指数 1.92 接近 2，保留数据的不完美而不强行贴合"
+    ]
+  },
+  {
+    "base_id": "measurement-close",
+    "shot": "sensitivity-measurement-close",
+    "question": "这个实验最巧妙的地方是什么？",
+    "answer": "先标定扭转与力，再改变距离、比较读数；长银丝让信号更明显。",
+    "text": "微小的力，留下了转动的线索。先标定多大的力对应多大的转角，再读角度，就能知道力的大小。把银丝加长，这个信号会更明显。最后改变两球的距离，电力变化的规律，就藏在这几次读数里。",
+    "visual_beats": [
+      "悬杆的细微转动与扭转银丝同屏出现",
+      "先标定力和转角，再点亮长银丝上下两个相加的角度",
+      "两球间距与三个测量点相连，停在已经呈现的实验规律上"
+    ]
+  }
+]

@@ -1,0 +1,46 @@
+{
+  "status": "Complete and frozen for scene6 composition",
+  "rendering": {
+    "complete": true,
+    "active-bottom-top": 96,
+    "active-top": 96,
+    "passive-bottom-top": 144,
+    "total_native_frames": 336,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "samples": 48,
+    "blender_exited_successfully": true,
+    "blend_saved": "blender/coulomb-reference-v38.blend"
+  },
+  "compression": {
+    "active-bottom-top": "All 96 completed and RGBA pixels checked equal; 194677980 to 127954207 bytes",
+    "remaining_batch": [
+      "active-top",
+      "passive-bottom-top"
+    ],
+    "remaining_batch_frames_to_recheck": 0,
+    "remaining_batch_status": "All 240 remaining frames completed; RGBA pixels equal. All 336 files are now compressed.",
+    "temporary_files_at_stop": 0,
+    "temporary_extension": ".png.tmp",
+    "temporary_files_note": "Interrupted compression uses temporary files. Valid original or atomically replaced .png files remain present; rerun overwrites the temporary path. Do not consume .tmp files.",
+    "process_4356": "Stopped; no owned rendering or compression process remains"
+  },
+  "validation": {
+    "physics_and_projection": "14 checks passed",
+    "all_336_png_decode": "Passed; all 336 native 1920x1080 PNG files fully decoded",
+    "final_signature_frozen": true
+  },
+  "outputs": {
+    "render_directory": "C:/Users/zhaos/.codex/visualizations/2026/10/14/01a13aae-1b5c-77e2-a65d-d4bd96773904/coulomb-v38-renders",
+    "projection": "projection-reference.json",
+    "midpoint_overlay": "wire-midpoint-v37.json",
+    "midpoint_overlay_status": "128 force-cycle and 64 short-wire poses ready; end-point reprojection error 0 px",
+    "freeze_manifest": "C:\\Users\\zhaos\\.codex\\visualizations\\2026\\10\\14\\01a13aae-1b5c-77e2-a65d-d4bd96773904\\coulomb-v38-renders\\reference-frozen.json"
+  },
+  "resume_from_repository_root": [
+    "Reference assets complete. Compose scene6 using reference-frozen.json; do not change the accepted 336 frames."
+  ],
+  "scope": "Only reference comparison around the former 2:25; no v3.7 files changed. The parent has completed other final segments and has not yet composed scene6."
+}

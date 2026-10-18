@@ -1,5 +1,5 @@
 {
-  "edition": "3.7.0",
+  "edition": "3.8.0",
   "narration": "Modern question-led explanation of the published memoirs; mature Doubao synthetic voice at native tempo.",
   "historical": [
     {
@@ -18,6 +18,11 @@
       "supports": "Earth-density experiment; related torsion-balance measurement, not a claim of direct replication of Coulomb"
     }
   ],
+  "analogy": {
+    "winding_key": "Hand-feel analogy only: positive winding and opposing elastic restoring tendency. The key winds forward and holds; the next shot, of the straight silver wire, demonstrates unloading and return. No claim that a clock mainspring bends by the same mechanism as straight-wire torsion, or that Coulomb derived his design from a clock.",
+    "clock_ratchet_reference": "https://www.awci.com/wp-content/uploads/ht/1993/1993-03-web.pdf",
+    "direct_comparison": "A faint first equilibrium rod remains while the applied tangential force doubles. Two equal angular intervals make the doubled settled twist directly visible; the force itself is not amplified."
+  },
   "modern": [
     "https://www.nist.gov/publications/design-electrostatic-feedback-experiment-measure-g",
     "https://www.pasco.com/resources/lab-experiments/1506",
@@ -27,7 +32,7 @@
     "claim": "Measure what is measurable, and make measurable what is not so is widely attributed to Galileo, but lacks reliable primary attribution.",
     "research": "https://websrv.physik.uni-halle.de/Fachgruppen/history/Luchs-2009.pdf"
   },
-  "model": "Native Full-HD Blender with fine satin silver wire. First demonstrate force, release, twice the force, longer wire and longer lever arm. Source ball then advances and pauses while the suspended needle responds through a damped angular ODE; instantaneous gap changes. Only final geometry and relative twist are equivalent to the original upper-knob operation. Each trial charge product is calibrated to the historical endpoint; illustrative dynamics are not independent experimental evidence.",
+  "model": "Native Full-HD Blender with fine satin silver wire. Same-force comparison of lengths L and 2L, with a midpoint observation mark: each equal half has the same equilibrium relative twist, so the angles add. The lower-rod reference views use matched true-overhead orthographic cameras; upper-driven and lower-driven cases have separate damped ODE trajectories, with equivalent final geometry and relative twist only. Spoken component names trigger gentle highlights.",
   "data_plot": {
     "inputs": "0+36,126+18,567+8.5 degrees",
     "conversion": "r=2R sin(alpha/2), F=kappa*(alpha+beta)*pi/180/[R cos(alpha/2)]",
@@ -44,6 +49,7 @@
   "force_scale": {
     "first_measurement": "Revised MIT translation p4: 1/3400 grain-weight, approximately 0.153 microN or 15.6 micrograms weight.",
     "zero_uncertainty": "Revised MIT translation p6 Fourth Remark, French printed p576: zero uncertain by 2-3 degrees, at most about 1/40000 grain-weight, approximately 13 nN or 1.3 micrograms weight. This is an historical estimate of readable microforce, not a modern certified resolution specification.",
-    "torsion_sensitivity": "1784 memoir section XIV: restoring torque proportional to angle and diameter^4, inverse to length. Equal tangential force at doubled lever arm doubles torque; equilibrium twist doubles."
+    "torsion_sensitivity": "1784 memoir section XIV: restoring torque proportional to angle and diameter^4, inverse to length. Equal tangential force at doubled lever arm doubles torque; equilibrium twist doubles.",
+    "comparison": "A 0.01 g reading increment is an illustrative weighing reference, not a universal specification. It is about 642 times the mass-equivalent of the first force, or about 7547 times the memoir zero-uncertainty equivalent. First measured force and uncertainty are distinct quantities."
   }
 }

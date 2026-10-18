@@ -1,0 +1,79 @@
+{
+  "checks": [
+    {
+      "name": "active final gap and relative twist",
+      "pass": true,
+      "gap_deg": 8.500000000045159,
+      "twist_deg": 575.5000000000452
+    },
+    {
+      "name": "active relative twist identity",
+      "pass": true
+    },
+    {
+      "name": "active finite spheres stay separate",
+      "pass": true,
+      "minimum_gap_deg": 8.499255696044544,
+      "contact_gap_deg": 6.9008846133937505
+    },
+    {
+      "name": "passive final gap and relative twist",
+      "pass": true,
+      "gap_deg": 8.499995802337091,
+      "twist_deg": 575.4999958023371
+    },
+    {
+      "name": "passive relative twist identity",
+      "pass": true
+    },
+    {
+      "name": "passive finite spheres stay separate",
+      "pass": true,
+      "minimum_gap_deg": 7.350624218234726,
+      "contact_gap_deg": 6.9008846133937505
+    },
+    {
+      "name": "active source remains fixed",
+      "pass": true
+    },
+    {
+      "name": "passive upper end remains fixed",
+      "pass": true
+    },
+    {
+      "name": "passive source stops while needle moves away",
+      "pass": true,
+      "gap_increase_deg": 3.2885634090224265
+    },
+    {
+      "name": "active upper end reaches minus567",
+      "pass": true
+    },
+    {
+      "name": "true overhead angle equals physical lower angle",
+      "pass": true,
+      "maximum_error_deg": 9.882503366043238e-05
+    },
+    {
+      "name": "force arrow aligns with real sphere line",
+      "pass": true,
+      "maximum_normalized_cross_error": 2.276034364992247e-05
+    },
+    {
+      "name": "all bottom geometry fits common square crop",
+      "pass": true,
+      "failures": []
+    },
+    {
+      "name": "upper and lower active images share exact poses",
+      "pass": true
+    },
+    {
+      "name": "all reference renders fully decode",
+      "pass": true,
+      "count": 336,
+      "failures": []
+    }
+  ],
+  "scope": "Two distinct motions with identical final gap, twist and balance torque. Historical angles calibrate endpoint; timing and moving trajectories are modern explanatory simulations."
+}
