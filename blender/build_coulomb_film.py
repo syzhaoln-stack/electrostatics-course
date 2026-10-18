@@ -1,42 +1,41 @@
-"""1785 balance: dimensional reconstruction + explicitly enlarged torsion insert.
+"""1785 balance v3.6: one dimensional model and fixed-axis torsion views.
 Blender units are decimetres. Wood, patina and lighting are interpretive.
 Run: blender -b -t 4 -P this.py -- --preview / --render
 """
-import bpy, math, sys, json
+import bpy, math, sys, json, time, shutil
+from bpy_extras.object_utils import world_to_camera_view
 from mathutils import Vector
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent.parent
-OUT=ROOT/'media/lesson-dialogues/production/v3-5/coulomb/renders-final';OUT.mkdir(parents=True,exist_ok=True)
+OUT=ROOT/'media/lesson-dialogues/production/v3-6/coulomb/renders';OUT.mkdir(parents=True,exist_ok=True)
 bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
-S=bpy.context.scene;S.render.engine='CYCLES';S.cycles.samples=16;S.cycles.use_denoising=True
-prefs=bpy.context.preferences.addons['cycles'].preferences;prefs.compute_device_type='OPTIX';prefs.get_devices()
-for device in prefs.devices:device.use=device.type=='OPTIX'
-S.cycles.device='GPU';S.cycles.transparent_max_bounces=12
-S.render.resolution_x=1280;S.render.resolution_y=720;S.render.resolution_percentage=100
+S=bpy.context.scene;S.render.engine='BLENDER_EEVEE_NEXT';S.eevee.taa_render_samples=48;S.eevee.use_raytracing=False
+S.render.resolution_x=1920;S.render.resolution_y=1080;S.render.resolution_percentage=100
 S.render.image_settings.file_format='PNG';S.render.fps=24
-S.world.use_nodes=True;S.world.node_tree.nodes['Background'].inputs[0].default_value=(.004,.005,.007,1);S.world.node_tree.nodes['Background'].inputs[1].default_value=.25;S.view_settings.view_transform='AgX'
+S.world.use_nodes=True;S.world.node_tree.nodes['Background'].inputs[0].default_value=(.065,.075,.085,1);S.world.node_tree.nodes['Background'].inputs[1].default_value=.34;S.view_settings.view_transform='AgX'
 def material(name,color,metal=0,rough=.4,noise=0):
  m=bpy.data.materials.new(name);m.use_nodes=True;n=m.node_tree.nodes;p=n.get('Principled BSDF');p.inputs['Base Color'].default_value=(*color,1);p.inputs['Metallic'].default_value=metal;p.inputs['Roughness'].default_value=rough
  if noise:
   tex=n.new('ShaderNodeTexNoise');tex.inputs['Scale'].default_value=125;tex.inputs['Detail'].default_value=2
-  bump=n.new('ShaderNodeBump');bump.inputs['Strength'].default_value=noise;bump.inputs['Distance'].default_value=.015;m.node_tree.links.new(tex.outputs['Fac'],bump.inputs['Height']);m.node_tree.links.new(bump.outputs['Normal'],p.inputs['Normal'])
+  bump=n.new('ShaderNodeBump');bump.inputs['Strength'].default_value=noise;bump.inputs['Distance'].default_value=.0015;m.node_tree.links.new(tex.outputs['Fac'],bump.inputs['Height']);m.node_tree.links.new(bump.outputs['Normal'],p.inputs['Normal'])
  return m
-brass=material('warm aged brass',(.42,.245,.075),.78,.31,.16)
-silver=material('drawn silver wire',(.78,.83,.88),1,.19,.035)
-steel=material('polished steel screw',(.38,.43,.49),1,.24,.045)
-wood=material('dark walnut',(.045,.018,.009),0,.38,.3)
+brass=material('warm aged brass',(.34,.225,.104),.78,.4,.055)
+silver=material('fine satin silver - not chrome',(.61,.65,.69),.9,.39,.018)
+steel=material('dark turned steel',(.18,.22,.255),.78,.43,.045)
+wood=material('dark walnut',(.037,.019,.011),0,.57,.16)
 paper=material('rag paper',(.68,.59,.4),0,.85,.15)
 ink=material('engraved ink',(.025,.019,.013),0,.85)
 wax=material('shellac insulation',(.12,.038,.014),0,.3)
 pith=material('pith ball',(.75,.66,.46),0,.9,.4)
 coral=material('electric torque annotation',(.9,.13,.065),.1,.35)
 cyan=material('elastic torque annotation',(.05,.52,.58),.1,.3)
-gold=material('teaching tracer',(.95,.55,.12),.45,.3)
+gold=material('small teaching section index',(.67,.43,.15),.3,.55)
 glass=material('clear antique glass',(.63,.79,.75),0,.17)
-p=glass.node_tree.nodes.get('Principled BSDF');p.inputs['Alpha'].default_value=.12;p.inputs['Transmission Weight'].default_value=.1
+p=glass.node_tree.nodes.get('Principled BSDF');p.inputs['Alpha'].default_value=.02;p.inputs['Transmission Weight'].default_value=0;p.inputs['Specular IOR Level'].default_value=.18
 glass.surface_render_method='BLENDED';glass.use_transparent_shadow=False
 nodes=glass.node_tree.nodes;links=glass.node_tree.links
-gloss=nodes.new('ShaderNodeBsdfGlass');gloss.inputs['Color'].default_value=(.93,.98,.96,1);gloss.inputs['Roughness'].default_value=.035;gloss.inputs['IOR'].default_value=1.46;links.new(gloss.outputs[0],nodes.get('Material Output').inputs['Surface'])
+# Clear thin-wall appearance is an interpretation, not an optical reconstruction
+# of an identified surviving glass specimen. Avoid opaque/reflected black tubes.
 def finish(o,name,m):
  o.name=name;o.data.materials.append(m)
  if o.type=='MESH':
@@ -82,15 +81,22 @@ cyl('fixed graduated brass disc',.42,.07,9.98,brass)
 for i in range(72):
  a=i*math.tau/72;r=.36;length=.058 if i%6==0 else .028
  rod('fixed micrometer graduation',(r*math.cos(a),r*math.sin(a),10.02),((r-length)*math.cos(a),(r-length)*math.sin(a),10.02),.004,ink)
-parent(rod('rotating micrometer index',(.13,0,.055),(.36,0,.055),.012,steel),dial)
+parent(rod('rotating micrometer index',(.13,0,.055),(.36,0,.055),.007,steel),dial)
 text('fixed zero reference','0',(.39,0,10.025),.052,ink,rot=(0,0,0))
+for angle in range(30,360,30):
+ a=-math.radians(angle);text('fixed micrometer numeral',str(angle),(.265*math.cos(a),.265*math.sin(a),10.025),.039,ink,rot=(0,0,0))
 parent(cyl('top thumb grip',.13,.24,.14,brass),dial)
-for i in range(30):
- a=i*math.tau/30;parent(rod('grip knurl',(.132*math.cos(a),.132*math.sin(a),.04),(.132*math.cos(a),.132*math.sin(a),.24),.006,brass),dial)
-wire=rod('silver wire 28 pouces',(0,0,1.64),(0,0,9.20),.0045,silver)
-rod('upper clamp',(0,0,9.2),(0,0,9.83),.027,brass)
-cyl('lower clamp',.026,.14,1.68,brass)
+for z in [.04,.13,.23]:parent(torus('fine grip groove',.13,.0017,z,ink),dial)
+wire=rod('fine straight silver wire 28 pouces',(0,0,1.64),(0,0,9.20),.0032,silver)
+rod('upper adjustment shaft',(0,0,9.3),(0,0,9.83),.019,brass)
+upper_clamp=empty('rotating upper silver-wire clamp',(0,0,9.25))
+parent(cyl('upper clamp collet',.029,.14,0,steel),upper_clamp)
+parent(cyl('upper clamp shoulder',.046,.045,0,steel),upper_clamp)
+parent(rod('upper clamp screw',(0,-.035,0),(0,-.052,0),.011,steel),upper_clamp)
 moving=empty('suspended needle',(0,0,1.64))
+parent(cyl('lower clamp collet',.028,.14,.025,steel),moving)
+parent(cyl('lower clamp shoulder',.044,.045,.025,steel),moving)
+parent(rod('lower clamp screw',(0,-.035,.025),(0,-.052,.025),.011,steel),moving)
 parent(rod('waxed light needle',(-1.03,0,0),(.59,0,0),.012,paper),moving)
 parent(rod('shellac tip',(.59,0,0),(1.08,0,0),.014,wax),moving)
 parent(sphere('moving pith ball',(1.08,0,0),.065,pith),moving)
@@ -113,62 +119,158 @@ pin=empty('charging pin assembly',(1.1,-1,2.3))
 parent(rod('wax charging handle',(0,-.7,.6),(0,0,0),.035,wax),pin);parent(rod('charging needle',(0,0,0),(0,.24,-.23),.009,brass),pin)
 pin.hide_render=True
 for ch in pin.children:ch.hide_render=True
-# Enlarged separate wire demonstrator. Geometry axial, tracer curves ON surface.
+# Same thin wire, fixed straight axis. Small sectional index marks are teaching
+# aids; no second thick cylinder or free-standing helical tracer is introduced.
 before=set(bpy.data.objects)
-macro_origin=Vector((7,0,0))
-rod('enlarged straight silver wire',(7,0,.8),(7,0,5.7),.115,silver)
-for z in [.65,5.85]:
- cyl('macro steel collet',.26,.28,z,steel,7)
- for dz in [-.11,.11]:
-  o=torus('turned steel collar',.26,.012,z+dz,silver);o.location.x=7
- screw=rod('slotted clamp screw',(7,-.24,z),(7,-.36,z),.07,steel)
- rod('screw slot',(6.96,-.362,z),(7.04,-.362,z),.009,ink)
-macro_lower=empty('lower orientation',(7,0,.7));macro_upper=empty('upper orientation',(7,0,5.8))
-bpy.context.view_layer.update()
-for o in set(bpy.data.objects)-before:
- if o.name.startswith(('macro steel collet','turned steel collar','slotted clamp screw','screw slot')):
-  anchor=macro_lower if o.location.z<3 else macro_upper;o.parent=anchor;o.matrix_parent_inverse=anchor.matrix_world.inverted()
-parent(rod('lower radial index',(0,0,0),(1,0,0),.055,coral),macro_lower)
-parent(rod('upper radial index',(0,0,0),(1,0,0),.055,gold),macro_upper)
-tracer=line('surface paint marks',[(7.12,0,.8+i*4.9/100) for i in range(101)],.014,gold)
+section_marks=[]
+for z in [2.15,4.15,6.15,8.15]:
+ g=empty('section orientation teaching aid',(0,0,z))
+ parent(rod('small section index',(0,0,0),(.35,0,0),.007,gold),g)
+ parent(sphere('section index endpoint',(.35,0,0),.013,gold),g)
+ parent(torus('section orientation guide',.35,.002,0,cyan),g)
+ section_marks.append(g)
+macro_lower=empty('lower orientation',(0,0,1.64));macro_upper=empty('upper orientation',(0,0,9.2))
+parent(rod('lower radial index',(0,0,0),(.3,0,0),.009,coral),macro_lower)
+parent(rod('upper radial index',(0,0,0),(.3,0,0),.009,gold),macro_upper)
 macro=set(bpy.data.objects)-before
 def light(name,loc,power,size,color):
- d=bpy.data.lights.new(name,'AREA');d.energy=power;d.shape='RECTANGLE';d.size=size*.22;d.size_y=size*1.7;d.color=color;o=bpy.data.objects.new(name,d);bpy.context.collection.objects.link(o);o.location=loc;o.rotation_euler=(Vector((0,0,4))-o.location).to_track_quat('-Z','Y').to_euler()
-light('softbox amber',(-5,-6,10),1900,7,(1,.77,.49));light('silver rim',(4,3,8),2200,5,(.51,.73,1));light('large front fill',(0,-8,4),2200,6,(1,.92,.79));light('wire insert fill',(8,-4,6),900,4,(1,.86,.63))
-d=bpy.data.cameras.new('Camera');camera=bpy.data.objects.new('Camera',d);bpy.context.collection.objects.link(camera);S.camera=camera;d.lens=45;d.clip_end=300
+ d=bpy.data.lights.new(name,'AREA');d.energy=power;d.shape='DISK';d.size=size;d.color=color;o=bpy.data.objects.new(name,d);bpy.context.collection.objects.link(o);o.location=loc;o.rotation_euler=(Vector((0,0,4))-o.location).to_track_quat('-Z','Y').to_euler()
+light('broad warm window',(-6,-8,11),1450,9,(1,.91,.78));light('broad cool fill',(5,1,8),850,8,(.79,.88,1));light('quiet front bounce',(0,-8,3),600,7,(1,.95,.87))
+d=bpy.data.cameras.new('Camera');camera=bpy.data.objects.new('Camera',d);bpy.context.collection.objects.link(camera);S.camera=camera;d.lens=55;d.clip_end=300;d.type='ORTHO';d.dof.use_dof=False
 def camera_at(p,target):camera.location=p;camera.rotation_euler=(Vector(target)-camera.location).to_track_quat('-Z','Y').to_euler()
 shots={
- 'whole':((15,-26,12),(0,0,4.7)),
- 'balance':((4.8,-7.4,4.4),(0,0,1.75)),
- 'charge':((4.8,-7.4,4.4),(0,0,1.75)),
- 'knob':((1.25,-2.1,10.9),(0,0,9.85)),
- 'wire':((13,-14,6),(7,0,3.3))}
+ 'whole':((11,-24,8.8),(0,0,4.65),25.8),
+ 'materials':((2.7,-4.8,4.5),(0,0,1.8),7.55),
+ 'charge':((3.9,-6.6,4.1),(.15,0,1.85),7.72),
+ 'knob':((1.15,-2.25,11),(0,0,9.93),2.67),
+ 'knob-0':((1.15,-2.25,11),(0,0,9.93),2.67),
+ 'knob-126':((1.15,-2.25,11),(0,0,9.93),2.67),
+ 'knob-567':((1.15,-2.25,11),(0,0,9.93),2.67),
+ 'wire':((0,-14,10.2),(0,0,5.42),20.5),
+ 'measure-0':((0,1.6,7),(0,0,1.64),6.93),
+ 'measure-126':((0,1.6,7),(0,0,1.64),6.93),
+ 'measure-567':((0,1.6,7),(0,0,1.64),6.93),
+ 'active':((0,1.6,7),(0,0,1.64),6.93),
+ 'knob-active':((1.15,-2.25,11),(0,0,9.93),2.67),
+ 'equiv-passive':((0,-14,10.2),(0,0,5.42),20.5),
+ 'equiv-active':((0,-14,10.2),(0,0,5.42),20.5),
+ 'passive-readout':((0,-14,10.2),(0,0,5.42),20.5)}
+
+def smooth(u):u=max(0,min(1,u));return u*u*(3-2*u)
+
+def projection(shot,u,alpha,beta):
+ bpy.context.view_layer.update()
+ pa=math.radians(alpha);pb=-math.radians(beta)
+ points={'wire_top':(0,0,9.2),'wire_bottom':(0,0,1.64),'upper_clamp':(0,0,9.25),'lower_clamp':(0,0,1.665),'fixed_ball':(1.08,0,1.64),'moving_ball':(1.08*math.cos(pa),1.08*math.sin(pa),1.64),'zero':(1.08,0,1.64),'needle_center':(0,0,1.64),'paper_counterweight':(-.92*math.cos(pa),-.92*math.sin(pa),1.675),'shellac_tip':(.84*math.cos(pa),.84*math.sin(pa),1.64),'knob':(0,0,10.12),'pointer':(.36*math.cos(pb),.36*math.sin(pb),10.035),'dial_zero':(.39,0,10.025),'fixed_stem':(1.08,0,2.65)}
+ # These fixed-length arrows illustrate moment direction, not force magnitude.
+ # Project a world-space tangent; a screen-space perpendicular is wrong for an
+ # obliquely viewed horizontal plane. Restoration opposes the relative twist.
+ twist_sign=1 if alpha+beta>=0 else -1
+ for name,sign in [('applied_tangent',twist_sign),('restoring_tangent',-twist_sign)]:
+  points[name]=(1.08*math.cos(pa)-sign*.4*math.sin(pa),1.08*math.sin(pa)+sign*.4*math.cos(pa),1.64)
+ out={}
+ for name,pt in points.items():
+  v=world_to_camera_view(S,camera,Vector(pt));out[name]={'x':round(v.x*1920,3),'y':round((1-v.y)*1080,3),'visible':0<=v.x<=1 and 0<=v.y<=1 and v.z>0}
+ return {'u':u,'alpha_deg':alpha,'beta_deg':beta,'twist_deg':alpha+beta,'points':out}
 def setup(shot,u):
- for o in macro:o.hide_render=shot!='wire'
- for o in [vessel,lid,tower]:o.hide_render=shot in ['wire','balance','charge']
- # Nearby vessel panels remain transparent, no invented supports.
- alpha=6.9+29.1*(1-math.exp(-6*max(0,u-.2)/.8)) if shot=='charge' else 60*(u*u*(3-2*u)) if shot=='wire' else 36-18*(u*u*(3-2*u)) if shot=='knob' else 36
- beta=126*(u*u*(3-2*u)) if shot=='knob' else 0
- moving.rotation_euler.z=math.radians(alpha);dial.rotation_euler.z=-math.radians(beta)
+ measure=shot.startswith('measure') or shot=='active'
+ equivalent=shot.startswith('equiv-');wire_view=shot in ['wire','passive-readout'] or equivalent
+ for o in macro:o.hide_render=not wire_view
+ for o in [vessel,lid,tower]:o.hide_render=wire_view or shot in ['materials','charge'] or measure
+ for o in bpy.data.objects:
+  if o.name.startswith('glass rim'):o.hide_render=shot!='whole'
+  if o.name.startswith(('paper band','paper graduation','scale numeral','fixed insulating','fixed stem','fixed pith')):o.hide_render=wire_view
+  if o.name.startswith(('waxed light needle','shellac tip','moving pith ball','paper damping counterweight')):o.hide_render=equivalent
+ for o in bpy.data.objects:
+  if o.name.startswith(('fixed graduated','fixed micrometer','fixed zero','brass collar','top housing','upper adjustment')):o.hide_render=measure or wire_view
+ for o in [dial,*dial.children]:o.hide_render=measure or wire_view
+ for o in [upper_clamp,*upper_clamp.children,wire]:o.hide_render=measure
+ # The frame is stationary. Recorded readings are reached within the first 30%
+ # of each measurement shot, then held for exact narration/graph association.
+ f=smooth(u/.30);alpha,beta=36,0
+ if shot=='materials':alpha=36
+ elif shot=='charge':alpha=6.9+29.1*smooth((u-.12)/.18)
+ elif shot=='wire':
+  alpha=72*smooth(u/.30) if u<=.30 else 72 if u<.5 else 72*math.exp(-7*(u-.5))*math.cos(18*(u-.5))
+  if u>.90:alpha*=1-smooth((u-.90)/.10)
+ elif shot in ['active','knob-active']:
+  # Deliberate manipulation through historical equilibrium readings. This is
+  # an illustrative sequence, not a measured time record or dynamic solution.
+  if u<.12:alpha,beta=8.5,0
+  elif u<.32:alpha,beta=8.5+27.5*smooth((u-.12)/.20),0
+  elif u<.40:alpha,beta=36,0
+  elif u<.85:
+   g=smooth((u-.40)/.45);alpha,beta=36-27.5*g,567*g
+  else:alpha,beta=8.5,567
+ elif shot=='equiv-passive':alpha,beta=575.5*smooth(u),0
+ elif shot=='equiv-active':alpha,beta=8.5*smooth(u),567*smooth(u)
+ elif shot=='passive-readout':
+  # Exact keyframes at i=0,21,42,63 allow the reader to select the three
+  # measured torque-equivalent twists without inventing a force-distance model.
+  if u<=1/3:alpha=36*smooth(3*u)
+  elif u<=2/3:alpha=36+108*smooth(3*u-1)
+  else:alpha=144+431.5*smooth(3*u-2)
+  beta=0
+ elif shot in ['knob','knob-126']:alpha=36-18*f;beta=126*f
+ elif shot=='knob-0':alpha=6.9+29.1*f
+ elif shot=='knob-567':alpha=18-9.5*f;beta=126+441*f
+ elif shot=='measure-0':alpha=6.9+29.1*f
+ elif shot=='measure-126':alpha=36-18*f;beta=126*f
+ elif shot=='measure-567':alpha=18-9.5*f;beta=126+441*f
+ moving.rotation_euler.z=math.radians(alpha);dial.rotation_euler.z=-math.radians(beta);upper_clamp.rotation_euler.z=-math.radians(beta)
  macro_lower.rotation_euler.z=math.radians(alpha);macro_upper.rotation_euler.z=-math.radians(beta)
- for i,p in enumerate(tracer.data.splines[0].points):
-  t=i/100;a=math.radians(alpha*(1-t)-beta*t);p.co=(7+.122*math.cos(a),.122*math.sin(a),.8+4.9*t,1)
- for ch in pin.children:ch.hide_render=shot!='charge' or u>.28
- pin.location=(1.1,-.27-min(1,u*6),1.9+u*2)
- p,t=shots[shot];p=Vector(p);t=Vector(t);a=(u-.5)*.12;v=p-t;p=t+Vector((v.x*math.cos(a)-v.y*math.sin(a),v.x*math.sin(a)+v.y*math.cos(a),v.z));camera_at(p,t)
+ for g in section_marks:
+  t=(g.location.z-1.64)/7.56;g.rotation_euler.z=math.radians(alpha*(1-t)-beta*t)
+ pin.hide_render=shot!='charge' or u>.30
+ for ch in pin.children:ch.hide_render=shot!='charge' or u>.30
+ # Local pin tip is (0,.24,-.23); offset it onto the fixed ball, then withdraw.
+ pin.location=(1.08,-.305-.9*smooth((u-.10)/.2),1.87+.7*smooth((u-.10)/.2))
+ wire.scale.x=wire.scale.y=2.2 if wire_view else 1
+ p,t,scale=shots[shot];d.ortho_scale=scale;camera_at(p,t)
  S.render.filepath=str(OUT/f'{shot}-preview.png')
+ return projection(shot,u,alpha,beta)
 args=sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
-if '--render' in args:
+projection_data={};audit=[];projections_only='--projection-only' in args
+sampling='knob-0/126/567 and knob: 64 poses uniformly over u=0..0.30, then hold last pose; active/knob-active: 96 poses over u=0..1; other shots: 64 poses over u=0..1, measurement readings reached at u=.30'
+def save_projections(suffix):
+ payload={'size':[1920,1080],'coordinate_origin':'top-left pixels','sampling':sampling,'shots':projection_data}
+ (OUT/f'projection-{suffix}.json').write_text(json.dumps(payload,indent=2),encoding='utf-8')
+ if suffix!='all' and '--render' in args and (OUT/'projection.json').exists():
+  merged=json.loads((OUT/'projection.json').read_text(encoding='utf-8'));merged['shots'].update(projection_data);payload=merged
+ if suffix=='all' or '--render' in args:
+  temporary=OUT/f'.projection-{suffix}.tmp';temporary.write_text(json.dumps(payload,indent=2),encoding='utf-8');temporary.replace(OUT/'projection.json')
+if '--render' in args or projections_only:
  wanted=args[args.index('--shot')+1] if '--shot' in args else None
  for shot in shots:
   if wanted and wanted!=shot:continue
   folder=OUT/shot;folder.mkdir(exist_ok=True)
-  for i in range(48):
+  projection_data[shot]=[]
+  active=shot in ['active','knob-active'];count=96 if active else 64
+  for i in range(count):
    dest=folder/f'{i:04}.png'
-   if dest.exists():continue
-   setup(shot,i/47);S.render.filepath=str(dest);bpy.ops.render.render(write_still=True)
+   sample_u=(i/(count-1))*.30 if shot.startswith('knob') and not active else i/(count-1)
+   projection_data[shot].append(setup(shot,sample_u))
+   if projections_only:continue
+   if dest.exists() and '--force' not in args:continue
+   S.render.filepath=str(dest)
+   if shot in ['whole','materials','knob-0'] and i>0:shutil.copy2(folder/'0000.png',dest);continue
+   if shot=='knob-126' and (OUT/'knob'/f'{i:04}.png').exists():shutil.copy2(OUT/'knob'/f'{i:04}.png',dest);continue
+   if i>19 and shot not in ['wire','passive-readout'] and not shot.startswith(('knob','equiv-')) and not active:shutil.copy2(folder/'0019.png',dest);continue
+   if active:
+    if 0<i<=11:shutil.copy2(folder/'0000.png',dest);continue
+    if 32<=i<=38:shutil.copy2(folder/'0031.png',dest);continue
+    if i>81:shutil.copy2(folder/'0081.png',dest);continue
+   before=time.time();bpy.ops.render.render(write_still=True);audit.append({'shot':shot,'frame':i,'seconds':round(time.time()-before,2)})
+  save_projections(wanted or 'all')
+  print('V36_SHOT_DONE '+shot,flush=True)
 else:
- for shot in ['whole','balance','wire']:
-  setup(shot,.6);bpy.ops.render.render(write_still=True)
-setup('whole',0);bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/'blender/coulomb.blend'))
-(ROOT/'assets/coulomb/film-model.json').write_text(json.dumps({'source':'1785 memoir, dimensions in historical French pouces converted with 27 mm/pouce','wire_m':.756,'vessel_diameter_m':.324,'vessel_height_m':.324,'tower_height_m':.648,'arm_m':.108,'geometry':'pith balls, shellac tip, waxed needle, damping paper, glass enclosure','interpretation':'wood, patina, lighting; enlarged wire and gold surface tracer are teaching aids; motion transitions are illustrative, not measured oscillations','render':'Blender Cycles OptiX, native 1280x720 shots composited with full-HD explanatory graphics; 48 motion samples per shot with temporal interpolation'},indent=2),encoding='utf-8')
+ wanted=args[args.index('--shot')+1] if '--shot' in args else None
+ for shot in shots:
+  if wanted and wanted!=shot:continue
+  projection_data[shot]=[setup(shot,.4)];before=time.time();bpy.ops.render.render(write_still=True);audit.append({'shot':shot,'preview_seconds':round(time.time()-before,2)})
+setup('whole',0);bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/'blender/coulomb-v36.blend'))
+suffix=wanted or 'all'
+save_projections(suffix)
+if not projections_only:
+ (OUT/f'render-{suffix}.json').write_text(json.dumps({'source':'1785 memoir; 27 mm per historical French pouce','wire_m':.756,'vessel_diameter_m':.324,'vessel_height_m':.324,'tower_height_m':.648,'arm_m':.108,'display_wire_diameter_m':.00064,'wire_detail_diameter_factor':2.2,'interpretation':'surfaces and small section indices are modern teaching reconstruction; all cameras fixed, wire axis straight; animation timing illustrative, not a measured dynamic record','render':'Blender Eevee, native 1920x1080','sampling':sampling,'timing':audit},indent=2),encoding='utf-8')
+print('V36_DONE '+str(OUT),flush=True)

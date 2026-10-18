@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-10-18",
+  "officialSource": "https://docs.volcengine.com/docs/DoubaoVoice/Tonelist-1?lang=zh",
+  "api": "https://openspeech.bytedance.com/api/v3/tts/create",
+  "model": "seed-audio-1.0",
+  "candidates": [
+    {"name": "沉稳优雅 2.0", "speaker": "ICL_uranus_zh_male_chenwenyouya_tob", "officialCategory": "角色扮演", "audition": "media/lesson-dialogues/production/v3-6-audition/coulomb-sedate/preview.mp3", "speechRate": 0},
+    {"name": "胡子叔叔 2.0", "speaker": "ICL_uranus_zh_male_huzishushu_tob", "officialCategory": "角色扮演", "audition": "media/lesson-dialogues/production/v3-6-audition/coulomb-bearded/preview.mp3", "speechRate": 0}
+  ],
+  "selected": "sedate",
+  "selectionBasis": "Official preset character matches a composed, experienced researcher. Two successful same-text samples verify real API availability; measured pace and PCM checks support configuration, not a human listening judgment.",
+  "productionSpeechRate": 5,
+  "pitchRate": 0,
+  "localTempo": 1,
+  "humanListeningReview": false,
+  "disclosure": "Modern synthetic first-person narration, not a reconstruction of Coulomb's actual voice. Preset timbre is used directly; pitch is not lowered to imitate age."
+}

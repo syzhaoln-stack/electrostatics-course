@@ -1,0 +1,143 @@
+{
+  "provenance": "1785 memoir observations; modern SI conversion with chord distance and perpendicular moment arm",
+  "source": "https://web.mit.edu/llbjr/Public/www/Coulomb1785.pdf",
+  "frenchSource": "https://webusers.imj-prg.fr/~david.aubin/cours/Textes/Coulomb.pdf",
+  "assumptions": {
+    "radiusMetres": 0.108,
+    "grainKilograms": 0.000053,
+    "gravityMetresPerSecondSquared": 9.80665,
+    "torsionStiffnessNmPerRadian": 2.627613686169207e-8,
+    "calibration": "360 degrees corresponds to the weight of 1/340 grain at a 4-pouce arm",
+    "unitConversionsAreRounded": true
+  },
+  "points": [
+    {
+      "number": 1,
+      "alphaDegrees": 36,
+      "betaMagnitudeDegrees": 0,
+      "upperSignedDegrees": 0,
+      "lowerSignedDegrees": 36,
+      "twistDegrees": 36,
+      "reportedTwistDegrees": 36,
+      "distanceCm": 6.6747670784988635,
+      "effectiveArmCm": 10.271410375987658,
+      "torqueNm": 1.6509783705882355e-8,
+      "forceMicroN": 0.16073531386184967,
+      "arcDistanceCm": 6.785840131753954,
+      "constantArmForceMicroN": 0.15286836764705883
+    },
+    {
+      "number": 2,
+      "alphaDegrees": 18,
+      "betaMagnitudeDegrees": 126,
+      "upperSignedDegrees": -126,
+      "lowerSignedDegrees": 18,
+      "twistDegrees": 144,
+      "reportedTwistDegrees": 144,
+      "distanceCm": 3.378984444868987,
+      "effectiveArmCm": 10.667034078427488,
+      "torqueNm": 6.603913482352942e-8,
+      "forceMicroN": 0.6190955643151443,
+      "arcDistanceCm": 3.392920065876977,
+      "constantArmForceMicroN": 0.6114734705882353
+    },
+    {
+      "number": 3,
+      "alphaDegrees": 8.5,
+      "betaMagnitudeDegrees": 567,
+      "upperSignedDegrees": -567,
+      "lowerSignedDegrees": 8.5,
+      "twistDegrees": 575.5,
+      "reportedTwistDegrees": 576,
+      "distanceCm": 1.6007433882206237,
+      "effectiveArmCm": 10.770301999074446,
+      "torqueNm": 2.639272367426471e-7,
+      "forceMicroN": 2.4505091571743103,
+      "arcDistanceCm": 1.6022122533307945,
+      "constantArmForceMicroN": 2.4437707105800657
+    }
+  ],
+  "fit": {
+    "exponent": 1.9068700288885376,
+    "coefficient": 6.105479553598873,
+    "distanceUnit": "cm",
+    "forceUnit": "μN",
+    "method": "unweighted-log-least-squares",
+    "predictedMicroN": [
+      0.16354123095493056,
+      0.5989536819598513,
+      2.4894581134279377
+    ],
+    "relativeResiduals": [
+      -0.017456755616830733,
+      0.03253436709334909,
+      -0.015894230037703485
+    ]
+  },
+  "relativeComparison": {
+    "method": "memoir-small-angle-comparison",
+    "distanceReferenceAlphaDegrees": 36,
+    "forceReferenceTwistDegrees": 36,
+    "points": [
+      {
+        "number": 1,
+        "alphaDegrees": 36,
+        "betaMagnitudeDegrees": 0,
+        "twistDegrees": 36,
+        "reportedTwistDegrees": 36,
+        "distanceRatio": 1,
+        "forceRatio": 1,
+        "forceLabel": "1倍"
+      },
+      {
+        "number": 2,
+        "alphaDegrees": 18,
+        "betaMagnitudeDegrees": 126,
+        "twistDegrees": 144,
+        "reportedTwistDegrees": 144,
+        "distanceRatio": 0.5,
+        "forceRatio": 4,
+        "forceLabel": "4倍"
+      },
+      {
+        "number": 3,
+        "alphaDegrees": 8.5,
+        "betaMagnitudeDegrees": 567,
+        "twistDegrees": 575.5,
+        "reportedTwistDegrees": 576,
+        "distanceRatio": 0.2361111111111111,
+        "forceRatio": 15.98611111111111,
+        "forceLabel": "约16倍"
+      }
+    ],
+    "fit": {
+      "exponent": 1.9191905142294352,
+      "coefficient": 1.0193421088025427,
+      "distanceUnit": "first-distance",
+      "forceUnit": "first-force",
+      "method": "unweighted-log-least-squares",
+      "predictedForceRatios": [
+        1.0193421088025427,
+        3.855261820097423,
+        16.271551907257468
+      ],
+      "relativeResiduals": [
+        -0.019342108802542723,
+        0.03618454497564427,
+        -0.01785554936797369
+      ]
+    }
+  },
+  "timelineSeconds": {
+    "leadIn": 0.4,
+    "readingDuration": 12,
+    "twistAt": 1.8,
+    "followAt": 3,
+    "followDuration": 5.2,
+    "forceAt": 8.2,
+    "pointAt": 9.8,
+    "fitStart": 36.4,
+    "fitDuration": 2.2,
+    "duration": 39
+  }
+}

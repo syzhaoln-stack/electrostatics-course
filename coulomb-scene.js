@@ -30,7 +30,7 @@ export function mountBalance(host,onKnob){
  for(const yy of[.237,.253,.269]){const groove=mesh(new THREE.TorusGeometry(.115,.0015,6,96),engraving,[0,yy,0],knob);groove.rotation.x=Math.PI/2;}
  segment([.065,.083,0],[.273,.083,0],brass,.0075,knob);const pointerTip=mesh(new THREE.ConeGeometry(.012,.075,3),steelEdge,[.294,.083,0],knob);pointerTip.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(1,0,0));
  const upperClamp=clamp(scene,9.25);upperClamp.name='rotating-upper-wire-clamp';
- const suspension=segment([0,1.64,0],[0,9.2,0],silver,.0055);suspension.name='straight-silver-suspension-wire';
+ const suspension=segment([0,1.64,0],[0,9.2,0],silver,.0032);suspension.name='straight-silver-suspension-wire';
  topHidden.push(knob,suspension,upperClamp,segment([0,9.3,0],[0,9.99,0],brass,.019));
  // Stationary sphere and insulating support through the second opening.
  topHidden.push(segment([R,Y,0],[R,3.43,0],shellac,.022),cylinder(.115,.07,3.43,shellac,R));mesh(new THREE.SphereGeometry(.065,32,24),materials.pith,[R,Y,0]);

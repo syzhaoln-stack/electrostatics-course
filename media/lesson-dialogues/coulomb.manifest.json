@@ -1,26 +1,154 @@
 {
+  "edition": "3.6.0",
+  "duration": 395.1830208333334,
+  "takes": [
+    {
+      "take": "media/lesson-dialogues/production/v3-6-relative/coulomb/turn-01.paced.wav",
+      "sha256": "5c03b95ed857c796116f57bd0ad4830acc6b0f1072bcb46c64bebda2be48c322",
+      "duration": 24.77,
+      "pacing": "media/lesson-dialogues/production/v3-6-relative/coulomb/turn-01.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    },
+    {
+      "take": "media/lesson-dialogues/production/v3-6/coulomb/turn-02.paced.wav",
+      "sha256": "bc48ffe88be3022b4c35acfb3e301ed033859be14700029f897de11fef289647",
+      "duration": 21.327729166666668,
+      "pacing": "media/lesson-dialogues/production/v3-6/coulomb/turn-02.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    },
+    {
+      "take": "media/lesson-dialogues/production/v3-6/coulomb/turn-03.paced.wav",
+      "sha256": "4bdae80628500ecac3bdf8e5ca9a0be423709550160316f943c86c5166a46d70",
+      "duration": 28.6765625,
+      "pacing": "media/lesson-dialogues/production/v3-6/coulomb/turn-03.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    },
+    {
+      "take": "media/lesson-dialogues/production/v3-6/coulomb/turn-04.paced.wav",
+      "sha256": "8c56b5ec55563d2e791f2809aa214bcc0aedac87ee056a5e899ee76b800378fb",
+      "duration": 21.712229166666667,
+      "pacing": "media/lesson-dialogues/production/v3-6/coulomb/turn-04.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    },
+    {
+      "take": "media/lesson-dialogues/production/v3-6/coulomb/turn-05.paced.wav",
+      "sha256": "a2221a10ed77e8ec1d635f79f7c0db69b1fca73bbbdc8f75d618c3c1c37bfe0e",
+      "duration": 23.92,
+      "pacing": "media/lesson-dialogues/production/v3-6/coulomb/turn-05.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    },
+    {
+      "take": "media/lesson-dialogues/production/v3-6/coulomb/turn-06.paced.wav",
+      "sha256": "6012b2a2f2cb983d1a9b8a373cb47413b758d3dec35bd11d4432fc4b9d167798",
+      "duration": 20.0076875,
+      "pacing": "media/lesson-dialogues/production/v3-6/coulomb/turn-06.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    },
+    {
+      "take": "media/lesson-dialogues/production/v3-6/coulomb/turn-07.paced.wav",
+      "sha256": "8d6f01b38150e0377bb2f0fc84c52d9c3aae623d38abec03e23fc48de868db55",
+      "duration": 20.841333333333335,
+      "pacing": "media/lesson-dialogues/production/v3-6/coulomb/turn-07.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    },
+    {
+      "take": "media/lesson-dialogues/production/v3-6-follow/coulomb/turn-01.paced.wav",
+      "sha256": "e429457ccd00fa8c6e7b7e0e8cefc71e6c81079a145a9e674777e8488e804e17",
+      "duration": 20.2066875,
+      "pacing": "media/lesson-dialogues/production/v3-6-follow/coulomb/turn-01.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    },
+    {
+      "take": "media/lesson-dialogues/production/v3-6-relative/coulomb/turn-02.paced.wav",
+      "sha256": "aab6002b291bdcaffce780a9250b4987b1e54b3481c46fed56400965bc6614d1",
+      "duration": 31.763833333333334,
+      "pacing": "media/lesson-dialogues/production/v3-6-relative/coulomb/turn-02.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    },
+    {
+      "take": "media/lesson-dialogues/production/v3-6-follow/coulomb/turn-02.paced.wav",
+      "sha256": "eb17baa818d42e91fdac16679a08ca757b43cd368f90f2f07c450a7dceb79d7a",
+      "duration": 30.308625,
+      "pacing": "media/lesson-dialogues/production/v3-6-follow/coulomb/turn-02.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    },
+    {
+      "take": "media/lesson-dialogues/production/v3-6-follow/coulomb/turn-03.paced.wav",
+      "sha256": "5e3d6ed9625b6ed2ea16f69e9d1b4cf1cdf4f35274dfed0bb9aae2f168059cd6",
+      "duration": 33.2438125,
+      "pacing": "media/lesson-dialogues/production/v3-6-follow/coulomb/turn-03.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    },
+    {
+      "take": "media/lesson-dialogues/production/v3-6-relative/coulomb/turn-05.paced.wav",
+      "sha256": "2be73fd97d6314475ed28597b3d6d02a4f395043f6acaaed3ee9fd473648490e",
+      "duration": 33.5360625,
+      "pacing": "media/lesson-dialogues/production/v3-6-relative/coulomb/turn-05.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    },
+    {
+      "take": "media/lesson-dialogues/production/v3-6-follow/coulomb/turn-04.paced.wav",
+      "sha256": "ef61631b1eefbbd3f5bf467386a471376126ef36167ec88940155e7ef230c6ba",
+      "duration": 27.89591666666667,
+      "pacing": "media/lesson-dialogues/production/v3-6-follow/coulomb/turn-04.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    },
+    {
+      "take": "media/lesson-dialogues/production/v3-6/coulomb/turn-13.paced.wav",
+      "sha256": "598f0833010cac6d67c3f3e01ed24a9a880ed9382bf74b1536562fcdbe2dbd10",
+      "duration": 27.4554375,
+      "pacing": "media/lesson-dialogues/production/v3-6/coulomb/turn-13.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    },
+    {
+      "take": "media/lesson-dialogues/production/v3-6-follow/coulomb/turn-05.paced.wav",
+      "sha256": "f6036fbb5341059b8e54342afdce0064593aa91e86c66acc42e3c1dd06977226",
+      "duration": 23.617104166666667,
+      "pacing": "media/lesson-dialogues/production/v3-6-follow/coulomb/turn-05.pacing.json",
+      "tempo_modified": false,
+      "sentence_timing_recovered": false
+    }
+  ],
+  "voice": "ICL_uranus_zh_male_chenwenyouya_tob",
+  "voice_name": "沉稳优雅 2.0",
+  "tempo_modified": false,
+  "source_timing": "Provider word times with recorded trim and edit offsets; per-take metadata identifies any additional processing",
   "title": "一根银丝，怎样称出电力？",
-  "duration": 264.1155,
-  "voice": "Doubao 清爽男大, seed-audio-1.0",
-  "synthetic": true,
-  "first_person": "现代改写；不是历史录音或私人日记",
-  "picture": "Blender Cycles native1280x720 motion samples, temporally blended into1920x1080/24fps explanatory film",
-  "subtitle": "Provider timing, locally adjusted; not independent forced alignment",
-  "human_listening_review": false,
-  "sources": "See assets/coulomb/film-sources.json",
+  "synthetic_voice": true,
+  "narrative": "First-person adaptation of published memoirs, source notes on webpage",
+  "picture": "Blender Eevee native 1920x1080; fixed cameras; sampled motion blended at 24fps; illustrative timing",
+  "plot": "Memoir small-angle comparison: relative distance alpha/36 and relative force (alpha+beta)/36 on LINEAR axes; SI and geometric corrections remain in webpage details",
+  "source": "assets/coulomb/film-sources.json",
   "script": [
-    "如果两颗小球之间的电力，轻到不能直接称出来，我该拿什么量它？我是库仑。接下来，请跟我看这台电秤怎样工作。这段叙述依据我的论文作现代改写，并不是历史录音或私人日记。",
-    "在研究电力以前，我研究过磁针的悬挂、摩擦，以及金属丝的扭转。在一七八五年的论文开头，我还提到，先把这种扭转测力的方法用于固体在流体中运动的阻力。电秤沿用了同一个原理。",
-    "看这根藏在玻璃管里的银丝。论文记载，它长二十八法寸，约七十六厘米。下端悬着一根很轻的杆，杆端是一颗小髓质球。另一颗球固定在绝缘支杆上。下面的玻璃罩，挡住容易扰乱读数的气流。",
-    "现在把银丝放大。它并不是弯成弹簧，而是绕自己的轴扭转。金色线只是我们加上的观察标记。轻杆带着下端转，上端保持原来的方向，银丝就会产生一个反向的回复力矩，试着把轻杆扭回去。",
-    "今天可以这样解释：材料和粗细不变，银丝越长，扭转刚度越小。同一个力矩，长度加倍，转角也加倍。固定一度的读数分辨率，就对应更小的力变化。但丝径的作用更猛烈：粗一倍，刚度会变成十六倍。",
-    "先让两颗小球接触。我用绝缘柄拿着一根带电的针，把电传给它们，再把针拿走。两球带上同种电，开始相斥。活动球带着轻杆转开。注意，针已经撤走，接下来读的是两球与悬丝共同决定的平衡。",
-    "小球受到的电力，沿两球的连线。它让杆转开；银丝的回复力矩，让杆往回转。等两种力矩一样大，读数就稳定了。我们先校准银丝，再从它扭了多少，反推出电力有多大。不是直接看见电力，而是测量它造成的改变。",
-    "第一次，轻杆偏转三十六度，上端没有转。接着，我反向转动上端旋钮一百二十六度，把两球逼近。新的夹角只有十八度。但是，银丝并不是只扭了十八度。相对于原来的零位，上端是负一百二十六度，下端是正十八度，总扭转是一百四十四度，是第一次的四倍。",
-    "原文保留了三组读数。第三次，上端转了五百六十七度，下面是八点五度。相加是五百七十五点五度，论文写作五百七十六度。这些是不完美的实验读数。它们支持距离越近，斥力按距离平方的反比增大的规律。",
-    "这里还有一个容易忽略的地方：我读的是转角，真正进入力律的却是两球的距离。小角度下，可以把角度当作距离的近似。今天重建实验，我们也能用准确的弦长和垂直力臂重新计算。近似用在哪里，必须说清楚。",
-    "并不是越灵敏，就一定量得越准。我的论文讨论过两到三度的零点不确定性，也提醒读者，细丝容易断，电会慢慢漏掉。杆后的薄纸片帮助减小摆动。放大信号的同时，也得控制气流、振动和漂移，给装置留下合适的量程。",
-    "后来的故事，交给今天的我们来讲。卡文迪许用同属扭秤家族的装置研究地球密度。现代实验还用静电反馈，去平衡极小的引力矩。这不是说它们都照搬了库仑的电秤，而是同一种思路：用可校准的作用，去比较未知的微小作用。",
-    "回到这根银丝。关键并不只是记住平方反比，而是先问：什么变化看得见？它与未知的力有什么关系？怎样把干扰压下去？一根经过研究和校准的银丝，让这三个问题有了具体的答案。现在，轮到你转动它。"
-  ]
+    "两颗小球之间，有一股很小的横向电力。怎样把它变成能读出来的量？我们看到小球被推开，却不能只凭它动了多少，就判断力有多大。还需要一种能校准的回复作用，与电力相抗衡。库仑选择了细长的银丝：让转角成为测力的读数，再比较不同距离下的斥力。",
+    "我叫库仑。我的办法，是把一根轻杆悬在细丝下面。电力推着杆端的小球，杆就转动。这样，测的不是秤盘下沉了多少，而是轻杆转过多少。在做电秤之前，我已经研究过磁针悬挂、摩擦和金属丝的扭转，还把扭转测力用在过流体阻力的研究中。",
+    "请看里面。银丝长二十八法寸，约七十六厘米。下面的轻杆，可以用涂了封蜡的丝线或稻草做成，前端接一小段虫胶。杆端这颗小球，用的是接骨木的髓，直径不过几毫米。另一端的纸片，用来配重，也减轻摆动。外面的玻璃罩挡住气流。每一个部分，都在帮我们留住那一点点可测的转动。",
+    "把银丝放大看。上端夹头不动，下端跟着轻杆转，丝的中心轴仍然是直的。变的是两端的方向。它们错开得越多，银丝想扭回去的作用就越强。松手，轻杆便会往回转。我们要量的，正是这两个方向之间的总扭转角。",
+    "同一种材料、同样粗细，丝越长，相同的力就越容易把它扭开。我在此前的实验里研究了这个关系，也校准了这根丝：在四法寸的杆臂上，三百六十度的扭转，对应三百四十分之一格令的重量。知道这个刻度，转角就能换算成力。",
+    "先在没有扭转的时候，记住轻杆和上端指针的方向，这就是参考零位。让两颗小球接触，再把带电针碰到它们。电荷传过去了。现在撤走针，两球带着同种电荷，互相排斥。活动球带着轻杆转开，也把银丝扭了起来。",
+    "看小球上的箭头。电力沿着两球的连线，想把杆继续推开。银丝则往回扭。两种转动作用相等，轻杆就停在这里。第一次，上端仍在零位，下端是三十六度，所以银丝总共扭了三十六度。",
+    "实际操作时，库仑会转动银丝上端。我们换个参照，把上端看成固定：悬球转开，施力球在后面跟随。换参照，不会改变两球的间距，也不会改变这根银丝两端的相对扭转，回复力矩仍然相同。后面就沿用这个视角，直接看悬杆累计转了多少。",
+    "我们把第一次测量作为参照。下端转过三十六度，上端还在零位，银丝总扭转也是三十六度。把这时的距离记成一，力也记成一。这两个一，表示的是同一次参照。图上的横坐标，是距离相对第一次变成多少；纵坐标，是斥力变成第一次的几倍。第一个点，就落在一和一的交点。",
+    "让施力球靠近一点，悬球就被推开。施力球继续跟随，银丝越扭越紧，直到两边的转动作用重新平衡。此时，两球之间只隔十八度，悬杆却已经从最初的零位累计转过一百四十四度。相对第一次，距离约为一半，总扭转是四倍。按原论文采用的近似，力变成四倍。第二个点，向左移动，也升高了。",
+    "再让施力球继续跟随。悬杆继续转动，银丝也继续扭紧。这次转过了一整圈，还没有结束。直到两球之间只隔八点五度，系统才再次平衡。悬杆累计转过五百七十五点五度，论文把总扭转约记成五百七十六度。相对第一次，距离不到四分之一，总扭转接近十六倍。按原文的近似，力约为十六倍。第三个点，更靠左，也更高。",
+    "现在，三个点都在图上了。横轴比较距离，纵轴比较斥力，两条轴都用均匀刻度。距离越小，力增加得越快。我们用距离的幂函数来拟合，得到的指数约为二，并不是事先把它固定成二。这就是平方反比的意思：距离减半，力约变成四倍。三个点并不完全落在一条理想曲线上，却让这个规律显出了形状。",
+    "别把这两个角度混在一起。两球的夹角告诉我们距离，银丝两端的相对转角告诉我们回复力矩。刚才沿用的是论文中的近似：夹角不大时，距离近似正比于两球夹角，力臂也近似不变，所以能用总扭转比较斥力。平衡时，力矩除以垂直力臂，才是力。更精确的弦长和力臂换算，可以在装置旁继续查看。",
+    "可是一根更细的丝，并不能解决所有问题。它容易断，也更容易被扰动。零位差上两三度，就会影响读数；空气潮湿，电荷还会慢慢漏掉。所以我用玻璃罩挡风，让纸片减轻摆动，并尽快完成三次测量。仪器既要看得出小变化，也得稳得住。",
+    "十三年后，卡文迪许用另一台扭秤，研究小球之间极其微弱的引力，并求出地球的密度。电力和引力不同，却都能让细丝发生可测的扭转。回看库仑的三次测量，两球夹角告诉我们距离，银丝累计扭转告诉我们抵抗电力的回复力矩。再结合力臂，就能比较斥力的大小。"
+  ],
+  "human_listening_review": false
 }

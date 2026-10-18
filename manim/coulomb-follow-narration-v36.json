@@ -1,0 +1,48 @@
+[
+  {
+    "base_id": "equivalent",
+    "shot": "equivalent-follow",
+    "question": "换个参照，能把扭转看清吗？",
+    "answer": "上端作为固定参照：施力球跟随，悬杆累计转角就是银丝的相对扭转。",
+    "text": "实际操作时，库仑会转动银丝上端。我们换个参照，把上端看成固定：悬球转开，施力球在后面跟随。换参照，不会改变两球的间距，也不会改变这根银丝两端的相对扭转，回复力矩仍然相同。后面就沿用这个视角，直接看悬杆累计转了多少。"
+  },
+  {
+    "base_id": 8,
+    "shot": "passive-follow-144",
+    "question": "两球只隔十八度，银丝为什么扭得更多？",
+    "answer": "两球夹角为18°，悬杆累计转过144°；距离约减半，斥力约为4倍。",
+    "text": "让施力球靠近一点，悬球就被推开。施力球继续跟随，银丝越扭越紧，直到两边的转动作用重新平衡。此时，两球之间只隔十八度，悬杆却已经从最初的零位累计转过一百四十四度。相对第一次，距离约为一半，总扭转是四倍。按原论文采用的近似，力变成四倍。第二个点，向左移动，也升高了。"
+  },
+  {
+    "base_id": 9,
+    "shot": "passive-follow-575",
+    "question": "转过一整圈，为什么还要继续转？",
+    "answer": "两球夹角为8.5°，累计扭转575.5°；距离不到四分之一，斥力约16倍。",
+    "text": "再让施力球继续跟随。悬杆继续转动，银丝也继续扭紧。这次转过了一整圈，还没有结束。直到两球之间只隔八点五度，系统才再次平衡。悬杆累计转过五百七十五点五度，论文把总扭转约记成五百七十六度。相对第一次，距离不到四分之一，总扭转接近十六倍。按原文的近似，力约为十六倍。第三个点，更靠左，也更高。"
+  },
+  {
+    "base_id": 11,
+    "shot": "passive-follow-geometry",
+    "question": "两球夹角和银丝扭转，各告诉我们什么？",
+    "answer": "两球夹角决定距离；银丝相对扭转决定回复力矩。平衡时还要结合力臂，才能得到斥力。",
+    "text": "别把这两个角度混在一起。两球的夹角告诉我们距离，银丝两端的相对转角告诉我们回复力矩。刚才沿用的是论文中的近似：夹角不大时，距离近似正比于两球夹角，力臂也近似不变，所以能用总扭转比较斥力。平衡时，力矩除以垂直力臂，才是力。更精确的弦长和力臂换算，可以在装置旁继续查看。",
+    "measurement_mapping": {
+      "sphere_separation_angle": "determines center-to-center chord distance; r approximately proportional to separation angle only under the stated small-angle approximation",
+      "relative_wire_twist": "directly gives restoring torque through torsion stiffness, not force without a moment arm",
+      "force": "at equilibrium, restoring torque divided by the electric force's perpendicular moment arm"
+    }
+  },
+  {
+    "base_id": 13,
+    "shot": "whole-follow",
+    "question": "这根细丝，后来还测出了什么？",
+    "answer": "卡文迪许也用扭秤测微弱引力并求地球密度；扭转直接给出力矩，结合力臂才能得到力。",
+    "text": "十三年后，卡文迪许用另一台扭秤，研究小球之间极其微弱的引力，并求出地球的密度。电力和引力不同，却都能让细丝发生可测的扭转。回看库仑的三次测量，两球夹角告诉我们距离，银丝累计扭转告诉我们抵抗电力的回复力矩。再结合力臂，就能比较斥力的大小。",
+    "measurement_mapping": {
+      "historical_example": "Cavendish 1798 torsion-balance measurement of attraction and Earth's mean density",
+      "distance": "from the angle separating the two spheres, not the moving arm's accumulated rotation in the fixed-upper-end reference",
+      "torque": "from the relative torsion of the same calibrated wire",
+      "force": "requires the perpendicular moment arm and equilibrium"
+    }
+  }
+]

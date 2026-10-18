@@ -1,4 +1,6 @@
 import './embed-layout.js';
+import {mountCoulombFit} from './coulomb-fit.js';
+import {mountCoulombActive} from './coulomb-active.js';
 import {mountTorsion} from './coulomb-torsion.js';
 import {mountCoulombFilm} from './coulomb-film.js';
 import {mountMeasurementHistory} from './measurement-history.js';
@@ -10,7 +12,10 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 mountCalibration($('#calibration'));
 const state={beta:0,alpha:3.18,power:2,charged:false,history:false,chargeFraction:1,contact:false};
 let balance,torsion;
-mountCoulombFilm($('#coulomb-film'));
+const filmCleanup=mountCoulombFilm($('#coulomb-film'));
+const fitControl=mountCoulombFit($('#distance-force'));
+let activeCleanup;const activeHost=$('#active-balance');
+const activeObserver=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){activeCleanup=mountCoulombActive(activeHost);activeObserver.disconnect();}},{rootMargin:'300px'});activeObserver.observe(activeHost);
 const disposeHistory=mountMeasurementHistory($('#measurement-history'));
 try{torsion=mountTorsion($('#torsion-detail'));}catch(error){console.error(error);}
 function render(){
@@ -22,7 +27,7 @@ function render(){
  balance?.set(state);torsion?.set(state.charged?state:{alpha:0,beta:0,charged:false});document.body.dataset.state=JSON.stringify(state);
 }
 function model(beta){state.beta=Math.round(beta);state.charged=true;state.history=false;const s=equilibrium(state.beta,{power:state.power,chargeFraction:state.chargeFraction});state.alpha=s.alpha;state.contact=s.contact;$('#observation').textContent=`采用 1/r${state.power===1?'':state.power===2?'²':'³'} 的假设，转动上端后计算新的平衡。越想让两球靠近，需要抵抗的斥力越大。`;render();}
-function trial(i){const r=RECORDS[i];Object.assign(state,r,{charged:true,history:true,chargeFraction:1,contact:false});$('#observation').textContent=[`原文第一次：两球转开到 36°。上端没有转动，所以银丝总扭转也是 36°。`,`原文第二次：上端反向转 126°，两球只相隔 18°。银丝总扭转 144°，是第一次的四倍。`,`原文第三次：上端反向转 567°，两球相隔 8.5°。总扭转相加为 575.5°，原文记为 576°。`][i];$('#error-note').textContent='历史按钮显示原文读数；已恢复充电条件。打开漏电示例可对照现代模型的预测。';render();}
+function trial(i){fitControl.setStep(i+1);const r=RECORDS[i];Object.assign(state,r,{charged:true,history:true,chargeFraction:1,contact:false});$('#observation').textContent=[`原文第一次：两球转开到 36°。上端没有转动，所以银丝总扭转也是 36°。`,`原文第二次：上端反向转 126°，两球只相隔 18°。银丝总扭转 144°，是第一次的四倍。`,`原文第三次：上端反向转 567°，两球相隔 8.5°。总扭转相加为 575.5°，原文记为 576°。`][i];$('#error-note').textContent='历史按钮显示原文读数；已恢复充电条件。打开漏电示例可对照现代模型的预测。';render();}
 $('#charge').onclick=()=>trial(0);$$('[data-trial]').forEach(b=>b.onclick=()=>trial(+b.dataset.trial));$('#reset').onclick=()=>{Object.assign(state,{beta:0,alpha:3.18,charged:false,history:false,chargeFraction:1,contact:false});$('#observation').textContent='先给两球充电。轻杆能自由旋转，银丝会阻止它继续转开。';render();};$('#twist').oninput=e=>model(+e.target.value);
 let drag;$('#dial').onpointerdown=e=>{drag={x:e.clientX,beta:state.beta};e.currentTarget.setPointerCapture(e.pointerId);};$('#dial').onpointermove=e=>{if(drag)model(Math.max(0,Math.min(720,drag.beta+(e.clientX-drag.x)*3)));};$('#dial').onpointerup=$('#dial').onpointercancel=()=>{drag=null;};$('#dial').onkeydown=e=>{const d={ArrowRight:5,ArrowUp:5,ArrowLeft:-5,ArrowDown:-5}[e.key];if(d){e.preventDefault();model(Math.max(0,Math.min(720,state.beta+d)));}if(e.key==='Home'||e.key==='End'){e.preventDefault();model(e.key==='Home'?0:720);}};
 $$('[data-view]').forEach(b=>b.onclick=()=>{balance?.view(b.dataset.view);$$('[data-view]').forEach(x=>x.classList.toggle('selected',x===b));$('.scene-caption').innerHTML=b.dataset.view==='top'?'俯视 · 玻璃外壳和立管暂时隐藏<br>拖动画面仍可旋转':b.dataset.view==='knob'?'左右拖动三维黄铜旋钮，改变上端转角<br>纸刻度与金属刻度对应不同的读数位置':'拖动画面旋转 · 滚轮缩放<br>金色标签是固定球，红色标签是活动球';});
@@ -43,4 +48,4 @@ $('#facsimiles').innerHTML=Array.from({length:7},(_,i)=>`<a href="assets/coulomb
 $('#expand').onclick=()=>{const open=$$('#memoir details').some(d=>!d.open);$$('#memoir details').forEach(d=>d.open=open);$('#expand').textContent=open?'收起全文':'展开全文';};
 window.addEventListener('beforeprint',()=>$$('#memoir details').forEach(d=>d.open=true));
 try{balance=mountBalance($('#instrument'),model);balance.view('close');render();document.body.dataset.ready='true';}catch(e){console.error(e);$('#instrument').innerHTML='<p style="padding:80px 25px">浏览器未能启用三维图形。下方仍可阅读原图、实测数据和完整译文。</p>';render();document.body.dataset.ready='partial';}
-window.addEventListener('pagehide',()=>{balance?.dispose();torsion?.dispose();disposeHistory?.();},{once:true});
+window.addEventListener('pagehide',()=>{balance?.dispose();torsion?.dispose();disposeHistory?.();fitControl();activeCleanup?.();activeObserver.disconnect();filmCleanup.then(f=>f?.());},{once:true});
