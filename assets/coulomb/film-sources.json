@@ -1,0 +1,16 @@
+{
+ "edition":"3.5.0",
+ "narration":"First-person modern adaptation of published memoirs; no verified private laboratory diary located. Synthetic Doubao narration, no historical voice impersonation.",
+ "historical":[
+  {"work":"1784 torsion and elasticity memoir, MIT translation by Louis L. Bucciarelli, 2000","url":"https://web.mit.edu/llbjr/Public/www/Coulomb_1784_w.Notes_llbjr.pdf","supports":"Prior magnetic-needle suspensions; systematic length, diameter, tension and elastic-restoring studies; oscillatory calibration"},
+  {"work":"1785 first electric memoir","url":"https://dspace.mit.edu/entities/publication/93de3f66-7454-45a3-9632-7a1db0307fe7","supports":"Opening fluid-resistance application, apparatus dimensions/materials, measurements0+36,126+18,567+8.5, original576 rounding, zero uncertainty and leakage"},
+  {"work":"Cavendish1798 manuscript","url":"https://makingscience.royalsociety.org/items/l-and-p_11_68/paper-experiments-to-determine-the-density-of-the-earth-by-henry-cavendish","supports":"Earth-density experiment; related torsion-balance measurement, not a claim of direct replication of Coulomb"}
+ ],
+ "modern":[
+  "https://www.nist.gov/publications/design-electrostatic-feedback-experiment-measure-g",
+  "https://www.pasco.com/resources/lab-experiments/1506",
+  "https://prancer.physics.louisville.edu/modules/cavendish/simulator/index.html"
+ ],
+ "quote_attribution":{"claim":"Measure what is measurable, and make measurable what is not so is widely attributed to Galileo, but lacks reliable primary attribution.","research":"https://websrv.physik.uni-halle.de/Fachgruppen/history/Luchs-2009.pdf"},
+ "model":"Original Blender dimensional reconstruction; patina, steel clamp details, wood and lighting are interpretive. Gold wire tracer and magnification are modern teaching aids. Physics principles do not imply historically measured dynamic timing."
+}

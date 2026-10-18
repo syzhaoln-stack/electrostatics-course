@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-10-18",
+  "assets": [{
+    "file": "thomson-1897-fig2.jpg",
+    "title": "Electrostatic deflection apparatus, Fig. 2",
+    "author": "J. J. Thomson",
+    "publication": "Cathode Rays, Philosophical Magazine, Series 5, Volume 44 (1897), pp. 293–316",
+    "page": 296,
+    "figure": 2,
+    "source": "https://www.ub.edu/hcub/hfq/sites/default/files/thomson%2C%201897.pdf",
+    "sourceFilePage": 3,
+    "processing": "Extracted a small figure from the page scan, rotated upright and cropped. Diagram content unchanged; colored highlights are separate modern HTML overlays.",
+    "rightsNote": "Historical 1897 figure, cited educational excerpt from University of Barcelona-hosted scan. No open license is asserted for the scan edition."
+  }],
+  "verifiedText": [{
+    "source": "https://www.nobelprize.org/uploads/2018/06/thomson-lecture.pdf",
+    "title": "Carriers of negative electricity, Nobel Lecture, 11 December 1906",
+    "pages": "147–148 (PDF pages 3–4)",
+    "finding": "Crossed electric and magnetic forces establish velocity; subsequent electric deflection and phosphorescent displacement determine e/m. Original symbols X and H are not silently treated as present SI E and B.",
+    "note": "The lecture contains the method and equations, not the 1897 Fig. 2 apparatus drawing. The two sources are labeled separately."
+  }, {
+    "source": "https://educationalgames.nobelprize.org/educational/physics/vacuum/experiment-2.html",
+    "finding": "The educational account describes cathode/anode acceleration, electric deflection plates, and magnetic coils. No e/m number is copied from the old educational pages."
+  }, {
+    "source": "https://www.epa.gov/air-emissions-monitoring-knowledge-base/monitoring-control-technique-electrostatic-precipitators",
+    "asset": "../cases/esp-components-epa.jpg",
+    "credit": "Institute of Clean Air Companies / U.S. EPA",
+    "finding": "Dust charging and electric-field transport to collecting plates; actual apparatus includes airflow and dust collection. Existing source image and provenance retained."
+  }]
+}

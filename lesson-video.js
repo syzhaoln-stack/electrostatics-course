@@ -32,7 +32,7 @@ export function mountLessonVideo(host, { lesson = 'foundations' } = {}) {
   const config = LESSON_VIDEOS[lesson];
   if (!config) throw new Error(`Unknown lesson video: ${lesson}`);
   ensureStyle();
-  const asset = file => {const url=new URL(file,MEDIA);url.searchParams.set('v','3.4.0');return url.href;};
+  const asset = file => {const url=new URL(file,MEDIA);url.searchParams.set('v','3.5.0');return url.href;};
   const portraits = new URL('./assets/lesson-characters/students-ai.png', import.meta.url).href;
   host.innerHTML = `<figure class="lesson-film" tabindex="0" aria-keyshortcuts="Space ArrowLeft ArrowRight" aria-label="${config.title}，双人对话视频。空格播放暂停，左右方向键快退快进。">
     <figcaption class="lesson-film-heading"><span class="lesson-film-kicker">同学聊一聊</span><strong>${config.title}</strong><span class="lesson-film-duration"></span></figcaption>

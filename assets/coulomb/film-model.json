@@ -1,0 +1,11 @@
+{
+  "source": "1785 memoir, dimensions in historical French pouces converted with 27 mm/pouce",
+  "wire_m": 0.756,
+  "vessel_diameter_m": 0.324,
+  "vessel_height_m": 0.324,
+  "tower_height_m": 0.648,
+  "arm_m": 0.108,
+  "geometry": "pith balls, shellac tip, waxed needle, damping paper, glass enclosure",
+  "interpretation": "wood, patina, lighting; enlarged wire and gold surface tracer are teaching aids; motion transitions are illustrative, not measured oscillations",
+  "render": "Blender Cycles OptiX, native 1280x720 shots composited with full-HD explanatory graphics; 48 motion samples per shot with temporal interpolation"
+}

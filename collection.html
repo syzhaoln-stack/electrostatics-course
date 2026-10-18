@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#071017"><meta name="description" content="实时调节电场，把变速气流中的 100 颗带电粉尘收集到侧壁亮区。"><title>侧壁截获 · 静电场交互教材</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%2391e3c8'/%3E%3Cpath d='M9 16h14' stroke='%23071017' stroke-width='3'/%3E%3C/svg%3E"><link rel="stylesheet" href="./collection.css"><script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script></head>
+<body>
+<header class="collection-header"><a href="./index.html" class="collection-brand">静电场 <span>空间实验室</span></a><nav aria-label="实验导航"><a href="./beam.html">电子束收集</a><a href="./wall.html">固定电场</a><a href="./cases.html?case=esp">真实除尘器 ↗</a></nav></header>
+<main>
+  <section class="collection-intro"><div><p class="eyebrow">实时挑战 · 静电收集</p><h1>别让它们穿过出口。</h1><p>风速在变。边观察，边调电场，把 <strong>100 颗负电粉尘</strong>留在侧壁亮区。</p></div><div class="goal-chip"><strong>90<span>/100</span></strong><span>收进亮区，且零逃逸</span></div></section>
+  <section id="collection-stage" class="collection-stage" aria-label="可旋转的三维静电收集通道">
+    <div class="scene-topline"><div class="wind-meter"><span>气流速度 <b id="wind-value">0.30</b> m/s <span id="wind-direction">→</span></span><div class="wind-track"><i id="wind-bar"></i></div></div><div class="scoreboard"><span>亮区 <b id="hit-count">0</b></span><span>错位 <b id="miss-count">0</b></span><span>逃逸 <b id="escape-count">0</b></span></div></div>
+    <div id="collection-canvas" class="collection-canvas"></div>
+    <div class="scene-tools"><button id="view-space" class="selected" aria-pressed="true">空间</button><button id="view-front" aria-pressed="false">正视</button><button id="show-history" aria-pressed="true" disabled>上一轮轨迹</button></div>
+    <div class="particle-readout"><span class="gold-dot"></span>跟随一颗粉尘 <b id="particle-speed">—</b><span>m/s</span><small id="emitted-count">等待释放</small></div>
+    <div id="collection-result" class="collection-result" hidden aria-live="polite"><div class="result-mark">✓</div><h2 id="result-title"></h2><p id="result-copy"></p><button id="retry-result">保留轨迹，再试一次</button></div>
+    <div class="scene-bottom"><p id="play-hint"><span class="hint-dot"></span>拖动金色把手。向上推，负电粉尘向亮区偏转。</p><div><button id="collection-reset" class="quiet" disabled>重来</button><button id="collection-play" class="primary">释放 100 颗粉尘 <span>→</span></button></div></div>
+  </section>
+  <div class="scene-caption"><span><i class="legend-e"></i><b>E</b> 电场方向</span><span><i class="legend-f"></i><b>F = qE</b> 负粉尘受力，方向相反</span><span>拖空白旋转 · 滚轮缩放 · 过程放慢 3 倍</span></div>
+  <section class="collection-context"><div><p class="eyebrow">它真的用在哪里？</p><h2>让烟气走，让粉尘留下。</h2><p>静电除尘器先让粉尘带电，再用电场把它们推向收集极。气流把粉尘带向出口，电场把粉尘带向侧壁：两个方向一起决定落点。</p><p>这关把收集极缩成了一段亮区。<strong>风速变快，同样的电场来不及把粉尘推到壁面；增强电场，就能更快偏转。</strong></p><a class="text-link" href="./cases.html?case=esp">进入真实设备：照片、剖面与收集过程 ↗</a></div><figure><img src="./assets/cases/esp-components-epa.jpg" alt="ICAC 静电除尘器部件示意图，美国环保署页面收录，展示放电极、收集极和灰斗" loading="lazy"><figcaption>设备结构示意 · ICAC / 美国环保署 EPA。<a href="https://www.epa.gov/air-emissions-monitoring-knowledge-base/monitoring-control-technique-electrostatic-precipitators" target="_blank" rel="noopener">来源与原理 ↗</a></figcaption></figure></section>
+  <details class="collection-model"><summary>这里计算了什么？</summary><div><p><b>q</b> 是粉尘电荷量，约 −2 × 10<sup>−16</sup> C；<b>m</b> 是质量，约 7.4 × 10<sup>−14</sup> kg。粒子半径约 2 μm，画面为便于观察放大了粒子。</p><p>每颗粉尘满足 <b>m dv/dt = qE + 6πηr(u − v) + mg</b>。<b>u</b> 是气流速度，<b>v</b> 是粉尘速度；η 是空气黏度，r 是粒子半径。电场力、空气阻力与重力一起改变速度。画面箭头分别显示 E 与电场力 qE，未把它们混同于合力。</p><p>两壁间按均匀电场近似，忽略边缘效应。电场由你实时改变，采用准静态近似，忽略感应磁场、辐射、空间电荷、电晕充电过程与湍流。粉尘已带电，撞壁后按完全捕集处理。实际除尘器还有脱附与振打等过程。</p><p>亮区与手动调场是教学挑战，不是工业控制规程。这里调的是<b>电场</b>；磁场的洛伦兹力垂直于速度，单独不改变粒子动能。</p></div></details>
+</main><noscript>请启用 JavaScript 以操作三维收集实验。</noscript><script type="module" src="./collection.js"></script>
+</body></html>
