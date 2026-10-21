@@ -14,6 +14,7 @@ export function mountChapterExpansions(article,id){
  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting&&entry.target.dataset.src){entry.target.src=entry.target.dataset.src;delete entry.target.dataset.src;observer.unobserve(entry.target);}}),{rootMargin:'500px'});
  const exp=experiments[id];
  if(exp){const block=section(exp.title,exp.copy);block.dataset.inlineExperiment=id;block.id='particle-experiment';const before=article.querySelector('#lesson-video');if(before&&['foundations','field'].includes(id))before.before(block);else if(before)before.after(block);else article.append(block);frameInto(block,exp.url,exp.title);}
+ if(id==='foundations'){const oil=section('油滴捕获：把它接住，再测出电荷','完成上面的“质量·电量对照”后，试着用电压把油滴送进目标带并稳住。四关依次练习捕获、换高度、换电荷、由下降速度和悬浮电压反推电荷量。');oil.id='oil-drop-challenge';const link=document.createElement('a');link.className='chapter-expand-link';link.href='oil-drop.html';link.textContent='进入油滴捕获 · 四关挑战 →';oil.append(link);article.querySelector('#particle-experiment')?.after(oil);}
  if(id==='conductors'){const live=section('风速变了，怎样把粉尘留下？','这次边运行、边调场。让100颗粉尘碰到侧壁亮区，别从出口逃走。');live.id='live-collection';article.querySelector('#particle-experiment')?.after(live);frameInto(live,'collection.html','实时调场与静电粉尘侧壁收集');}
  const history=section(id==='foundations'?'1785：用一根银丝量出微小的电力':'这个问题，曾经放进什么装置里？','');history.classList.add('chapter-history');history.id='history-experiment';article.append(history);
  if(id==='foundations'){

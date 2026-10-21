@@ -1,0 +1,84 @@
+{
+  "version": "v44",
+  "mode": "portrait",
+  "duration": 97.49777083333333,
+  "width": 1080,
+  "height": 1920,
+  "fps": 24,
+  "sha256": "163c9cf8778d85827320036d875ec00361272e71a4c051598e193179aafbfcb6",
+  "audio_sha256": "8569cc2a6f3bb6174cd04b8bda9018eef313d04e1bde783cd083d2cd9549ed50",
+  "synthetic_voice": true,
+  "ai_illustrations": true,
+  "ai_video_inserts": true,
+  "human_listening_review": false,
+  "loudness": {
+    "input_i": "-16.60",
+    "input_tp": "-1.48",
+    "input_lra": "4.30",
+    "input_thresh": "-27.02",
+    "output_i": "-16.09",
+    "output_tp": "-1.50",
+    "output_lra": "4.30",
+    "output_thresh": "-26.51",
+    "normalization_type": "dynamic",
+    "target_offset": "0.09"
+  },
+  "source": "production/coulomb-v44; manim/compose_coulomb_v44.py; manim/coulomb_v44_visuals.py",
+  "female_characters_per_minute": 271.7360360310531,
+  "sound_events": [
+    {
+      "portrait": "coulomb",
+      "start": 12.780645833333335,
+      "duration": 0.28,
+      "source_peak_dbfs": -29,
+      "source": "Original procedural sine-partial bell; no external recording",
+      "purpose": "User requested a gentle ding at the portrait greeting"
+    },
+    {
+      "portrait": "cavendish",
+      "start": 82.90475,
+      "duration": 0.28,
+      "source_peak_dbfs": -29,
+      "source": "Original procedural sine-partial bell; no external recording",
+      "purpose": "User requested a gentle ding at the portrait greeting"
+    }
+  ],
+  "chapters": [
+    {
+      "base_id": "hook",
+      "question": "称黄金的秤，也看不见？",
+      "start": 0.06,
+      "end": 11.980645833333334
+    },
+    {
+      "base_id": "reveal",
+      "question": "让小力，转给你看",
+      "start": 11.980645833333334,
+      "end": 26.8561875
+    },
+    {
+      "base_id": "read",
+      "question": "角度，就是力的读数",
+      "start": 26.8561875,
+      "end": 52.91191666666667
+    },
+    {
+      "base_id": "law",
+      "question": "靠近一点，变化有多猛？",
+      "start": 52.91191666666667,
+      "end": 66.5624375
+    },
+    {
+      "base_id": "payoff",
+      "question": "一根细丝，看见一条规律",
+      "start": 66.5624375,
+      "end": 78.34789583333334
+    },
+    {
+      "base_id": "gravity",
+      "question": "更小的引力，也能测吗？",
+      "start": 78.34789583333334,
+      "end": 97.19777083333334
+    }
+  ]
+}

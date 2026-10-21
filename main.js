@@ -45,7 +45,7 @@ try{
  window.addEventListener('pagehide',()=>dispose?.(),{once:true});
  if(['beam','aim','collector'].includes(key)){
   const related=document.createElement('nav');related.className='experiment-links';related.setAttribute('aria-label','继续实验');
-  related.innerHTML=[['beam','beam.html','收集电子束','加速、转向，穿过接收孔'],['aim','aim.html','瞄准自由靶','靶也受电场力，同一刻释放'],['collector','wall.html','把粒子送上壁面','100 个粒子，落在同一片亮区']].filter(([id])=>id!==key).map(([,href,title,copy])=>`<a href="${href}"><span>${title} <b aria-hidden="true">↗</b></span><small>${copy}</small></a>`).join('');container.after(related);
+  related.innerHTML=[['beam','beam.html','收集电子束','加速、转向，穿过接收孔'],['oil','oil-drop.html','油滴捕获 · 四关挑战','调电压稳住油滴，从运动测出电荷'],['aim','aim.html','瞄准自由靶','靶也受电场力，同一刻释放'],['collector','wall.html','把粒子送上壁面','100 个粒子，落在同一片亮区']].filter(([id])=>id!==key).map(([,href,title,copy])=>`<a href="${href}"${href==='oil-drop.html'?' target="_top"':''}><span>${title} <b aria-hidden="true">↗</b></span><small>${copy}</small></a>`).join('');container.after(related);
   if(key!=='beam')document.querySelector('.nav a[href="beam.html"]').classList.add('current');
  }
  document.body.dataset.ready='true';

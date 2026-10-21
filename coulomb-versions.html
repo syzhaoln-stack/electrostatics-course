@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f4ed">
+  <title>这么小的力，怎样测量？ · 两种讲述</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./coulomb-versions.css">
+  <script src="./coulomb-versions.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#film">跳到影片</a>
+  <div class="page">
+    <nav class="page-nav" aria-label="课程导航">
+      <a href="./coulomb.html">← 回到库仑实验课程</a>
+      <a href="./coulomb-short.html">新短片：黄金秤测不到，一根细丝却做到了 →</a>
+    </nav>
+    <header class="page-heading">
+      <div>
+        <p class="eyebrow">同一个问题 · 两种讲述</p>
+        <h1>这么小的力，怎样测量？</h1>
+      </div>
+      <p class="heading-note">约十六微克物体的重量，<br>怎样成为一个读得出的数？</p>
+    </header>
+    <main>
+      <section class="watch" aria-labelledby="watch-title">
+        <h2 id="watch-title" class="visually-hidden">选择讲述方式并观看</h2>
+        <div class="watch-toolbar">
+          <div class="version-picker" role="group" aria-label="讲述方式">
+            <button class="version-button selected" type="button" data-version="dialogue" aria-pressed="true">
+              <strong>年轻男女对话</strong><span>双人：跟着问题探索</span>
+            </button>
+            <button class="version-button" type="button" data-version="solo" aria-pressed="false">
+              <strong>单人讲述</strong><span>单人：连贯回看</span>
+            </button>
+          </div>
+          <p class="duration"><span id="version-name">年轻男女对话</span><span>时长 <b id="film-duration">读取中</b></span></p>
+        </div>
+        <div class="watch-layout">
+          <div class="film-column">
+            <video id="film" controls preload="metadata" playsinline
+              poster="./media/lesson-dialogues/coulomb-v41-dialogue.poster.jpg"
+              aria-label="这么小的力，怎样测量？年轻男女对话"
+              src="./media/lesson-dialogues/coulomb-v41-dialogue.mp4">
+              <track id="film-captions" kind="subtitles" srclang="zh-CN" label="中文"
+                src="./media/lesson-dialogues/coulomb-v41-dialogue.vtt">
+              您的浏览器无法播放此影片，可使用下方链接下载观看。
+            </video>
+            <div class="current-chapter">
+              <span id="chapter-number">第 01 章</span>
+              <p id="chapter-question">这么小的力，怎样测量？</p>
+            </div>
+            <p class="playback-note">切换讲述方式，会停在同一章的开头。点击播放继续观看。</p>
+            <div class="load-message" id="load-message" role="status" aria-live="polite">
+              <p id="load-message-text">正在读取影片与章节…</p>
+              <button id="retry" type="button" hidden>重新加载</button>
+            </div>
+          </div>
+          <aside class="chapter-panel" aria-labelledby="chapters-title">
+            <div class="chapter-heading"><h2 id="chapters-title">循着问题看</h2><span>10 章</span></div>
+            <ol id="chapter-list" class="chapter-list" aria-label="影片章节" aria-busy="true"></ol>
+            <p id="chapter-help" class="chapter-help">正在读取章节。您也可以直接播放影片。</p>
+          </aside>
+        </div>
+      </section>
+      <section class="keep" aria-labelledby="keep-title">
+        <div><h2 id="keep-title">留作课堂回看</h2><p>年轻男女对话与单人讲述分别保留，可下载后用于课堂回看。</p></div>
+        <div class="download-links">
+          <a href="./media/lesson-dialogues/coulomb-v41-dialogue.mp4" download>下载年轻男女对话 <span aria-hidden="true">↓</span></a>
+          <a href="./media/lesson-dialogues/coulomb-v39-solo.mp4" download>下载单人讲述 <span aria-hidden="true">↓</span></a>
+        </div>
+      </section>
+      <details class="method-notes">
+        <summary>量级、示意与史料说明</summary>
+        <div class="method-content">
+          <p><b>库仑第一组测到了多小的力？</b>按论文校准换算，约为 1.5 × 10<sup>−7</sup> N，相当于约 16 μg 物体的重量。这里比较的是带电小球之间的横向力；等效物重用于帮助理解量级。</p>
+          <p><b>黄金与首饰秤。</b>“黄金每克近 1000 元”是取整的价值示例，不是实时金价。0.01 g 是首饰秤质量读数的一个分度；比较力时，先用 F = mg 换成这份质量对应的重量，取 g ≈ 9.81 m/s²。读数分度不等于最小可靠测量值。</p>
+          <p><b>数量级与实际换算。</b>旁白用约千分之一、约万分之一说明量级。第一组测力实际约为 0.01 g 对应重量的 1/640；论文所述零位不确定范围，折合约为这一重量的 1/7500。两者分别表示测得的力与可辨差别的限制，不能混为一个数，也不作现代仪器检测限的标定。</p>
+          <p><b>从电力追问引力。</b>结尾引出中性宏观球之间的万有引力测量，承接卡文迪许实验。引力图与电力图的箭头分别用于表示方向，不共用力的大小比例。</p>
+          <p><b>实验与示意。</b>库仑在 1785 年比较的是带电小球之间的力。影片中的装置、动作与小球受力图是教学重建；史料读数与现代计算分别说明。</p>
+          <p class="method-links"><a href="./assets/coulomb/Coulomb_El_1785.pdf">库仑论文英译本</a><a href="./coulomb.html#scale-title">课程中的原文与量级换算</a><a href="https://makingscience.royalsociety.org/items/l-and-p_11_68/paper-experiments-to-determine-the-density-of-the-earth-by-henry-cavendish">卡文迪许实验 · 英国皇家学会史料</a><a href="./assets/coulomb/film-sources.json">影片资料记录</a></p>
+        </div>
+      </details>
+      <noscript><p class="no-script">影片和下载链接仍可使用。要切换两种讲述并查看章节，请在浏览器中启用 JavaScript。</p></noscript>
+    </main>
+    <footer>静电场交互教材 · 课堂影片</footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>黄金秤测不到，一根细丝却做到了 · 库仑短片</title>
+  <link rel="icon" href="data:,">
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#090e13;color:#f3eee5;font-family:"Microsoft YaHei",sans-serif}a{color:inherit}button,a{touch-action:manipulation}main{max-width:1440px;margin:auto;padding:32px 48px}nav{display:flex;justify-content:space-between;color:#a2b2ba;font-size:14px;margin-bottom:40px}nav a{text-decoration:none}header{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:28px}.eyebrow{font-size:13px;letter-spacing:3px;color:#d5af74}h1{font-size:36px;line-height:1.45;margin:10px 0}header p{color:#a2b2ba;line-height:1.8}.layout{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:48px}.screen{display:flex;align-items:center;justify-content:center;background:#040609;border:1px solid #25313a;border-radius:18px;overflow:hidden;min-height:600px}video{display:block;max-height:750px;max-width:100%;width:100%;object-fit:contain}.screen.portrait video{width:auto;height:750px}.picker{display:flex;gap:6px;padding:5px;background:#141e26;border-radius:12px;margin-bottom:24px}button{flex:1;border:0;color:#c3d0d5;background:transparent;font:inherit;padding:12px 8px;border-radius:8px;cursor:pointer}button[aria-pressed=true]{background:#e9c789;color:#15202b}h2{font-size:22px;line-height:1.6;margin:0 0 12px}aside p{color:#a2b2ba;font-size:15px;line-height:1.9}.duration{font-size:54px;letter-spacing:-2px;color:#e9c789;margin:0}.duration small{font-size:16px;letter-spacing:0;color:#a2b2ba}.download{display:block;text-decoration:none;border:1px solid #43515b;border-radius:10px;padding:14px 18px;margin-top:12px}.download.primary{background:#e9c789;color:#15202b;border-color:#e9c789;font-weight:bold}.notes{margin-top:32px;padding-top:24px;border-top:1px solid #25313a;font-size:13px!important}footer{color:#7e919d;font-size:13px;margin-top:28px;line-height:1.8}:focus-visible{outline:3px solid #8cdee5;outline-offset:4px}@media(max-width:1000px){main{padding:24px}.layout{grid-template-columns:minmax(0,1fr) 290px;gap:24px}h1{font-size:29px}.screen.portrait video{height:650px}}@media(max-width:700px){header{display:block}.layout{display:block}.screen{min-height:0;margin-bottom:24px}.screen.portrait video{height:65vh}h1{font-size:26px}nav{gap:20px}}
+  </style>
+</head>
+<body><main>
+  <nav><a href="./coulomb-versions.html">← 完整版与单人版</a><span>静电场 · 微小力的测量</span></nav>
+  <header><div><p class="eyebrow">短片 · 东北口音捧逗对话</p><h1>黄金秤测不到，<br>一根细丝却做到了。</h1></div><p>从黄金的一小格，走到看不见的力。<br>把微小的推力，变成看得清的转角。</p></header>
+  <div class="layout">
+    <section class="screen portrait" id="screen" aria-label="短片播放器">
+      <video id="film" controls playsinline preload="metadata" poster="./media/lesson-dialogues/coulomb-v44-portrait.poster.jpg" src="./media/lesson-dialogues/coulomb-v44-portrait.mp4" aria-label="库仑短片竖屏版"></video>
+    </section>
+    <aside>
+      <div class="picker" role="group" aria-label="画面比例"><button data-mode="portrait" aria-pressed="true">竖屏 9:16</button><button data-mode="landscape" aria-pressed="false">横屏 16:9</button></div>
+      <p class="duration"><span id="duration">—</span> <small>分钟</small></p>
+      <h2>不是力变大了，<br>是我们更会“看”了。</h2>
+      <p>从称金饰到推门，用生活中的动作看懂扭秤。<br>女生约 272 字／分钟，人物打招呼时各有一声轻“叮”。</p>
+      <a class="download primary" id="download" href="./media/lesson-dialogues/coulomb-v44-portrait.mp4" download>下载竖屏成片 ↓</a>
+      <a class="download" id="poster" href="./media/lesson-dialogues/coulomb-v44-portrait.poster.jpg" download>下载封面 ↓</a>
+      <a class="download" href="./coulomb-versions.html">回看完整讲解 →</a>
+      <p class="notes">配音为合成声音；称金饰、推门为 AI 生成镜头，实验动作为原理示意。人物以历史肖像为参考制作眨眼、招手动画，并非真实影像；银丝场景为 AI 插图。<br>库仑：<a href="https://commons.wikimedia.org/wiki/File:Charles_de_Coulomb.png" target="_blank" rel="noopener">Louis Hierle，1894，公共领域</a>。卡文迪许：<a href="https://wellcomecollection.org/works/aamhkq3s" target="_blank" rel="noopener">C. Rosenberg / W. Alexander，Wellcome Collection</a>，<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>，已裁切并作动画演绎。</p>
+    </aside>
+  </div>
+  <footer id="status" role="status">正在读取影片…</footer>
+</main>
+<script>
+const film=document.querySelector('#film'),screen=document.querySelector('#screen');
+const modes={portrait:'竖屏',landscape:'横屏'};
+film.addEventListener('loadedmetadata',()=>{const s=Math.round(film.duration);document.querySelector('#duration').textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;document.querySelector('#status').textContent='影片已就绪。点击播放观看，两个画幅使用同一条对白。'});
+film.addEventListener('error',()=>document.querySelector('#status').textContent='影片未能加载，请刷新页面或使用下载链接。');
+document.querySelectorAll('[data-mode]').forEach(button=>button.addEventListener('click',()=>{const mode=button.dataset.mode;if(button.getAttribute('aria-pressed')==='true')return;const t=film.currentTime;film.pause();document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));screen.classList.toggle('portrait',mode==='portrait');const stem=`./media/lesson-dialogues/coulomb-v44-${mode}`;film.poster=stem+'.poster.jpg';film.src=stem+'.mp4';film.setAttribute('aria-label',`库仑短片${modes[mode]}版`);film.addEventListener('loadedmetadata',()=>film.currentTime=Math.min(t,film.duration),{once:true});document.querySelector('#download').href=stem+'.mp4';document.querySelector('#download').textContent=`下载${modes[mode]}成片 ↓`;document.querySelector('#poster').href=stem+'.poster.jpg';}));
+</script></body></html>
