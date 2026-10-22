@@ -19,6 +19,10 @@ $('#practice-app').innerHTML=`<header class="work-header"><div><h1>在图中解�
 <section><div class="notebook-title"><h2>把数据放进算式</h2><span class="kicker">取数 → 组式 → 计算</span></div><p class="empty-note">点数据标签可填入对应槽，也可拖到任一槽。下方单位固定，填写时请先换成相应单位。</p><div id="data-chips" class="data-chips"></div><div id="slots" class="slot-grid"></div><details class="paste-box"><summary>一次粘贴多个数</summary><p id="paste-order" class="empty-note">先记录图形。</p><textarea id="paste-values" rows="2" aria-label="批量粘贴数值" placeholder="空格、逗号、制表符或换行分隔"></textarea><button id="apply-paste">填入对应槽</button></details><label for="expression">算式（用上面的字母代入）</label><div class="calc-line"><input id="expression" value="${lesson.formula}" spellcheck="false"><button id="calculate" class="primary">计算</button></div><p class="empty-note">支持 + − × ÷、括号、^ 和科学记数法。${key==='field'?'本题只算竖直合力：Fᵧ=F₁y+F₂y，向上为正。1 fN=10⁻¹⁵ N。':key==='paths'?'A 槽是 V_A，B 槽是 V_B；A−B 得到 U_AB（V）。槽字母只是计算标签。':'ε₀Φ 的单位为 C；乘 10^12 换成 pC。'}</p><output id="calc-result" class="calc-result" aria-live="polite"></output><div><button id="use-result" disabled>把结果填到答案</button></div><p id="calc-feedback" class="work-message" role="status"></p><small>计算槽可自行修改，不会改动原始取数。核对始终以本条记录为依据。</small></section></div>
 <footer class="work-footer">所有读数均来自现代静电模型。记录只保存在本页内存中，切换题目或离开前请导出；文件包含图形状态、算式、答案、解释和批注，可交给老师复核。<span id="export-message" role="status"></span></footer></main>`;
 
+const frontierLink=document.createElement('a');
+frontierLink.href=`frontier.html?case=${key==='paths'?'graphene':'droplet'}`;
+frontierLink.textContent='从课本再走一步';
+document.querySelector('.work-links').append(frontierLink);
 const host=$('#experience');host.addEventListener('lab-state',e=>{if(e.detail?.lab==='flux')fluxState=e.detail;});
 try{const module=await import(lesson.module);dispose=module[lesson.mount](host,{dimensions:true,practiceTrial:key==='field'});$('#capture').disabled=false;$('#snapshot-status').textContent='拖动图形，准备好后记录。';document.body.dataset.ready='true';}
 catch(error){console.error(error);$('#snapshot-status').textContent='图形未载入。请用本地启动器打开，并检查浏览器是否支持 WebGL。';document.body.dataset.ready='error';}

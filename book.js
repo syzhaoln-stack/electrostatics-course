@@ -2,6 +2,7 @@ import {VERSION,versioned} from './release-version.js';
 import {UNITS,COVERAGE} from './book-content.js';
 import {LESSONS,briefMarkup,mountLessonGuide} from './lesson-guide.js';
 import {typesetBook,renderMath} from './book-math.js';
+import {mountFrontierEntryPoints} from './frontier-entry.js';
 const $=s=>document.querySelector(s),url=id=>`chapter.html?unit=${id}`;
 document.body.classList.add('academic','intuitive-edition');
 const guideStyle=document.createElement('link');guideStyle.rel='stylesheet';guideStyle.href=new URL('./lesson-guide.css',import.meta.url).href;document.head.append(guideStyle);const intuitiveStyle=document.createElement('link');intuitiveStyle.rel='stylesheet';intuitiveStyle.href=new URL('./intuitive-figures.css',import.meta.url).href;document.head.append(intuitiveStyle);
@@ -26,4 +27,5 @@ if(page==='home'){
  if(unit.id==='foundations'){const inline=await import('./inline-figures.js');disposers.push(inline.mountInlineFigures($('.book-chapter')));const style=document.createElement('link');style.rel='stylesheet';style.href=new URL('./inline-figures.css',import.meta.url).href;document.head.append(style);$('.book-chapter').addEventListener('click',event=>{const target=event.target.closest('[data-try-source]');if(target){$('#experience [data-model='+target.dataset.trySource+']')?.click();if(target.dataset.trySource!=='point'&&!$('#experience .foundation-finite')?.matches('[aria-pressed=true]'))$('#experience .foundation-finite')?.click();}});}
  try{await document.fonts.ready;const module=await import(versioned('./'+unit.module,import.meta.url));dispose=module[unit.mount]($('#experience'),unit.id==='applications'?{mode:'wall',onNavigate:(mode,id)=>location.href=`${mode==='wall'?'cases':'analysis'}.html?case=${encodeURIComponent(id)}`} : undefined);disposers.push(mountLessonGuide($('#lesson-task'),unit.id,$('#experience')));if(['foundations','field','flux','potential','paths','conductors'].includes(unit.id)){const video=await import('./lesson-video.js');disposers.push(video.mountLessonVideo($('#lesson-video'),{lesson:unit.id}));}document.body.dataset.ready='true';}catch(e){console.error(e);$('#experience').innerHTML='<p class="book-loading">三维插图暂未载入，可打开独立图窗重试。</p>';document.body.dataset.ready='error';}
 }
+mountFrontierEntryPoints({page,unit:document.body.dataset.unit});
 window.addEventListener('pagehide',()=>{dispose?.();disposers.forEach(fn=>fn?.());},{once:true});

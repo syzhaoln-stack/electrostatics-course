@@ -22,5 +22,6 @@ if(fs.existsSync('media/lesson-dialogues')){
 console.log('Static pages and local assets built in dist');
 
 fs.writeFileSync('dist/.nojekyll','');
+if(fs.existsSync('frontier-sources.md'))fs.copyFileSync('frontier-sources.md','dist/frontier-sources.md');
 
-fs.writeFileSync('dist/release.json',JSON.stringify({version,builtAt:new Date().toISOString(),entry:'index.html',practice:['field','paths','flux']},null,2));
+fs.writeFileSync('dist/release.json',JSON.stringify({version,builtAt:new Date().toISOString(),entry:'index.html',practice:['field','paths','flux'],frontier:['droplet','graphene','storage']},null,2));

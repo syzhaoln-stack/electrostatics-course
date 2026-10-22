@@ -1,0 +1,13 @@
+.frontier-entry{max-width:760px;margin:40px auto;padding:24px 0;border-top:1px solid var(--book-rule,#d1d2cc);border-bottom:1px solid var(--book-rule,#d1d2cc);font-size:15px;line-height:1.9}
+.book-home>.frontier-entry{max-width:720px;margin:45px auto}
+.frontier-entry .frontier-entry-kicker{font:12px/1.6 system-ui,sans-serif;color:#355d5b;margin:0 0 12px}
+.frontier-entry h2{font-size:23px!important;margin:0 0 14px}
+.frontier-entry h3{font-size:19px!important;line-height:1.8;margin:4px 0 12px}
+.frontier-entry p{margin:10px 0;text-indent:0}
+.frontier-entry strong{font-weight:500}
+.frontier-entry-example{margin-top:20px}
+.frontier-entry .frontier-entry-source{font-size:12px;color:#65706a;margin-bottom:5px}
+.frontier-entry .frontier-entry-link{display:inline-block;margin:12px 0 4px;color:#355d5b;font-size:15px}
+.frontier-entry .frontier-entry-more{font-size:13px;margin-top:22px;color:#556159}
+.frontier-entry .frontier-entry-more a{color:#355d5b}
+@media print{.frontier-entry{break-inside:avoid}}
