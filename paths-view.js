@@ -1,3 +1,4 @@
+import {createDimensionView} from './dimension-view.js';
 import * as THREE from 'three';
 import {OrbitControls} from './vendor/OrbitControls.js';
 import {fieldAt} from './physics.js';
@@ -8,9 +9,9 @@ const vector=p=>new THREE.Vector3(...p);
 
 /** A self-contained scientific figure: every path, source, probe and arrow
  * shares one metric three-dimensional coordinate system (millimetres). */
-export function createPathsView(host,{onFrame,onProject}={}){
+export function createPathsView(host,{onFrame,onProject,dimensionHost=null}={}){
  const scene=new THREE.Scene();scene.background=new THREE.Color('#fbfaf6');
- const camera=new THREE.PerspectiveCamera(38,1,.1,100);
+ let camera=new THREE.PerspectiveCamera(38,1,.1,100);
  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,preserveDrawingBuffer:true});
  renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.outputColorSpace=THREE.SRGBColorSpace;
  renderer.domElement.dataset.pathsWebgl='true';renderer.domElement.setAttribute('aria-label','三维静电场与路径；拖动空白旋转，滚轮缩放');host.append(renderer.domElement);
@@ -93,6 +94,7 @@ export function createPathsView(host,{onFrame,onProject}={}){
  function project(p){const r=host.getBoundingClientRect(),v=vector(p).project(camera);return {x:(v.x+1)*r.width/2,y:(1-v.y)*r.height/2,visible:v.z<1};}
  function rayPoint(event,p){const rect=renderer.domElement.getBoundingClientRect(),mouse=new THREE.Vector2((event.clientX-rect.left)/rect.width*2-1,-(event.clientY-rect.top)/rect.height*2+1),ray=new THREE.Raycaster();ray.setFromCamera(mouse,camera);const normal=camera.getWorldDirection(new THREE.Vector3()),plane=new THREE.Plane().setFromNormalAndCoplanarPoint(normal,vector(p)),hit=new THREE.Vector3();return ray.ray.intersectPlane(plane,hit)?hit.toArray():[...p];}
  const observer=new ResizeObserver(resize);observer.observe(host);resize();
- function frame(t){if(disposed)return;onFrame?.(t,lastTime);lastTime=t;controls.update();motion();renderer.render(scene,camera);onProject?.(project);host.dataset.pathCamera=camera.position.toArray().map(v=>v.toFixed(3)).join(',');raf=requestAnimationFrame(frame);}raf=requestAnimationFrame(frame);
- return {update(next){state=next;geometry();motion();},project,rayPoint,setView,controls,field(value){fieldGroup.visible=value;},dispose(){disposed=true;cancelAnimationFrame(raf);observer.disconnect();controls.dispose();for(const g of[staticGroup,routesGroup,localGroup,motionGroup,fieldGroup])clear(g);renderer.dispose();renderer.domElement.remove();}};
+ const projection=dimensionHost?createDimensionView({host:dimensionHost,stage:host,getCamera:()=>camera,setCamera:next=>camera=next,controls}):null;
+ function frame(t){if(disposed)return;onFrame?.(t,lastTime);lastTime=t;controls.update();projection?.update();motion();renderer.render(scene,camera);onProject?.(project);host.dataset.pathCamera=camera.position.toArray().map(v=>v.toFixed(3)).join(',');raf=requestAnimationFrame(frame);}raf=requestAnimationFrame(frame);
+ return {update(next){state=next;geometry();motion();},project,rayPoint,setView,controls,field(value){fieldGroup.visible=value;},dispose(){projection?.dispose();disposed=true;cancelAnimationFrame(raf);observer.disconnect();controls.dispose();for(const g of[staticGroup,routesGroup,localGroup,motionGroup,fieldGroup])clear(g);renderer.dispose();renderer.domElement.remove();}};
 }

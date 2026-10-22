@@ -1,3 +1,4 @@
+import {createDimensionView} from './dimension-view.js';
 import {FieldScene,THREE} from './scene.js';
 import {CONSTANTS,fieldAt} from './physics.js';
 import {buildFluxLine} from './flux-journey.js';
@@ -9,7 +10,7 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const fmt=(v,n=3)=>(Math.abs(v)<.5*10**-n?0:v).toFixed(n);
 const signed=(v,n=3)=>Math.abs(v)<.5*10**-n?fmt(0,n):(v>0?'+':'')+fmt(v,n);
 
-export function mountFlux(container){
+export function mountFlux(container,{dimensions=false}={}){
  document.body.classList.add('intuitive-edition');
  if(!document.querySelector('[data-flux-style]')){const s=document.createElement('link');s.rel='stylesheet';s.href=new URL('./flux.css',import.meta.url).href;s.dataset.fluxStyle='';document.head.append(s);}
  container.innerHTML=`<section class="flux-experience flux-intuitive">
@@ -92,5 +93,7 @@ export function mountFlux(container){
  scene.frameFn=()=>{if(!inView||disposed)return;const rect=canvas.getBoundingClientRect(),project=p=>{const v=new THREE.Vector3(...p).project(scene.camera);return [rect.left+(v.x+1)*rect.width/2,rect.top+(1-v.y)*rect.height/2];};stage.dataset.sourceScreen=JSON.stringify(project(state.pos));stage.dataset.centerScreen=JSON.stringify(project([0,0,0]));stage.dataset.radiusHandleScreen=JSON.stringify(project(handles.radius||[2.1,0,0]));stage.dataset.shapeHandleScreen=JSON.stringify(project(handles.shape||[0,2.1,0]));stage.dataset.camera=JSON.stringify(scene.camera.position.toArray());};
  const sizeObserver=new ResizeObserver(()=>{if(!drag){scene.camera.fov=stage.clientWidth<600?47:38;scene.camera.updateProjectionMatrix();}});sizeObserver.observe(stage);
  resetView();draw();
- return()=>{disposed=true;cancelAnimationFrame(pending);viewport.disconnect();sizeObserver.disconnect();canvas.removeEventListener('pointerdown',start,true);canvas.removeEventListener('pointermove',move,true);canvas.removeEventListener('pointerup',end,true);canvas.removeEventListener('pointercancel',end,true);scene.dispose();container.innerHTML='';};
+ const projection=dimensions?createDimensionView({host:container,stage,getCamera:()=>scene.camera,setCamera:camera=>scene.camera=camera,controls:scene.controls}):null;
+ const frameBeforeProjection=scene.frameFn;scene.frameFn=t=>{projection?.update();frameBeforeProjection(t);};
+ return()=>{projection?.dispose();disposed=true;cancelAnimationFrame(pending);viewport.disconnect();sizeObserver.disconnect();canvas.removeEventListener('pointerdown',start,true);canvas.removeEventListener('pointermove',move,true);canvas.removeEventListener('pointerup',end,true);canvas.removeEventListener('pointercancel',end,true);scene.dispose();container.innerHTML='';};
 }

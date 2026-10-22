@@ -1,0 +1,12 @@
+/* Portable visual baseline; adapt to the chapter and classroom display. */
+:root{--tb-paper:#fffefa;--tb-ink:#243c33;--tb-muted:#66756d;--tb-accent:#286455;--tb-drag:#ae701c;--tb-compare:#2d7895;--tb-line:#d9dfd5}
+.tb-page{margin:0;background:var(--tb-paper);color:var(--tb-ink);font:16px/1.8 "Microsoft YaHei",system-ui,sans-serif}
+.tb-page h1,.tb-page h2{font-family:"Noto Serif SC",SimSun,serif;line-height:1.5}.tb-page h1{font-size:28px}.tb-page h2{font-size:23px}
+.tb-layout{max-width:1550px;margin:auto;padding:24px 30px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:24px;align-items:start}
+.tb-figure{min-width:0;border:1px solid var(--tb-line)}.tb-task{border-top:3px solid var(--tb-accent);padding-top:16px}
+.tb-levels{display:flex;gap:28px;border-bottom:1px solid var(--tb-line);padding:12px 0}.tb-levels [aria-current=step]{font-weight:700;color:var(--tb-accent)}
+.tb-primary{padding:12px 18px;background:var(--tb-accent);color:white;border:1px solid var(--tb-accent);border-radius:4px;font:inherit;cursor:pointer}
+.tb-target{border:2px solid #354855;background:#f1f4f7;padding:16px}.tb-reading{font:23px/1.5 Consolas,monospace}.tb-note{color:var(--tb-muted);font-size:14px}
+.tb-page input,.tb-page textarea{box-sizing:border-box;max-width:100%;padding:9px;font:inherit;background:white;border:1px solid var(--tb-line);border-radius:4px}
+.tb-page :focus-visible{outline:3px solid var(--tb-drag);outline-offset:3px}.tb-page [hidden]{display:none!important}
+@media(max-width:1050px){.tb-layout{grid-template-columns:1fr}.tb-task{max-width:760px}}

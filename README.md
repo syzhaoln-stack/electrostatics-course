@@ -6,6 +6,18 @@
 - 大纲对照：https://syzhaoln-stack.github.io/electrostatics-course/syllabus.html
 - 原实验版保持独立：https://syzhaoln-stack.github.io/electrostatic-space-lab/
 
+## 最新交互样题 · 3.9.3
+
+三道题均分为定性观察和定量验证两层，同一条冻结记录支持取数、计算、解释和作业导出。
+
+- [第一题：电子受力](https://syzhaoln-stack.github.io/electrostatics-course/practice.html?unit=field)：先拖动电子判断方向，再计算竖直合力；目标与当前受力分开放置。
+- [第二题：电势差与路径](https://syzhaoln-stack.github.io/electrostatics-course/practice.html?unit=paths)：先用平行板等势线，再换双球；固定 A、B，只改路径，验证电势差不变。
+- [第三题：通量与电荷](https://syzhaoln-stack.github.io/electrostatics-course/practice.html?unit=flux)：先比较面内与面外，再由通量推断净电荷。
+
+[可复用 Skill](skills/build-interactive-textbook/SKILL.md) 包含调研证据、教学与模型标准、交互思路、样式基线、验证交付方法和章节输入模板。复制整个 `build-interactive-textbook` 文件夹到 Codex 的技能目录，在新会话中使用 `$build-interactive-textbook`。这是从真实制作交流中提炼的方法，尚未验证跨章节的学习效果。
+
+本轮模型测试 221 项；桌面验证覆盖实际拖动、两层流程、正投影、输入核验与作业导出。
+
 ## 内容
 
 | 节 | 内容 | 学时 | 主要交互 |

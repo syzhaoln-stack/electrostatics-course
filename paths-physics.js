@@ -26,13 +26,14 @@ export function routeTangent(route,progress){const scaled=clamp(progress,0,1)*ro
 /** Independent composite Simpson quadrature of q E(r(t))·r'(t) dt.
  * Potential differences are only evaluated separately for the comparison.
  * Segment boundaries are always explicit quadrature boundaries. */
-export function integrateRoute(route,{q=1,sources=PATH_SOURCES,intervals=400}={}){
- const count=Math.max(4,Math.round(intervals/route.segments.length)),samples=[],potentialA=fieldAt(route.start,sources).V,potentialB=fieldAt(route.end,sources).V;
+export function integrateRoute(route,{q=1,sources=PATH_SOURCES,intervals=400,fieldAtPoint=null}={}){
+ const sampleField=fieldAtPoint||((p)=>fieldAt(p,sources));
+ const count=Math.max(4,Math.round(intervals/route.segments.length)),samples=[],potentialA=sampleField(route.start).V,potentialB=sampleField(route.end).V;
  let W=0,length=0,previous=route.start;
- const record=(p,u,dW)=>{const f=fieldAt(p,sources);return {u,p,E:f.E,V:f.V,U:q*f.V,W,dW,length,forceN:norm(f.E)*Math.abs(q)*CONSTANTS.elementaryCharge};};
+ const record=(p,u,dW)=>{const f=sampleField(p);return {u,p,E:f.E,V:f.V,U:q*f.V,W,dW,length,forceN:norm(f.E)*Math.abs(q)*CONSTANTS.elementaryCharge};};
  samples.push(record([...route.start],0,0));
  route.segments.forEach((segment,index)=>{
-  const integrand=t=>dot(fieldAt(segmentPoint(segment,t),sources).E,segmentDerivative(segment,t))*q*1e-3;
+  const integrand=t=>dot(sampleField(segmentPoint(segment,t)).E,segmentDerivative(segment,t))*q*1e-3;
   for(let i=0;i<count;i++){
    const a=i/count,b=(i+1)/count,m=(a+b)/2,dW=(integrand(a)+4*integrand(m)+integrand(b))*(b-a)/6,p=segmentPoint(segment,b);
    W+=dW;length+=norm(p.map((v,j)=>v-previous[j]));previous=p;samples.push(record(p,(index+b)/route.segments.length,dW));

@@ -1,3 +1,4 @@
+import {createDimensionView} from './dimension-view.js';
 import {FieldScene,THREE,slider} from './scene.js';
 import {fieldAt} from './physics.js';
 import {buildVectorLattice} from './field-vectors.js';
@@ -5,7 +6,7 @@ import {observationFrame} from './field-frame.js';
 import {FIELD_CHALLENGES,evaluateFieldChallenge,advanceFieldChallenge} from './field-challenge.js';
 import {applyAcademicScene} from './academic-scene.js';
 const norm=v=>Math.hypot(...v);
-export function mountField(container){
+export function mountField(container,{dimensions=false,practiceTrial=false}={}){
  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href='./field.css';document.head.append(sheet);
  container.classList.add('field-v4');
  container.innerHTML=`
@@ -22,9 +23,10 @@ export function mountField(container){
  const $=s=>container.querySelector(s),view=new FieldScene($('.stage'),{extent:6});
  $('.field-adjust-grid section:last-child').append($('.field-depth'));
  const challengePanel=document.createElement('div');challengePanel.className='field-challenge';challengePanel.innerHTML=`<button id="field-challenge-start">◎ 找一个受力位置</button><div class="field-challenge-task" hidden><div class="field-challenge-title" id="field-challenge-title"></div><div class="field-challenge-feedback"><span class="field-challenge-meter" aria-hidden="true"></span><span id="field-challenge-state" role="status" aria-live="polite">拖动黄点 P</span><span class="field-challenge-check" hidden>✓</span></div><div class="field-challenge-actions"><button id="field-challenge-next">换个目标 →</button><button id="field-challenge-exit">自由探索</button></div></div>`;$('.stage-wrap').append(challengePanel);
+ container.classList.toggle('practice-trial',practiceTrial);
  const academic=!document.body.classList.contains('intuitive-edition');applyAcademicScene(view);view.scene.fog.near=30;view.scene.fog.far=65;view.grid.visible=false;view.layer('axes').visible=false;view.controls.enablePan=false;
  let viewMode='space';
- function setView(mode){viewMode=mode;const d=Math.max(14,(view.camera.aspect<.9?4.7:6.5)/(Math.tan(19*Math.PI/180)*view.camera.aspect));view.controls.target.set(0,0,0);view.camera.up.set(0,1,0);if(mode==='plane'){const f=frame();view.camera.position.fromArray(f.normal).multiplyScalar(d);view.camera.up.fromArray(f.v);}else view.camera.position.set(d*.35,d*.30,d*.88);view.camera.lookAt(0,0,0);view.controls.enabled=true;view.controls.update();view.controls.enableRotate=mode==='space';view.renderer.domElement.dataset.viewMode=mode;container.querySelectorAll('[data-field-view]').forEach(b=>{const on=b.dataset.fieldView===mode;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on)});$('#field-gesture').textContent=mode==='plane'?'拖动源或 P · 滚轮缩放':'拖空白旋转 · 拖动源或 P';if(typeof volume!=='undefined'){volume.group.visible=showField&&mode==='space';vectors.group.visible=showField&&mode==='plane';}}
+ function setView(mode){viewMode=mode;const d=Math.max(14,(view.camera.aspect<.9?4.7:6.5)/(Math.tan(19*Math.PI/180)*view.camera.aspect));view.controls.target.set(0,0,0);view.camera.up.set(0,1,0);if(mode==='plane'){const f=frame();view.camera.position.fromArray(f.normal).multiplyScalar(d);view.camera.up.fromArray(f.v);}else view.camera.position.set(d*.35,d*.30,d*.88);view.camera.lookAt(0,0,0);view.controls.enabled=true;view.controls.update();view.controls.enableRotate=mode==='space';view.renderer.domElement.dataset.viewMode=mode;container.querySelectorAll('[data-field-view]').forEach(b=>{const on=b.dataset.fieldView===mode;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on)});$('#field-gesture').textContent=practiceTrial?'拖动黄点 P · 滚轮缩放':mode==='plane'?'拖动源或 P · 滚轮缩放':'拖空白旋转 · 拖动源或 P';if(typeof volume!=='undefined'){volume.group.visible=showField&&mode==='space';vectors.group.visible=showField&&mode==='plane';}}
  const resize=view.resize.bind(view);view.resize=()=>{resize();if(ready)setView(viewMode);};let ready=false;
  const surface=new THREE.Mesh(new THREE.PlaneGeometry(12,8),new THREE.MeshBasicMaterial({color:'#9bb9b7',transparent:true,opacity:.035,side:THREE.DoubleSide,depthWrite:false}));view.layer('sampling-plane').add(surface);
  surface.add(new THREE.LineSegments(new THREE.EdgesGeometry(surface.geometry),new THREE.LineBasicMaterial({color:'#b5c7c3',transparent:true,opacity:.5})));
@@ -56,6 +58,12 @@ export function mountField(container){
  function drawChallengeTarget(p){
   view.clearLayer('challenge-target');challengeRing=null;if(!challenge)return;
   const color='#357857',layer='challenge-target';
+  if(practiceTrial){
+   challengeEvaluation=evaluateFieldChallenge(challenge.id,{position:p,sources,chargeSign:sign});
+   container.dataset.targetInScene='false';
+   for(const el of [container,canvas]){el.dataset.challengeId=challenge.id;el.dataset.challengeAngle=challengeEvaluation.angle==null?'':String(challengeEvaluation.angle*180/Math.PI);}
+   return;
+  }
   if(challenge.kind==='direction'){
    // Four open faces make a hollow +y arrow: its direction remains visible
    // when the camera turns, while the gold force arrow stays visually separate.
@@ -96,11 +104,12 @@ export function mountField(container){
   const ring=new THREE.Mesh(new THREE.RingGeometry(.19,.21,48),new THREE.MeshBasicMaterial({color:'#b08424',transparent:true,opacity:.75,side:THREE.DoubleSide,depthTest:false}));ring.position.set(...p);ring.quaternion.copy(view.camera.quaternion);view.layer('probe').add(ring);
   if(showProbe){
    if($('#source-guides').checked)sources.filter(s=>Math.abs(s.Q)>1e-8).forEach((s,i)=>view.dashedLine([s.pos,p],i?'#61849c':'#c47865','guides',.7));
-   parts.forEach((e,i)=>view.arrow(p,e,i?'#81c7ec':'#f19c84',norm(e)*scale,'probe'));
+   if(!practiceTrial){parts.forEach((e,i)=>view.arrow(p,e,i?'#81c7ec':'#f19c84',norm(e)*scale,'probe'));
    const tip1=p.map((v,i)=>v+parts[0][i]*scale),tip2=p.map((v,i)=>v+parts[1][i]*scale),tip=p.map((v,i)=>v+E[i]*scale);
    if(norm(parts[0])>1e-6&&norm(parts[1])>1e-6){view.dashedLine([tip1,tip],'#81c7ec','probe',.45);view.dashedLine([tip2,tip],'#f19c84','probe',.45);}
    view.arrow(p,E,'#7cd9e4',m*scale,'probe');
-   if(m>1e-6){view.label('合场 E',tip.map((v,i)=>v+(i===1?.21:0)),'#7cd9e4','probe',.28);const f=E.map(v=>sign*v),forceLength=m*scale*(sign>0?.68:1);view.arrow(p,f,'#f0cb80',forceLength,'probe');view.label(sign<0?'电子受力 F':'F · +eE',p.map((v,i)=>v+f[i]*scale*(sign>0?.68:1)+(i===1?-.24:0)),'#edc580','probe',.27);}
+   }
+   if(m>1e-6){if(!practiceTrial)view.label('合场 E',tip.map((v,i)=>v+(i===1?.21:0)),'#7cd9e4','probe',.28);const f=E.map(v=>sign*v),forceLength=m*scale*(sign>0?.68:1);const forceArrow=view.arrow(p,f,practiceTrial?'#b76b13':'#f0cb80',forceLength,'probe');if(practiceTrial&&forceArrow)forceArrow.setLength(forceLength,Math.min(.26,forceLength*.3),.17);view.label(practiceTrial?'当前受力 F':sign<0?'电子受力 F':'F · +eE',p.map((v,i)=>v+f[i]*scale*(sign>0?.68:1)*(practiceTrial?.5:1)+(practiceTrial?(i===0?.7:i===1?.1:0):(i===1?-.24:0))),practiceTrial?'#8c510b':'#edc580','probe',.31);}
   }
   $('#field-sign-reason').textContent=sign<0?'电子带负电，受力与电场反向':'正试探电荷：受力与电场同向';$('.field-direction-key .electron').textContent=sign<0?'金色 F · 电子受力':'F = qE · 与电场同向';
   $('#e1-value').textContent=norm(parts[0]).toFixed(1)+' V/m';$('#e2-value').textContent=norm(parts[1]).toFixed(1)+' V/m';$('#field-value').textContent=m.toFixed(1)+' V/m';$('#force-value').textContent=(m*1.602176634e-4).toFixed(3)+' fN';$('#force-note').textContent=sign<0?'电子：力与 E 反向':'正试探电荷：力与 E 同向';
@@ -110,10 +119,10 @@ export function mountField(container){
   const zero=m<.02;
   $('#field-observation').textContent=zero?'P 点两个贡献相互抵消：E = 0，F = 0；附近仍然有电场。':sources[0].Q*sources[1].Q>0?(Math.abs(sources[0].Q-sources[1].Q)<1e-8?'两个等量同号源的中点，合场抵消。拖动黄点，看离开中点后的变化。':'同号源之间，两个贡献方向相反；电量不等时，抵消点不在几何中点。'):Math.abs(sources[1].Q)<1e-8?'现在只看一个源。切回上方双电荷情形，比较第二个源增加的作用。':'正源贡献向外，负源贡献向内。沿两条源—P 连线读出分场，再看它们的矢量和。';
   for(const id of ['probe-x','probe-y','probe-z'])$('#'+id+'-value').textContent=(+$('#'+id).value).toFixed(1)+' mm';
-  canvas.dataset.samplePlane='through-sources-and-probe';canvas.dataset.viewMode=viewMode;canvas.dataset.planeNormal=JSON.stringify(frame().normal);canvas.dataset.vectorE=JSON.stringify(E);canvas.dataset.vectorE1=JSON.stringify(parts[0]);canvas.dataset.vectorE2=JSON.stringify(parts[1]);canvas.dataset.vectorF=JSON.stringify(E.map(v=>v*sign*1.602176634e-19));canvas.dataset.field=m.toFixed(6);canvas.dataset.forceSign=sign;canvas.dataset.probe=JSON.stringify(p);canvas.dataset.sources=JSON.stringify(sources.map(s=>s.pos));
+  canvas.dataset.samplePlane='through-sources-and-probe';canvas.dataset.viewMode=viewMode;canvas.dataset.planeNormal=JSON.stringify(frame().normal);canvas.dataset.vectorE=JSON.stringify(E);canvas.dataset.vectorE1=JSON.stringify(parts[0]);canvas.dataset.vectorE2=JSON.stringify(parts[1]);canvas.dataset.vectorF=JSON.stringify(E.map(v=>v*sign*1.602176634e-19));canvas.dataset.field=m.toFixed(6);canvas.dataset.forceSign=sign;canvas.dataset.probe=JSON.stringify(p);canvas.dataset.probeScreen=JSON.stringify((()=>{const r=canvas.getBoundingClientRect(),v=new THREE.Vector3(...p).project(view.camera);return [r.left+(v.x+1)*r.width/2,r.top+(1-v.y)*r.height/2]})());canvas.dataset.sources=JSON.stringify(sources.map(s=>s.pos));
   drawChallengeTarget(p);
  }
- function rebuild(){view.clearLayer('charges');sources.filter(s=>Math.abs(s.Q)>1e-8).forEach(s=>view.charge(s));vectors.update();volume.update();view.layer('field-vectors').visible=showField;drawProbe();dirty=false;}
+ function rebuild(){view.clearLayer('charges');sources.filter(s=>Math.abs(s.Q)>1e-8).forEach(s=>view.charge(s));vectors.update();volume.update();view.layer('field-vectors').visible=showField&&!practiceTrial;if(practiceTrial){volume.group.visible=false;vectors.group.visible=false;}drawProbe();dirty=false;}
  function values(){sources.forEach((s,i)=>s.Q=+$('#q'+(i+1)).value);for(const id of ['q1','q2'])$('#'+id+'-value').textContent=(+$('#'+id).value).toFixed(2)+' pC';}
  function stop(){moving=false;$('#field-auto-btn').textContent='让左源往复';$('#field-auto-btn').setAttribute('aria-pressed','false');}
  function resetPositions(){stop();sources[0].pos=[-1.8,0,0];sources[1].pos=[1.8,0,0];$('#probe-x').value=0;$('#probe-y').value=1.2;$('#probe-z').value=.8;}
@@ -129,14 +138,16 @@ export function mountField(container){
  $('#field-auto-btn').onclick=()=>{moving=!moving;clock=0;base=sources[0].pos[1];$('#field-auto-btn').textContent=moving?'暂停往复':'让左源往复';$('#field-auto-btn').setAttribute('aria-pressed',moving);};
  const ray=new THREE.Raycaster(),mouse=new THREE.Vector2(),plane=new THREE.Plane(new THREE.Vector3(0,0,1),0),point=new THREE.Vector3();
  function cast(e){const r=canvas.getBoundingClientRect();mouse.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(mouse,view.camera);}
- function down(e){cast(e);const charge=!challenge&&ray.intersectObjects(view.layer('charges').children).find(h=>h.object.userData.source),hit=showProbe?ray.intersectObjects(view.layer('probe').children).find(h=>h.object.userData.probe):null;if(charge||hit){drag=charge?charge.object.userData.source:'probe';const position=drag==='probe'?probe():drag.pos;plane.setFromNormalAndCoplanarPoint(viewMode==='plane'?new THREE.Vector3(...frame().normal):view.camera.getWorldDirection(new THREE.Vector3()),new THREE.Vector3(...position));stop();view.controls.enabled=false;canvas.setPointerCapture(e.pointerId);}}
- function move(e){if(!drag)return;cast(e);if(ray.ray.intersectPlane(plane,point)){const p=[Math.max(-4.5,Math.min(4.5,point.x)),Math.max(-3,Math.min(3,point.y)),Math.max(-2.5,Math.min(2.5,point.z))];if(drag==='probe'){$('#probe-x').value=p[0];$('#probe-y').value=p[1];$('#probe-z').value=p[2];drawProbe();}else{drag.pos=p;dirty=true;}}}
+ function down(e){cast(e);const charge=!challenge&&ray.intersectObjects(view.layer('charges').children).find(h=>h.object.userData.source),hit=showProbe?ray.intersectObjects(view.layer('probe').children).find(h=>h.object.userData.probe):null;if(charge||hit){drag=charge?charge.object.userData.source:'probe';const position=drag==='probe'?probe():drag.pos;plane.setFromNormalAndCoplanarPoint(viewMode==='plane'&&(!projection||projection.mode==='3d')?new THREE.Vector3(...frame().normal):view.camera.getWorldDirection(new THREE.Vector3()),new THREE.Vector3(...position));stop();view.controls.enabled=false;canvas.setPointerCapture(e.pointerId);}}
+ function move(e){if(!drag)return;cast(e);if(ray.ray.intersectPlane(plane,point)){const p=[Math.max(-4.5,Math.min(4.5,point.x)),Math.max(-3,Math.min(3,point.y)),Math.max(-2.5,Math.min(2.5,point.z))];if(drag==='probe'){if(practiceTrial&&challenge)p[2]=0;$('#probe-x').value=p[0];$('#probe-y').value=p[1];$('#probe-z').value=p[2];drawProbe();}else{drag.pos=p;dirty=true;}}}
  let pointerStart=null;
  function recordStart(e){pointerStart=[e.clientX,e.clientY,!!drag];}
  function up(e){const wasDrag=!!drag;drag=null;view.controls.enabled=true;if(e?.type==='pointerup'&&viewMode==='plane'&&!wasDrag&&pointerStart&&!pointerStart[2]&&Math.hypot(e.clientX-pointerStart[0],e.clientY-pointerStart[1])<5){cast(e);plane.setFromNormalAndCoplanarPoint(new THREE.Vector3(...frame().normal),new THREE.Vector3(...frame().origin));if(ray.ray.intersectPlane(plane,point)){$('#probe-x').value=Math.max(-4.5,Math.min(4.5,point.x));$('#probe-y').value=Math.max(-3.5,Math.min(3.5,point.y));$('#probe-z').value=Math.max(-2.5,Math.min(2.5,point.z));drawProbe();}}pointerStart=null;}
  canvas.addEventListener('pointerdown',down);canvas.addEventListener('pointerdown',recordStart);canvas.addEventListener('pointermove',move);canvas.addEventListener('pointerup',up);canvas.addEventListener('pointercancel',up);
  view.frameFn=t=>{const dt=Math.min(.05,(t-last)/1000||0);last=t;if(moving){clock+=dt;sources[0].pos[1]=base+Math.min(1.1,Math.max(.05,3-Math.abs(base)))*Math.sin(clock*.9)*(1-Math.exp(-clock*clock*4));dirty=true;}if(dirty&&t-lastDraw>32){rebuild();lastDraw=t;}tickChallenge(dt,t);canvas.dataset.sourceY=sources[0].pos[1].toFixed(3);};
  values();rebuild();
+ const projection=dimensions?createDimensionView({host:container,stage:$('.stage'),getCamera:()=>view.camera,setCamera:camera=>view.camera=camera,controls:view.controls}):null;
+ const frameBeforeProjection=view.frameFn;view.frameFn=t=>{frameBeforeProjection(t);projection?.update();const r=canvas.getBoundingClientRect(),v=new THREE.Vector3(...probe()).project(view.camera);canvas.dataset.probeScreen=JSON.stringify([r.left+(v.x+1)*r.width/2,r.top+(1-v.y)*r.height/2]);};
  const requestedChallenge=new URLSearchParams(location.search).get('challenge');if(FIELD_CHALLENGES.some(g=>g.id===requestedChallenge))beginChallenge(requestedChallenge);
- return()=>{canvas.removeEventListener('pointerdown',down);canvas.removeEventListener('pointerdown',recordStart);canvas.removeEventListener('pointermove',move);canvas.removeEventListener('pointerup',up);canvas.removeEventListener('pointercancel',up);vectors.dispose();volume.dispose();view.dispose();sheet.remove();container.classList.remove('field-v4','field-challenge-active');};
+ return()=>{projection?.dispose();canvas.removeEventListener('pointerdown',down);canvas.removeEventListener('pointerdown',recordStart);canvas.removeEventListener('pointermove',move);canvas.removeEventListener('pointerup',up);canvas.removeEventListener('pointercancel',up);vectors.dispose();volume.dispose();view.dispose();sheet.remove();container.classList.remove('field-v4','field-challenge-active');};
 }
