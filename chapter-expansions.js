@@ -1,3 +1,4 @@
+import {VERSION} from './release-version.js';
 /** Experiments are part of the reading flow, never hidden in accordions. */
 const experiments={
  foundations:{title:'把 100 个电子送进接收孔',copy:'先发射一批。拖动图里的电场手柄，把下一批的落点移进绿色孔；灰线保留上一批轨迹。',url:'beam.html'},
@@ -10,7 +11,7 @@ export function mountChapterExpansions(article,id){
  const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=new URL('./chapter-expansions.css',import.meta.url).href;document.head.append(sheet);
  const abort=new AbortController(),frames=[];let dead=false;
  const section=(title,copy)=>{const el=document.createElement('section');el.className='chapter-expansion';const h=document.createElement('h2');h.textContent=title;const p=document.createElement('p');p.textContent=copy;el.append(h,p);return el;};
- function frameInto(parent,url,title){const frame=document.createElement('iframe'),u=new URL(url,location.href);u.searchParams.set('embed','1');u.searchParams.set('v','3.5.0');frame.dataset.src=u.href;frame.title=title;frame.className='chapter-experiment-frame';frame.style.height=url.startsWith('coulomb')?'2600px':'1100px';frame.allow='fullscreen';parent.append(frame);frames.push(frame);const link=document.createElement('a');link.className='chapter-expand-link';link.href=url;link.textContent='单独展开这个实验 ↗';parent.append(link);observer.observe(frame);}
+ function frameInto(parent,url,title){const frame=document.createElement('iframe'),u=new URL(url,location.href);u.searchParams.set('embed','1');u.searchParams.set('v',VERSION);frame.dataset.src=u.href;frame.title=title;frame.className='chapter-experiment-frame';frame.style.height=url.startsWith('coulomb')?'2600px':'1100px';frame.allow='fullscreen';parent.append(frame);frames.push(frame);const link=document.createElement('a');link.className='chapter-expand-link';link.href=url;link.textContent='单独展开这个实验 ↗';parent.append(link);observer.observe(frame);}
  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting&&entry.target.dataset.src){entry.target.src=entry.target.dataset.src;delete entry.target.dataset.src;observer.unobserve(entry.target);}}),{rootMargin:'500px'});
  const exp=experiments[id];
  if(exp){const block=section(exp.title,exp.copy);block.dataset.inlineExperiment=id;block.id='particle-experiment';const before=article.querySelector('#lesson-video');if(before&&['foundations','field'].includes(id))before.before(block);else if(before)before.after(block);else article.append(block);frameInto(block,exp.url,exp.title);}

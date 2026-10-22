@@ -1,3 +1,4 @@
+import {versioned} from './release-version.js';
 import { DEG, R, GRAIN_KG, G, KAPPA, RECORDS, reading } from './coulomb-physics.js';
 
 /** The memoir's observations remain separate from the modern SI conversion and regression. */
@@ -148,7 +149,7 @@ export function mountCoulombFit(host, { initialStep = 0, autoplay = false, onCha
       <div class="cf-toolbar"><div class="cf-sequence" aria-label="读数与拟合步骤">${['第一次', '第二次', '第三次', '拟合'].map((name, i) => `<button type="button" data-step="${i + 1}" aria-label="显示${name}${i < 3 ? '测量' : '曲线'}"><span>${i < 3 ? '0' + (i + 1) : '↗'}</span>${name}</button>`).join('')}</div><span class="cf-phase" data-part="phase" aria-live="polite">把读数放到图上</span></div>
       <div class="cf-media-plot">
         <div class="cf-video-panel">
-          <video class="cf-readout-video" data-part="readout-video" src="${new URL('./media/lesson-dialogues/coulomb-readout.mp4?v=3.7.0', import.meta.url).href}" poster="${new URL('./media/lesson-dialogues/coulomb-readout.poster.jpg?v=3.7.0', import.meta.url).href}" muted playsinline preload="metadata" aria-label="三维读数动画：施力球先靠近，悬球随后退开；两球间距变化，银丝逐渐扭紧"></video>
+          <video class="cf-readout-video" data-part="readout-video" src="${versioned('./media/lesson-dialogues/coulomb-readout.mp4', import.meta.url)}" poster="${versioned('./media/lesson-dialogues/coulomb-readout.poster.jpg', import.meta.url)}" muted playsinline preload="metadata" aria-label="三维读数动画：施力球先靠近，悬球随后退开；两球间距变化，银丝逐渐扭紧"></video>
           <p class="cf-video-message" data-part="video-message" hidden>三维动画暂时无法加载</p>
         </div>
       <svg class="cf-visual" viewBox="0 0 700 480" role="img" aria-label="按论文近似比较的线性坐标：横轴为分离角除以第一次分离角，表示相对距离；纵轴为总扭转除以第一次总扭转，表示相对斥力。">

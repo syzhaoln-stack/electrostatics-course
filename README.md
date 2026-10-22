@@ -1,12 +1,12 @@
 # 静电场 · 交互教材
 
-大学物理 A，JC05 静电场，12 学时。发现版 3.5.0 采用本地宋体衬线字、LaTeX 数学排版、规范公式编号和图号；正文中嵌入可旋转、可拖动的真实三维模型。每节以一个具体问题开始，列出学习目标；图中一次呈现一个操作任务，按测量值核对完成状态。必要定义、单位和模型条件与插图对应。
+大学物理 A，JC05 静电场，12 学时。当前版 3.9.4（2026-10-22）采用本地宋体衬线字、LaTeX 数学排版、规范公式编号和图号；正文中嵌入可旋转、可拖动的真实三维模型。每节以一个具体问题开始，列出学习目标；图中一次呈现一个操作任务，按测量值核对完成状态。必要定义、单位和模型条件与插图对应。
 
 - 教材：https://syzhaoln-stack.github.io/electrostatics-course/
 - 大纲对照：https://syzhaoln-stack.github.io/electrostatics-course/syllabus.html
-- 原实验版保持独立：https://syzhaoln-stack.github.io/electrostatic-space-lab/
+- 早期实验存档（不作为当前教材入口）：https://syzhaoln-stack.github.io/electrostatic-space-lab/
 
-## 最新交互样题 · 3.9.3
+## 最新交互样题 · 3.9.4
 
 三道题均分为定性观察和定量验证两层，同一条冻结记录支持取数、计算、解释和作业导出。
 

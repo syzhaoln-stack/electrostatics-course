@@ -103,9 +103,10 @@ export function mountField(container,{dimensions=false,practiceTrial=false}={}){
   const hitArea=new THREE.Mesh(new THREE.SphereGeometry(.25,12,8),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));hitArea.position.set(...p);hitArea.userData={probe:true};view.layer('probe').add(hitArea);
   const ring=new THREE.Mesh(new THREE.RingGeometry(.19,.21,48),new THREE.MeshBasicMaterial({color:'#b08424',transparent:true,opacity:.75,side:THREE.DoubleSide,depthTest:false}));ring.position.set(...p);ring.quaternion.copy(view.camera.quaternion);view.layer('probe').add(ring);
   if(showProbe){
+   const tip=p.map((v,i)=>v+E[i]*scale);
    if($('#source-guides').checked)sources.filter(s=>Math.abs(s.Q)>1e-8).forEach((s,i)=>view.dashedLine([s.pos,p],i?'#61849c':'#c47865','guides',.7));
    if(!practiceTrial){parts.forEach((e,i)=>view.arrow(p,e,i?'#81c7ec':'#f19c84',norm(e)*scale,'probe'));
-   const tip1=p.map((v,i)=>v+parts[0][i]*scale),tip2=p.map((v,i)=>v+parts[1][i]*scale),tip=p.map((v,i)=>v+E[i]*scale);
+   const tip1=p.map((v,i)=>v+parts[0][i]*scale),tip2=p.map((v,i)=>v+parts[1][i]*scale);
    if(norm(parts[0])>1e-6&&norm(parts[1])>1e-6){view.dashedLine([tip1,tip],'#81c7ec','probe',.45);view.dashedLine([tip2,tip],'#f19c84','probe',.45);}
    view.arrow(p,E,'#7cd9e4',m*scale,'probe');
    }
